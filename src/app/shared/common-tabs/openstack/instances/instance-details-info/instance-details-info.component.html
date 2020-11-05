@@ -1,0 +1,88 @@
+<div fxLayout="row" fxLayout.lt-md="column" class="fl-content">
+  <div fxFlex="100" *ngIf="object">
+    <div class="fl-subheader">Instance specifications</div>
+    <p class="fl-detail" *ngIf="object.image && object.image.id">Image:
+      <a [routerLink]="[config.getPanelUrl('openstack/images'), object.image.id]" class="active-link">
+        {{object.image.name || object.image.id}}
+      </a>
+    </p>
+    <p class="fl-detail" *ngIf="object.image && object.image.name && !object.image.id">Image:
+      Image: {{object.image.name}}
+      <span *ngIf="object.image.os_distro && object.image.os_version">
+        ({{object.image.os_distro}} {{object.image.os_version}})
+      </span>
+    </p>
+
+    <p class="fl-detail" *ngIf="object.flavor">
+      Flavor:
+      <a [routerLink]="[config.getPanelUrl('openstack/flavors'), object.flavor.id]" class="active-link">
+        {{object.flavor.name }}
+      </a>
+    </p>
+
+    <div *ngIf="object.flavor">
+      <p class="fl-detail">
+        Memory (RAM): {{object.flavor.memory_mb }} MB
+      </p>
+
+      <p class="fl-detail">
+        Virtual CPUs: {{object.flavor.vcpus }}
+      </p>
+    </div>
+    <div class="fl-detail"
+         *ngIf="object.storage_details.local_storage || object.storage_details.volume_attachments.length">
+      Storage
+      <ul class="instance-details-storage-list">
+        <li *ngIf="object.storage_details.local_storage && !object.storage_details.hide_local_storage"
+            class="fl-detail">
+          Local storage: {{ object.storage_details.local_storage }} GB
+          <span *ngIf="object.image">(boot)</span>
+        </li>
+        <li *ngFor="let vol_att of object.storage_details.volume_attachments" class="fl-detail">
+          Volume:
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('openstack/volumes'), vol_att.volume_id]">
+            {{ vol_att.volume_name || vol_att.volume_id }}
+          </a>: {{ vol_att.size }} GB&nbsp;
+          <span *ngIf="vol_att.is_boot">
+            (boot<span *ngIf="vol_att.delete_on_termination">, delete</span>)
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div fxFlex="100" *ngIf="object">
+    <div class="fl-subheader">Other details</div>
+    <p class="fl-detail">Instance UUID: {{object.uuid }}</p>
+    <p class="fl-detail">Project ID: {{object.project }}</p>
+    <p class="fl-detail">Instance hypervisor: {{object.host_name || object.hostId }}</p>
+    <p class="fl-detail">Created at: {{object.created | date : 'medium'}}</p>
+    <p class="fl-detail" *ngIf="object.client">
+      Client:
+      <a [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]"
+         class="active-link">
+        {{ object.client.name }}
+      </a>
+    </p>
+    <p class="fl-detail">Region: {{object.region }} </p>
+    <p class="fl-detail" *ngIf="object.locked">
+      <span>Instance is locked</span>
+    </p>
+    <div *ngIf="object.traffic_type === 'all'">
+      <p *ngIf="auth.feature('openstack.instances.traffic')" class="fl-detail">
+        Total traffic this billing cycle: {{object.current_cycle_traffic }} GB
+      </p>
+      <p *ngIf="auth.feature('openstack.instances.traffic')" class="fl-detail">
+        Total traffic this month: {{object.current_month_traffic }} GB
+      </p>
+    </div>
+    <div *ngIf="object.traffic_type === 'public'">
+      <p *ngIf="auth.feature('openstack.instances.traffic')" class="fl-detail">
+        Public traffic this billing cycle: {{object.current_cycle_traffic }} GB
+      </p>
+      <p *ngIf="auth.feature('openstack.instances.traffic')" class="fl-detail">
+        Public traffic this month: {{object.current_month_traffic }} GB
+      </p>
+    </div>
+  </div>
+</div>

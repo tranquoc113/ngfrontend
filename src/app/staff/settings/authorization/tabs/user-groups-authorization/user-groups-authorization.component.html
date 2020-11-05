@@ -1,0 +1,91 @@
+<div class="fl-content-min-height">
+  <app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+  <p class="fl-subheader-md">Select a user group to manage permissions</p>
+  <form appFormSubmit (ngSubmit)="saveUserGroupPermissions()"
+        [formGroup]="userGroupAuthorizationForm" fxLayout="column">
+    <mat-form-field>
+      <input matInput placeholder="User group" aria-label="User group" [matAutocomplete]="auto"
+             (click)="clickedUserGroupInput()"
+             formControlName="userGroup">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserGroupFn"
+                        (optionSelected)="newUserSelection($event)">
+        <mat-option *ngFor="let userGroup of filteredUserGroups" [value]="userGroup">
+          <span>{{userGroup.name || userGroup.id}}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <div class="fl-margin-bottom" fxLayout="row"
+         *ngIf="showPermissionOptions()">
+      <a mat-button (click)="checkAll()">Check all</a>
+      <a mat-button (click)="unCheckAll()">Uncheck all</a>
+      <a mat-button (click)="refreshAllPermissions()">Revert permissions</a>
+    </div>
+    <mat-checkbox *ngIf="showPermissionOptions()"
+                  [color]="'primary'" [checked]="permissions.implicitly_granted"
+                  (change)="permissions.implicitly_granted = !permissions.implicitly_granted"
+                  class="fl-grant-permissions-checkbox">
+      Grant new permissions implicitly
+    </mat-checkbox>
+    <div fxFlex="100" *ngIf="showPermissionOptions()">
+      <div fxFlex="100" fxLayout="row" fxLayout.lt-md="column">
+        <table class="fl-grid fl-table-auto-height" fxFlex="50" fxFlex.lt-md="100" fxLayout="column">
+            <ng-container *ngFor="let perm of permissions.objects; let i = index">
+              <tbody *ngIf="i <= (permissions.objects.length / 2)">
+                <tr *ngIf="perm && perm.display_data && i === 0">
+                  <td class="fl-permissions-category" fxFlex="100">
+                    {{perm.display_data.category.toUpperCase()}}
+                  </td>
+                </tr>
+                <tr class="v-middle">
+                  <td [attr.fl-tooltip]="perm.description" fxFlex="95"
+                      class="fl-permissions-display-name fl-cursor-pointer"
+                      (click)="toggleCheckbox(perm)">
+                    <p>{{perm.display_name }}</p>
+                  </td>
+                  <td fxFlex="5">
+                    <mat-checkbox [checked]="perm.granted" [color]="'primary'"
+                                  class="fl-permissions-checkboxes"></mat-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="perm && perm.display_data && perm.display_data.last_in_category == true">
+                  <td class="fl-permissions-category" fxFlex="100">
+                    {{perm.display_data.next_category.toUpperCase()}}
+                  </td>
+                </tr>
+              </tbody>
+            </ng-container>
+        </table>
+        <table class="fl-grid fl-table-auto-height" fxFlex="50" fxFlex.lt-md="100" fxLayout="column">
+            <ng-container *ngFor="let perm of permissions.objects; let i = index">
+              <tbody *ngIf="i > (permissions.objects.length / 2)">
+                <tr *ngIf="perm && perm.display_data && i === 0">
+                  <td class="fl-permissions-category" fxFlex="100">
+                    {{perm.display_data.category.toUpperCase()}}
+                  </td>
+                </tr>
+                <tr class="v-middle">
+                  <td [attr.fl-tooltip]="perm.description" fxFlex="95"
+                      class="fl-permissions-display-name fl-cursor-pointer"
+                      (click)="toggleCheckbox(perm)">
+                    <p>{{perm.display_name }}</p>
+                  </td>
+                  <td fxFlex="5">
+                    <mat-checkbox [checked]="perm.granted" [color]="'primary'"
+                                  class="fl-permissions-checkboxes"></mat-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="perm && perm.display_data && perm.display_data.last_in_category == true">
+                  <td class="fl-permissions-category" fxFlex="100">
+                    {{perm.display_data.next_category.toUpperCase()}}
+                  </td>
+                </tr>
+              </tbody>
+            </ng-container>
+        </table>
+      </div>
+    </div>
+  </form>
+  <div fxLayout="row" class="fl-margin-top" *ngIf="permissions">
+    <button mat-button (click)="saveUserGroupPermissions()" color="primary">Save permissions</button>
+  </div>
+</div>

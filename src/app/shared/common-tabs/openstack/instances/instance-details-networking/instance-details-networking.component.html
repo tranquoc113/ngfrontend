@@ -1,0 +1,102 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <div class="fl-subheader fl-margin-bottom">Ports</div>
+  <ul *ngFor="let port of object.net_details.ports">
+    <li class="fl-detail fl-margin-left">
+      <a [routerLink]="[config.getPanelUrl('openstack/ports'), port.id]" class="active-link"
+         *ngIf="auth.feature('openstack.ports')">
+        {{port.name}}
+      </a>
+      <span *ngIf="!auth.feature('openstack.ports')">{{port.name}}</span>
+      <button mat-icon-button class="fl-margin-left-small vertical-align-middle"
+         fl-tooltip="Delete port"
+         (click)="removePort(port)">
+        <mat-icon class="fl-icons">delete</mat-icon>
+      </button>
+      <button mat-icon-button class="fl-margin-left-small vertical-align-middle"
+         fl-tooltip="Detach port"
+         (click)="detachPort(port)">
+        <mat-icon>link_off</mat-icon>
+      </button>
+      <div class="fl-margin-left">
+        <div *ngIf="port.ipv4s.length">
+          IPv4:
+          <ul class="fl-margin-left">
+            <li *ngFor="let ip of port.ipv4s">
+              <span *ngIf="ip.new">*</span>{{ ip.ip_address }}
+              <a class="fl-margin-left-small vertical-align-middle fl-bold"
+                 fl-tooltip="Remove ip"
+                 (click)="removeIp(port, ip)"><strong>X</strong></a>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="port.ipv6s.length">
+          IPv6:
+          <ul class="fl-margin-left">
+            <li *ngFor="let ip of port.ipv6s">
+              <span *ngIf="ip.new">*</span>{{ ip.ip_address }}
+              <a class="fl-margin-left-small vertical-align-middle fl-bold"
+                 fl-tooltip="Remove ip"
+                 (click)="removeIp(port, ip)"><strong>X</strong></a>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="port.floating_ips.length && auth.feature('openstack.floatingips')">
+          Floating IPs:
+          <ul class="fl-margin-left">
+            <li *ngFor="let ip of port.floating_ips" class="fl-detail">
+              <a class="active-link"
+                 [routerLink]="[config.getPanelUrl('openstack/floating-ips'), ip.id]"
+                 *ngIf="auth.feature('openstack.floatingips')">
+                {{ ip.floating_ip_address }}
+              </a>
+              <span *ngIf="!auth.feature('openstack.floatingips')">
+                {{ ip.floating_ip_address }}
+              </span>
+              <a class="fl-margin-left-small vertical-align-middle fl-bold"
+                 fl-tooltip="Dissociate ip"
+                 *ngIf="auth.feature('openstack.floatingips')"
+                 (click)="dissociateIp(ip.floating_ip_address)">
+                  <strong>X</strong>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div fxLayoutAlign="end right" *ngIf="object && object.status !== 'error'">
+  <button *ngIf="auth.feature('openstack.networks') && auth.feature('openstack.ports')"
+          [color]="'primary'"
+          (click)="openAddPortDialog()"
+          mat-button>
+    Add port
+  </button>
+  <button *ngIf="auth.feature('openstack.ports')"
+          [color]="'primary'"
+          (click)="openAttachPortDialog()"
+          mat-button>
+    Attach port
+  </button>
+  <button *ngIf="auth.feature('openstack.networks') && auth.feature('openstack.ports')"
+          [color]="'primary'"
+          fxFlexOffset="2"
+          (click)="openAddIpDialog()"
+          mat-button>
+    Add IP
+  </button>
+  <button *ngIf="auth.feature('openstack.networks') && auth.feature('openstack.ports')"
+          [color]="'primary'"
+          fxFlexOffset="2"
+          (click)="openAddIpAutomaticallyDialog()"
+          mat-button>
+    Add IP automatically
+  </button>
+  <button *ngIf="auth.feature('openstack.floatingips')"
+          [color]="'primary'"
+          fxFlexOffset="2"
+          (click)="openAssociateIpDialog()"
+          mat-button>
+    Associate IP
+  </button>
+</div>

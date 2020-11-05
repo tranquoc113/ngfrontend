@@ -1,0 +1,13 @@
+<div *ngIf="object" fxLayout="column" class="fl-content fl-content-min-height">
+  <p class="fl-detail">ID: {{ object.id }}</p>
+  <p class="fl-detail">Project name: {{ object.project_name }}</p>
+  <p class="fl-detail">Project ID: {{ object.project_id }}</p>
+  <p class="fl-detail">
+    Prefixes: {{ object.prefixes.join(', ') }}
+  </p>
+  <p class="fl-detail">Region: {{ object.region }}</p>
+  <p class="fl-detail">Created at: {{ object.created_at }}</p>
+  <p class="fl-detail" *ngIf="object.updated_at">Updated at: {{ object.updated_at }}</p>
+  <p class="fl-detail">Is default: {{ object.is_default }}</p>
+  <p class="fl-detail">Description: {{ object.description || 'n/a' }} </p>
+</div>

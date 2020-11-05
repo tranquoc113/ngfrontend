@@ -1,0 +1,30 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)" [formGroup]="sshKeyForm">
+  <app-form-errors #formErrors [formGroup]="sshKeyForm"></app-form-errors>
+  <div fxLayout="column">
+    <mat-form-field>
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput rows="10" #publicKey
+                placeholder="Key content" type="text" formControlName="public_key" required>
+      </textarea>
+      <mat-error>{{fieldErrors['public_key']}}</mat-error>
+    </mat-form-field>
+    <button *ngIf="generatedKey" mat-button color="primary"
+            (click)="clipboard.copyTextAreaToClipboard(publicKey)">
+      Copy public key to clipboard
+    </button>
+    <ng-container *ngIf="generatedKey">
+      <mat-form-field>
+        <p class="fl-detail">Private key. You should save this key locally, it will not be saved on server.</p>
+        <textarea matInput rows="10" #privateKey
+                  placeholder="Private key" type="text" formControlName="private_key" readonly>
+        </textarea>
+      </mat-form-field>
+      <button mat-button color="primary" (click)="clipboard.copyTextAreaToClipboard(privateKey)">
+        Copy private key to clipboard
+      </button>
+    </ng-container>
+  </div>
+</form>

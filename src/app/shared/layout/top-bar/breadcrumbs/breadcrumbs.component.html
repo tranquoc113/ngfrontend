@@ -1,0 +1,14 @@
+<div class="br">
+  <span *ngFor="let breadCrumb of breadCrumbs; let last = last"
+        [fxHide.lt-lg]="!last"
+        [class.br-ellipse]="last">
+    <a *ngIf="breadCrumb.url;else withoutUrl" [routerLink]="breadCrumb.url"
+       [queryParams]="breadCrumb.queryParams">
+      {{breadCrumb.display}}
+    </a>
+    <ng-template #withoutUrl>{{breadCrumb.display}}</ng-template>
+    <mat-icon class="fl-icons vertical-align-middle breadcrumb-icon" *ngIf="!last">
+      arrow_right
+    </mat-icon>
+  </span>
+</div>

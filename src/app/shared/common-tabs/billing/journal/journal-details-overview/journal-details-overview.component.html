@@ -1,0 +1,46 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <p>
+    Client:
+    <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]">
+      {{object.client.name}}
+    </a>
+  </p>
+  <p>
+    Source:
+    {{object.source_info.name}}  ({{object.source_amount}} {{object.source_currency}})
+  </p>
+  <p>
+    Destination:
+    {{object.destination_info.name}} ({{object.destination_amount}} {{object.destination_currency}})
+  </p>
+  <p>
+    Date: {{object.date_added | date: 'medium'}}
+  </p>
+  <p>
+    Invoice #:
+    <a *ngIf="object.invoice" class="active-link"
+       [routerLink]="[config.getPanelUrl('billing/invoices'), object.invoice]">
+      {{object.invoice}}
+    </a>
+    <span *ngIf="!object.invoice">n/a</span>
+  </p>
+  <p>
+    User:
+    <a *ngIf="object.user" class="active-link"
+       [routerLink]="[config.getPanelUrl('clients-users/users'), object.user.id]">
+      {{object.user.first_name}}&nbsp;{{object.user.last_name}}
+    </a>
+    <span *ngIf="!object.user">n/a</span>
+  </p>
+  <div *ngIf="object.transaction && object.transaction.id">
+    <p>
+      Transaction:&nbsp;{{object.transaction.external_id}} ({{object.transaction.status}})
+    </p>
+    <p>
+      Gateway:&nbsp;{{object.transaction.gateway.display_name}}
+    </p>
+    <p>
+      Fee:&nbsp;{{object.transaction.fee}} {{object.transaction.currency}}
+    </p>
+  </div>
+</div>

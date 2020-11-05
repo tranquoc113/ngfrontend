@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Extend volume {{data.volume.name}}</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="extendVolume()" [formGroup]="extendForm">
+    <app-form-errors #formErrors [formGroup]="extendForm"></app-form-errors>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Size" type="number" formControlName="size" required>
+      <mat-error>{{backendErrors['size'] || 'Field is required' }}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button disabled="{{!extendForm.controls.size.dirty}}" (click)="extendVolume()"
+          [color]="'primary'">
+    Extend
+  </button>
+</div>

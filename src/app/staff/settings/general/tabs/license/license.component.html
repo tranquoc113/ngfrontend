@@ -1,0 +1,20 @@
+<div fxLayout="column" class="fl-content-min-height">
+  <app-fl-backdrop *ngIf="loadingLicenseInfo === true"></app-fl-backdrop>
+  <div *ngIf="licenseInfo" fxLayout="column" fxLayoutGap="5px" class="fl-margin-bottom fl-padding-left fl-content">
+    <div fxLayout="row" *ngFor="let key of licenseInfoKeys()" class="license-info-row">
+      <p class="fl-detail" fxFlex="50">
+        {{key}}
+      </p>
+      <p class="fl-detail" fxFlex="auto">
+        {{licenseInfo[key]}}
+      </p>
+    </div>
+  </div>
+  <div *ngIf="licenseInfo" fxLayout="row" fxLayoutAlign="end right">
+    <button mat-button (click)="refreshLicense()" color="primary">Refresh license</button>
+    <button mat-button (click)="setNewLicense()" color="primary">Set new license</button>
+  </div>
+  <div *ngIf="!licenseInfo">
+    <p class="fl-detail">Could not load license info</p>
+  </div>
+</div>

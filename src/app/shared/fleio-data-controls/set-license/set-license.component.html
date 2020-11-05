@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Set license</h1>
+<div mat-dialog-content>
+  <app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+  <div [formGroup]="formOptions" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="formOptions" class="fl-margin-bottom"></app-form-errors>
+    <mat-form-field fxFlex="100">
+      <textarea matInput rows="10" placeholder="License key" type="text" formControlName="licenseKey" required>
+      </textarea>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [disabled]="!this.licenseKey.value" (click)="save()"
+          [color]="'primary'">
+    Set license
+  </button>
+</div>

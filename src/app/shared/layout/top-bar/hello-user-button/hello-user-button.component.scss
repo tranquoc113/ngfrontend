@@ -1,0 +1,40 @@
+.hello-user-button {
+  font-size: 20px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.hello-user-first-menu-item {
+  padding: 15px 40px 15px 15px;
+}
+
+.user-details-wrapper {
+  max-width: 165px;
+  padding-top: 10px;
+  word-wrap: break-word
+}
+
+.fl-notification-circle {
+  background-color: rgb(83, 109, 254);
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  font-size: 10px;
+  color: #fff;
+  line-height: 20px;
+  text-align: center;
+  position: absolute;
+  z-index: 999;
+  top: 13px;
+  right: 12px;
+}
+
+.fl-notification-circle-gravatar {
+  top: -2px;
+  right: -5px;
+}

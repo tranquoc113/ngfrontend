@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content [ngClass]="{'flags-dialog': !!data.flags}">
+  <p>{{data.message}}</p>
+  <p *ngIf="data.importantMessage" class="fl-important-text">{{data.importantMessage}}</p>
+  <ng-container *ngIf="data.flags">
+    <div *ngFor="let flag of data.flags">
+      <mat-checkbox [(ngModel)]="flag.selected" color="primary">
+        {{flag.message}}
+      </mat-checkbox>
+      <div *ngIf="flag.warningOnSelect && flag.selected">
+        <span class="fl-red-color">{{flag.warningOnSelect}}</span>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="closeNo()">No</button>
+  <button mat-button (click)="closeYes()" [color]="'primary'" cdkFocusInitial>Yes</button>
+</div>

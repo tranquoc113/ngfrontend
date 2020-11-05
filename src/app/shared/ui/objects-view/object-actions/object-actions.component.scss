@@ -1,0 +1,20 @@
+.actions-container > div {
+  display: inline;
+}
+
+.actions-container app-icon mat-icon {
+  vertical-align: middle;
+}
+
+.actions-menu {
+  float: right;
+}
+
+.fab-container button, .fab-container a {
+  display: block;
+}
+
+.fab-container button:not(:last-child), .fab-container a:not(:last-child) {
+  margin-bottom: 10px;
+}
+

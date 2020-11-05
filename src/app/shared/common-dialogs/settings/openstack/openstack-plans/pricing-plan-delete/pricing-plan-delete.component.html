@@ -1,0 +1,24 @@
+<h1 *ngIf="data && data.planToDelete" mat-dialog-title>Delete plan {{data.planToDelete.name}}</h1>
+<div mat-dialog-content>
+  <p *ngIf="data && data.planToDelete">Select another plan to migrate services from {{data.planToDelete.name}}</p>
+  <form [formGroup]="deleteOptions">
+    <app-form-errors #formErrors [formGroup]="deleteOptions" [maxWidth]="'300px'"></app-form-errors>
+    <span class="fl-important-text" *ngIf="alternativePlans && !alternativePlans.length">
+      Cannot delete this plan. No other plan to migrate to.
+    </span>
+    <mat-form-field *ngIf="alternativePlans && alternativePlans.length" class="fl-margin-top-medium">
+      <mat-select formControlName="selectedPlan" placeholder="Plan to migrate">
+        <mat-option *ngFor="let alternativePlan of alternativePlans" [value]="alternativePlan.id">
+          {{alternativePlan.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button disabled="{{!(this.selectedPlan.value > 0)}}" (click)="delete()"
+          [color]="'primary'">
+    Delete
+  </button>
+</div>

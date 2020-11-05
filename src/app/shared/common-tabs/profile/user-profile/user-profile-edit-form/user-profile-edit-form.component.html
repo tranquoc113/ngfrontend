@@ -1,0 +1,70 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="profileForm" fxLayout="column" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="profileForm"></app-form-errors>
+  <div fxLayout="row" fxLayout.lt-md="column">
+    <mat-form-field fxFlex="48">
+      <input matInput placeholder="First name" type="text" formControlName="first_name" required>
+      <mat-error>{{fieldErrors['first_name']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="50" fxFlexOffset="2" fxFlexOffset.lt-md="0">
+      <input matInput placeholder="Last name" type="text" formControlName="last_name" required>
+      <mat-error>{{fieldErrors['last_name']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayout.lt-md="column">
+    <mat-form-field fxFlex="48">
+      <input matInput placeholder="Email address" type="email" formControlName="email" required>
+      <mat-error>{{fieldErrors['email']}}</mat-error>
+    </mat-form-field>
+    <app-phone-input [phoneNumber]="phoneNumber" (changedPhone)="onChangedPhone($event)" fxFlex="50"
+                     fxFlexOffset="2" fxFlexOffset.lt-md="0" #phoneNumberInputComponent>
+    </app-phone-input>
+    <input type="hidden" formControlName="mobile_phone_number">
+  </div>
+  <div fxLayout="row">
+    <mat-form-field fxFlex="48" fxFlex.xs="38">
+      <input matInput placeholder="Old password"
+             [attr.type]="showOldPasswordText ? 'text' : 'password'" formControlName="old_password">
+      <mat-error>{{fieldErrors['old_password']}}</mat-error>
+    </mat-form-field>
+    <div>
+      <a (mousedown)="showOldPasswordText = true;"
+         (mouseup)="showOldPasswordText = false;"
+         class="fl-margin-top-medium"
+         mat-icon-button
+         fl-tooltip="Hold button to reveal password">
+        <mat-icon>visibility</mat-icon>
+      </a>
+    </div>
+    <mat-form-field fxFlex="50" fxFlex.xs="40" fxFlexOffset="2">
+      <input matInput placeholder="Password"
+             [attr.type]="showPasswordText ? 'text' : 'password'" formControlName="password">
+      <mat-error>{{fieldErrors['password']}}</mat-error>
+    </mat-form-field>
+    <div>
+      <a (mousedown)="showPasswordText = true;"
+         (mouseup)="showPasswordText = false;"
+         class="fl-margin-top-medium"
+         mat-icon-button
+         fl-tooltip="Hold button to reveal password">
+        <mat-icon>visibility</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div fxLayout="row">
+    <mat-form-field fxFlex="48">
+      <mat-select formControlName="language" placeholder="Language">
+        <mat-option *ngFor="let languageOpt of createOptions.languages" [value]="languageOpt[0]">
+          {{languageOpt[1]}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field fxFlexOffset="2" fxFlex="50">
+      <mat-select formControlName="theme" placeholder="Theme">
+        <mat-option *ngFor="let themeName of config.current.settings.availableThemes" [value]="themeName">
+          {{themeName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</form>

@@ -1,0 +1,10 @@
+<div *ngIf="visible" fxLayout="row" class="content" [style]="{maxWidth: this.maxWidth}">
+  <div class="messages" fxFlex="auto">
+    <div fxLayout="column">
+        <mat-error *ngFor="let message of errorMessages">{{ message }}</mat-error>
+    </div>
+  </div>
+  <div fxFlex="none" class="button" fxFlexAlign="end">
+    <button mat-raised-button (click)="hide()">Hide</button>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="contactForm" *ngIf="createOptions" fxLayout="column" fxLayoutAlign="center stretch">
+  <app-form-errors #formErrors [formGroup]="contactForm"></app-form-errors>
+  <mat-form-field>
+    <input matInput placeholder="Client" type="text" formControlName="client" required
+           [matAutocomplete]="autocompleteClient" (click)="clearClient()">
+    <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+      <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+        {{client.first_name}} {{client.last_name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['client']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="First name" type="text" formControlName="first_name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label for="last_name">Last name</mat-label>
+    <input matInput id="last_name" type="text" formControlName="last_name" required>
+    <mat-error>{{fieldErrors['last_name']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Account e-mail address" type="text" formControlName="email" required>
+    <mat-error>{{fieldErrors['email']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Country" type="text" formControlName="country" required
+           [matAutocomplete]="autocompleteCountry" (click)="clearCountry()">
+    <mat-autocomplete #autocompleteCountry="matAutocomplete" [displayWith]="countryDisplay">
+      <mat-option *ngFor="let country of filteredCountries$ | async" [value]="country">
+        {{country.label}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['country']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Company" type="text" formControlName="company">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="VAT ID" type="text" formControlName="vat_id">
+    <mat-error>{{fieldErrors['vat_id']}}</mat-error>
+  </mat-form-field>
+  <mat-checkbox formControlName="tax_exempt" [color]="'primary'">
+    Tax exempt
+  </mat-checkbox>
+  <mat-form-field>
+    <input matInput placeholder="Address line 1" type="text" formControlName="address1" required>
+    <mat-error>{{fieldErrors['address1']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Address line 2" type="text" formControlName="address2">
+  </mat-form-field>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+    <mat-form-field fxFlex="33">
+      <input matInput placeholder="Country/state" type="text" formControlName="state" required>
+      <mat-error>{{fieldErrors['state']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="33">
+      <input matInput placeholder="City" type="text" formControlName="city" required>
+      <mat-error>{{fieldErrors['city'] }}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="33">
+      <input matInput placeholder="Zip code" type="text" formControlName="zip_code" required>
+      <mat-error>{{fieldErrors['zip_code']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-form-field>
+    <input matInput placeholder="Phone" type="text" formControlName="phone" required>
+    <mat-error>{{fieldErrors['phone']}}</mat-error>
+  </mat-form-field>
+  <app-custom-fields #customFields
+                     *ngIf="createOptions.custom_fields"
+                     [backendErrors]="backendErrors"
+                     [customFieldsDefinition]="createOptions.custom_fields"
+                     [liveForm]="getLiveFormVal()"
+                     [formModel]="object"></app-custom-fields>
+</form>

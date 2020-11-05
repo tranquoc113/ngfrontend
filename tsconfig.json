@@ -1,0 +1,56 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "paths": {
+      "@billing-service-dialogs/*": [
+        "src/app/shared/common-dialogs/billing/services/*"
+      ],
+      "@billing-service-tabs/*": [
+        "src/app/shared/common-tabs/billing/services/*"
+      ],
+      "@openstack-api-users-dialogs/*": [
+        "src/app/shared/common-dialogs/cloud/api-users/*"
+      ],
+      "@openstack-api-users-tabs/*": [
+        "src/app/shared/common-tabs/openstack/api-users/*"
+      ],
+      "@openstack-images-tabs/*": [
+        "src/app/shared/common-tabs/openstack/images/*"
+      ],
+      "@shared/*": [
+        "src/app/shared/*"
+      ],
+      "@objects-view/*": [
+        "src/app/shared/ui/objects-view/*"
+      ],
+      "@fleio-api/*": [
+        "src/app/shared/fleio-api/*"
+      ]
+    },
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
+    "types": [
+      "jasmine",
+      "node"
+    ]
+  }
+}

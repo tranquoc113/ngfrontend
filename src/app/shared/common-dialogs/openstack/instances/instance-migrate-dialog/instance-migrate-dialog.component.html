@@ -1,0 +1,49 @@
+<h1 *ngIf="data && data.instance" mat-dialog-title>Migrate instance {{data.instance.name}}</h1>
+<div mat-dialog-content class="position-relative migrate-dialog">
+  <app-fl-backdrop *ngIf="loading" [spinnerDiameter]="50"></app-fl-backdrop>
+  <div *ngIf="migrateOptions && migrateOptions.hypervisors.length === 0">No other hosts available</div>
+  <form appFormSubmit (ngSubmit)="migrate()" [formGroup]="instanceMigrateForm" fxLayout="column"
+        *ngIf="migrateOptions && migrateOptions.hypervisors.length > 0">
+    <app-form-errors #formErrors [formGroup]="instanceMigrateForm"></app-form-errors>
+    <mat-form-field>
+      <mat-select formControlName="hypervisor" placeholder="Hypervisor" required>
+        <mat-option *ngFor="let hypervisor of migrateOptions.hypervisors" [value]="hypervisor">
+          {{hypervisor.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{backendErrors['hypervisor'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="live_migrate">
+        Live migrate
+      </mat-checkbox>
+    </div>
+    <mat-radio-group
+      *ngIf="instanceMigrateForm.controls.live_migrate.value === true"
+      class="fl-margin-top"
+      aria-labelledby="Block migration"
+      formControlName="block_migration">
+      <mat-radio-button [color]="'primary'" class="block-migration-radio-choices" [value]="false">
+        Shared migration
+      </mat-radio-button>
+      <mat-radio-button class="fl-margin-left" [color]="'primary'" [value]="true">
+        Block migration
+      </mat-radio-button>
+    </mat-radio-group>
+    <div class="fl-margin-top" *ngIf="instanceMigrateForm.controls.live_migrate.value === true">
+      <mat-checkbox [color]="'primary'" formControlName="over_commit">
+         Disk overcommit
+      </mat-checkbox>
+    </div>
+  </form>
+  <div class="mat-error fl-margin-top">Note that migration may fail if target hypervisor does not have enough disk
+    space. Use live migration if you want to overcommit.</div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="migrate()"
+          [disabled]="migrateOptions && migrateOptions.hypervisors.length === 0"
+          [color]="'primary'">
+    Migrate instance
+  </button>
+</div>

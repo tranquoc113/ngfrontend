@@ -1,0 +1,21 @@
+.total {
+  float: right;
+}
+
+.details-row {
+  height: 0;
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.price-cell {
+  float: right;
+  width: 25%;
+}
+
+.indent {
+  margin-left: 20px;
+}

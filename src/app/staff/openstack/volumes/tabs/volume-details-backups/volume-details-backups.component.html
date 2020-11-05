@@ -1,0 +1,77 @@
+<div *ngIf="backups" class="fl-content fl-content-min-height">
+  <div fxLayout="column">
+    <div fxLayout="row">
+      <button mat-button (click)="createNewBackup()" color="primary">
+        Create new backup
+      </button>
+    </div>
+  </div>
+
+  <table class="inline-table" mat-table [dataSource]="backups.objects">
+    <ng-container matColumnDef="(status)">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td class="position-relative" mat-cell *matCellDef="let backup">
+        <app-status-line [direction]="LineDirection.Vertical"
+                         [type]="backupStatus[backup.id].type" [color]="backupStatus[backup.id].value">
+        </app-status-line>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td class="position-relative" mat-cell *matCellDef="let backup">
+        <a class="fl-ellipsis-text" [routerLink]="config.getPanelUrl('openstack/volume-backups/') + backup.id">
+          {{backup.name}}<br><span class="fl-sub-text">{{backup.status | uppercase}}</span>
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="id/date">
+      <th mat-header-cell *matHeaderCellDef>ID / Date</th>
+      <td mat-cell *matCellDef="let backup">
+        <a class="fl-ellipsis-text" [routerLink]="config.getPanelUrl('openstack/volume-backups/') + backup.id">
+          <span>{{backup.id}}</span><br>
+          <span class="fl-sub-text">Created at {{backup.created_at | date:'medium'}}</span>
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="incremental">
+      <th mat-header-cell *matHeaderCellDef>Incremental</th>
+      <td mat-cell *matCellDef="let backup">
+        <a class="fl-ellipsis-text" [routerLink]="config.getPanelUrl('openstack/volume-backups/') + backup.id">
+          {{backup.is_incremental}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="client">
+      <th mat-header-cell *matHeaderCellDef>Client</th>
+      <td mat-cell *matCellDef="let backup">
+        <a *ngIf="backup.client" class="fl-ellipsis-text"
+           [routerLink]="config.getPanelUrl('client-users/clients/') + backup.client.id">
+          <span>{{backup.client.name || backup.client.id}}</span>
+        </a>
+        <a *ngIf="!backup.client" class="fl-table-link" ui-sref="openstackVolumeBackupDetails({'id': backup.id})">
+          &nbsp;
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="(actions)">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let backup">
+        <app-object-actions [objectActions]="backupActions[backup.id]" [maxVisibleActions]="3">
+        </app-object-actions>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['(status)', 'name', 'id/date', 'incremental', 'client', '(actions)']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['(status)', 'name', 'id/date', 'incremental', 'client', '(actions)'];">
+    </tr>
+  </table>
+  <div *ngIf="previousPage || nextPage" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <button mat-button (click)="changePage('previous')"
+            [disabled]="!previousPage" color="primary">
+      Previous page&nbsp;<ng-container *ngIf="previousPage">({{currentPage - 1}})</ng-container>
+    </button>
+    <button mat-button (click)="changePage('next')"
+            [disabled]="!nextPage === true" color="primary">
+      Next page&nbsp;<ng-container *ngIf="nextPage">({{currentPage + 1}})</ng-container>
+    </button>
+  </div>
+</div>

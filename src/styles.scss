@@ -1,0 +1,655 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+@font-face {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/ProximaNova-Regular.otf');
+  src: local('Proxima Nova'), url('assets/fonts/ProximaNova-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 500;
+  src: url('assets/fonts/ProximaNova-Semibold.otf');
+  src: local('Proxima Nova'), url('assets/fonts/ProximaNova-Semibold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  src: url('assets/fonts/ProximaNova-Bold.otf');
+  src: local('Proxima Nova'), url('assets/fonts/ProximaNova-Bold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: normal;
+  src: url('assets/fonts/ProximaNova-Regular.otf');
+  src: local('Proxima Nova'), url('assets/fonts/ProximaNova-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Fleio-Icons';
+  font-display: block;
+  src: url('assets/fonts/Fleio-Icons.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@import "~@angular/material/theming";
+@import "assets/styles/fleio-tooltips";
+@import "assets/themes/spring.theme";
+@import "assets/themes/navy.theme";
+@import "assets/themes/dusk.theme";
+
+$general-typography: mat-typography-config(
+  $font-family: '"Proxima Nova", "Helvetica", "Arial", sans-serif',
+  $body-1: mat-typography-level(15px, 20px, 400)
+);
+
+@include mat-core($general-typography);
+
+* {
+  font-family: "Proxima Nova", "Helvetica", "Arial", monospace;
+}
+
+body, html {
+  font-size: 14px;
+  background-color: #F1F1F1;
+  margin: 0;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+.fl-icons {
+  font-family: 'Fleio-Icons', monospace !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'flig';
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.no-hover-effect.mat-button:hover .mat-button-focus-overlay,
+.no-hover-effect.mat-stroked-button:hover .mat-button-focus-overlay {
+  opacity: 0;
+}
+
+.mat-menu-content:not(:empty) {
+  padding: 0 !important;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.vertical-align-middle {
+  vertical-align: middle;
+}
+
+.fl-margin-top {
+  margin-top: 15px !important;
+}
+
+.fl-margin-left {
+  margin-left: 24px !important;
+}
+
+.fl-margin-left-small {
+  margin-left: 8px !important;
+}
+
+.fl-margin-right {
+  margin-right: 24px !important;
+}
+
+.fl-padding-right {
+  padding-right: 24px !important;
+}
+
+.fl-margin-right-small {
+  margin-right: 8px !important;
+}
+
+.fl-margin-top-medium {
+  margin-top: 10px !important;
+}
+
+.fl-margin-top-small {
+  margin-top: 5px !important;;
+}
+
+.fl-subheader {
+  font-size: 25px;
+  letter-spacing: .01em;
+  line-height: 24px;
+}
+
+.fl-subheader-md {
+  font-size: 22px;
+  letter-spacing: 0.01em;
+  line-height: 21px;
+}
+
+.fl-tinymce-placeholder {
+  min-height: 172px;
+}
+
+.fl-content {
+  padding: 25px;
+}
+
+.fl-detail {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.fl-card-fixed,
+.fl-card-fixed-md,
+.fl-card-fixed-sm,
+.fl-card-styling {
+  width: 95%;
+  position: relative;
+  margin: 0 auto 50px;
+  padding: 0 !important;
+}
+
+.fl-card-fixed .mat-card-header-text,
+.fl-card-fixed-md .mat-card-header-text,
+.fl-card-fixed-sm .mat-card-header-text,
+.fl-card-styling .mat-card-header-text {
+  width: 100%;
+  background: #f8f8f8;
+  margin: 0;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  padding-left: 16px;
+  overflow: hidden;
+}
+
+.fl-card-fixed .mat-card-content, .fl-card-fixed .mat-card-actions,
+.fl-card-fixed-md .mat-card-content, .fl-card-fixed-md .mat-card-actions,
+.fl-card-fixed-sm .mat-card-content, .fl-card-fixed-sm .mat-card-actions,
+.fl-card-styling .mat-card-content, .fl-card-styling .mat-card-actions {
+  padding: 16px;
+  margin-bottom: 10px !important;
+}
+
+.fl-card-styling .object-actions {
+  top: 20px;
+}
+
+.fl-card-fixed {
+  max-width: 1320px;
+}
+
+.fl-card-fixed-md {
+  max-width: 920px;
+}
+
+.fl-card-fixed-sm {
+  max-width: 460px;
+}
+
+// form control styles
+.one-third-width {
+  width: 32%;
+}
+
+.one-third-width-spacing {
+  margin-right: 1%;
+}
+
+.half-width {
+  width: 49%;
+}
+
+.half-width-spacing {
+  margin-right: 1%;
+}
+
+.two-thirds-width {
+  width: 64%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.checkbox-container {
+  display: inline-block;
+}
+
+.actions-container app-icon mat-icon {
+  vertical-align: middle;
+}
+
+.fl-ellipsis-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+  //noinspection CssInvalidPropertyValue
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding-right: 1em;
+}
+
+.filtering-input-width {
+  width: 90%;
+}
+
+.fl-help-text {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-left: 50px;
+}
+
+.fl-help-text h3 {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.010em;
+  line-height: 1.2em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.fl-help-text h3:not(:first-child) {
+  margin: 8px 0 0;
+}
+
+.fl-help-text p {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.010em;
+  margin: 0;
+  line-height: 1.6em;
+}
+
+.fl-margin-bottom {
+  margin-bottom: 22px;
+}
+
+.fl-margin-bottom-small {
+  margin-bottom: 5px;
+}
+
+.fl-radio-group {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.fl-radio-group mat-label {
+}
+
+.fl-radio-group mat-radio-button {
+  margin-top: 10px;
+}
+
+.fl-important-text {
+  color: red;
+}
+
+.fl-no-margin-bottom {
+  margin-bottom: 0;
+}
+
+.fl-no-padding-bottom {
+  padding-bottom: 0;
+}
+
+.fl-no-margin-top {
+  margin-top: 0;
+}
+
+.fl-bordered-box {
+  padding: 20px 10px;
+  margin-bottom: 24px;
+  border: 1px solid #e7e7e7;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  background: #fff;
+  overflow: auto;
+}
+
+.fl-bordered-box-help-txt span {
+  font-size: 13px;
+}
+
+.fl-bold {
+  font-weight: 500;
+}
+
+td .actions-container {
+  float: right;
+}
+
+.fl-icon-off {
+  color: yellow;
+  background: linear-gradient(to right bottom, transparent 47.75%, yellow, currentColor 50.5%, transparent 40.25%),
+  linear-gradient(to left bottom, transparent 47.75%, yellow, currentColor 50.5%, transparent 40.25%);
+}
+
+.fl-icon-yellow {
+  color: #FFEB3B !important;
+}
+
+.fl-float-right {
+  float: right;
+}
+
+.fl-content-min-height {
+  min-height: 250px;
+}
+
+.add-item-button {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.wrap-text-content {
+  word-break: break-all;
+}
+
+.fl-indent {
+  margin-left: 10px;
+}
+
+.fl-double-indent {
+  margin-left: 20px;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.no-overflow-hidden {
+  overflow: visible;
+}
+
+.fl-error {
+  position: absolute;
+  top: 34px;
+  font-size: 12px;
+}
+
+.right-align {
+  text-align: right !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+@media screen and (max-width: 960px) {
+  /* sm and lower */
+  .fl-help-text {
+    padding-left: unset;
+    margin-bottom: 35px;
+  }
+}
+
+.fl-padding-lr {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.fl-table {
+  width: 100%;
+  max-width: 100%;
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  text-align: left;
+  background-color: white;
+  table-layout: fixed;
+}
+
+.fl-grid > tbody > tr > td {
+  color: #000;
+  opacity: 0.87;
+}
+
+.fl-grid > tbody > tr:hover {
+  background-color: #EEEEEE;
+}
+
+.fl-grid > thead > tr > th {
+  height: 48px;
+  font-weight: 500;
+  color: #000000;
+  opacity: 0.54;
+}
+
+table tbody tr.v-middle td {
+  vertical-align: middle;
+}
+
+.fl-cursor-pointer {
+  cursor: pointer;
+}
+
+.fl-table tr {
+  border-bottom: 1px solid #ececec;
+  margin: 0;
+  padding-left: 24px;
+}
+
+.fl-table.fl-smaller-rows-table td {
+  height: 35px;
+}
+
+.fl-red-color {
+  color: red !important;
+}
+
+.fl-green-color {
+  color: green !important;
+}
+
+.fl-orange-color {
+  color: orange !important;
+}
+
+.fl-gray-color {
+  color: gray !important;
+}
+
+.fl-dialog {
+  max-width: 500px;
+  width: 500px;
+  min-height: 100px;
+  position: relative;
+}
+
+@media screen and (max-width: 720px) {
+  .fl-dialog {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+// uncomment this to make dialog full width on mobile
+//@media screen and (max-width: 480px) {
+//  .cdk-overlay-pane {
+//    max-width: 99vw !important;
+//    width: 99vw !important;
+//  }
+//}
+
+.transparent-background {
+  background: transparent !important;
+}
+
+.fl-block {
+  display: block !important;
+}
+
+.on-dialog-card {
+  width: 100% !important;
+}
+
+.fl-light-green-bg {
+  background-color: #42bd41 !important;
+}
+
+.fl-red-bg {
+  background-color: #e03e2d !important;
+}
+
+/* sfa */
+.sfa-option {
+  background-color: #fafafa;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+}
+
+.sfa-option-google_authenticator {
+  background: #fafafa url('assets/img/common/sfa/for-google.png') 95% center / 21% no-repeat !important;
+  /* color used for image: #ddd */
+}
+
+.sfa-option-sms_authenticator {
+  background: #fafafa url('assets/img/common/sfa/for-sms.png') 95% center / 21% no-repeat !important;
+  /* color used for image: #ddd */
+}
+
+.sfa-option:hover {
+  background-color: #eee !important;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+}
+
+.sfa-option a {
+  display: inline-block;
+  width: 100%;
+  padding-top: 25px;
+  padding-left: 20px;
+  padding-bottom: 25px;
+}
+
+.sfa-option a span:first-child {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.sfa-option a span:last-child {
+  max-width: 200px !important;
+  margin-top: 3px;
+}
+
+.sfa-option a span:last-child.sfa-help-text {
+  display: block !important;
+}
+
+.sfa-option .fl-tag {
+  display: inline-block;
+  margin-top: 5px;
+  margin-left: 3px;
+}
+
+.chart-legend-wrap {
+  max-height: 65px !important;
+  min-height: 65px !important;
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.chart-legend-wrap::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.chart-legend-wrap::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, .26);
+}
+
+.chart-legend .chart-legend-item {
+  width: auto !important;
+  padding: 8px !important;
+  float: left;
+}
+
+.chart-legend .chart-legend-item span {
+  position: relative;
+  padding: 4px 6px;
+  border-radius: 13px;
+  color: white;
+  z-index: 2;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}
+
+.fl-list-header {
+  line-height: 24px;
+  vertical-align: middle;
+  padding: 5px 0 5px 24px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.fl-slightly-gray {
+  background-color: #F8F8F8;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.mat-dialog-actions {
+  justify-content: flex-end;
+}

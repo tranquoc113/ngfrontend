@@ -1,0 +1,392 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="pricingRuleForm" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="pricingRuleForm"></app-form-errors>
+  <div fxLayout="row">
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="resource" placeholder="Resource type" required
+                  (selectionChange)="selectedResourceChanged()">
+        <mat-option *ngFor="let resource of createOptions.resources" [value]="resource.id">{{resource.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['resource']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row">
+    <mat-form-field fxFlex="100">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="display_name" required type="text">
+      <mat-error>{{fieldErrors['display_name']}}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div fxLayout="row" class="fl-margin-bottom-small"
+       *ngIf="selectedResource && selectedResource.type !== 'internal'">
+    Start date and end date are useful when you want to change pricing. If you're not making any pricing change,
+    just leave the fields empty. To change pricing, set an end date for the old rule and a start date for the new
+    pricing rule. When start date is empty the rule applies "since the beginning of time" and when the end date is
+    empty the rule applies "until the end of time". A [start date - end date] time interval includes the full start
+    date and the full end date.
+  </div>
+  <div fxLayout="row" *ngIf="selectedResource && selectedResource.type !== 'internal'">
+    <mat-form-field fxFlex="45">
+      <input matInput [matDatepicker]="startDatePicker" formControlName="start_dt"
+             placeholder="Start date">
+      <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #startDatePicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field fxFlex="50" fxFlexOffset="5">
+      <input matInput [matDatepicker]="endDatePicker" formControlName="end_dt"
+             placeholder="End date">
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div fxLayout="row" *ngIf="hasPricingAttribute()">
+    <mat-form-field *ngIf="selectedResource && selectedResource.attribute_display" fxFlex="33">
+      <mat-select formControlName="attribute"
+                  (selectionChange)="canSelectUnitForAttribute()"
+                  placeholder="Attribute" required>
+        <mat-option [value]="' '">existence</mat-option>
+        <ng-container *ngFor="let attribute of attributes">
+          <mat-option *ngIf="attribute.type === 'integer'" [value]="attribute.name">{{attribute.name}}</mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>{{fieldErrors['attribute']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedResource && selectedResource.attribute_display" fxFlex="33">
+      <mat-select formControlName="attribute_unit"
+                  placeholder="Attribute unit" required>
+        <ng-container *ngFor="let key of objectKeys(createOptions.attribute_units)">
+          <mat-option [value]="key">{{createOptions.attribute_units[key]}}</mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>{{fieldErrors['attribute_unit']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedResource && selectedResource.attribute_display" fxFlex="33">
+      <mat-select formControlName="time_unit"
+                  placeholder="Time unit" required>
+        <ng-container *ngFor="let key of objectKeys(createOptions.time_units)">
+          <mat-option [value]="key">{{createOptions.time_units[key]}}</mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>{{fieldErrors['time_unit']}}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div fxLayout="row" *ngIf="selectedResource && selectedResource.metric_display">
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="attribute"
+                  placeholder="Metric" required>
+        <ng-container *ngFor="let metric of selectedResource.metrics">
+          <mat-option [value]="metric.name">{{metric.display_name}}</mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>{{fieldErrors['attribute']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="fl-margin-bottom" fxLayout="row"
+       *ngIf="selectedResource && selectedResource.metric_display && getMetricHelpText()">
+    {{getMetricHelpText()}}
+  </div>
+  <div fxLayout="row" class="fl-margin-bottom" *ngIf="selectedResource && getMetricPerSecondBillingAvailability()">
+    <mat-checkbox formControlName="calculate_metrics_pricing_per_time_unit" color="primary"
+                  (change)="changedCalculateMetrics($event)">
+      Calculate metrics pricing per time unit
+    </mat-checkbox>
+  </div>
+  <div fxLayout="row" *ngIf="selectedResource && pricingRuleForm.controls.calculate_metrics_pricing_per_time_unit.value">
+    <mat-form-field fxFlex="33">
+      <mat-select formControlName="time_unit"
+                  placeholder="Time unit" required>
+        <ng-container *ngFor="let key of objectKeys(createOptions.time_units)">
+          <mat-option [value]="key">{{createOptions.time_units[key]}}</mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>{{fieldErrors['time_unit']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" *ngIf="selectedResource && selectedResource.metric_display" class="fl-margin-bottom">
+    <span class="pr-header">Pricing:</span>
+    <mat-radio-group
+      aria-labelledby="rate_type"
+      (change)="resetPrices()"
+      [(ngModel)]="rateType"
+      [ngModelOptions]="{standalone: true}">
+      <mat-radio-button class="rate-type-radio-btns" [color]="'primary'" [value]="'flat'">
+        Flat
+      </mat-radio-button>
+      <mat-radio-button class="rate-type-radio-btns" [color]="'primary'" [value]="'tiered'">
+        Tiered
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div formGroupName="pricing">
+    <div formArrayName="prices" fxLayout="row"
+      *ngFor="let item of pricingRuleForm.get('pricing').get('prices')['controls']; let i = index;">
+        <div [formGroupName]="i" [fxFlex]="rateType === 'flat' ? 25 : 100">
+          <mat-form-field *ngIf="rateType !== 'flat'" fxFlex="97">
+            <mat-label>From</mat-label>
+            <input (change)="reCalculateTiers()" matInput formControlName="f" placeholder="From" type="number" required>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-form-field *ngIf="rateType !== 'flat'" fxFlex="97" fxFlexOffset="3">
+            <mat-label>To</mat-label>
+            <input matInput formControlName="t" placeholder="To" type="text">
+          </mat-form-field>
+          <mat-form-field fxFlex="100" [fxFlexOffset]="rateType === 'flat' ? 0 : 3">
+            <mat-label>Price ({{pricingPlan ? pricingPlan.currency : ''}})</mat-label>
+            <input matInput formControlName="p" type="number" required>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <div *ngIf="rateType !== 'flat'">
+            <button (click)="removeTier(i)" class="fl-margin-top-medium" fl-tooltip="Remove tier" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+    </div>
+    <mat-error class="fl-margin-bottom">{{fieldErrors['pricing']}}</mat-error>
+  </div>
+  <div *ngIf="rateType !== 'flat'" class="fl-margin-bottom">
+    <button mat-mini-fab class="add-item-button" fl-tooltip="Add tier" fl-tooltip-direction="right" (click)="addTier()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <div *ngIf="selectedResource && (selectedResource.attribute_display || selectedResource.type === 'internal')"
+       fxLayout="row" class="fl-margin-bottom">
+    <span class="pr-header">Filters</span>
+  </div>
+
+  <ng-container *ngIf="selectedResource && (selectedResource.attribute_display || selectedResource.type === 'internal')">
+    <div formArrayName="conditions" fxLayout="row" fxLayout.lt-sm="column"
+      *ngFor="let item of pricingRuleForm.controls.conditions['controls']; let i = index;">
+        <div [formGroupName]="i" fxFlex="100" fxLayout.lt-sm="column">
+          <mat-form-field fxFlex="97">
+            <mat-select formControlName="attribute"
+                        (selectionChange)="filterAttributeChanged(i)"
+                        placeholder="Attribute name" required>
+              <mat-option *ngFor="let attribute of attributes" [value]="attribute.name">{{attribute.name}}</mat-option>
+            </mat-select>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="97" fxFlexOffset="3">
+            <mat-select formControlName="operator"
+                        placeholder="Operator" required>
+              <mat-option
+                *ngFor="let key of objectKeys(getOperatorsForAttribute(pricingRuleForm.controls.conditions['controls'][i].value.attribute))"
+                [value]="key">
+                {{getOperatorsForAttribute(pricingRuleForm.controls.conditions['controls'][i].value.attribute)[key]}}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="97" fxFlexOffset="3"
+                          *ngIf="getFilterValueInputType(
+                            pricingRuleForm.controls.conditions['controls'][i].value.attribute
+                          ) === 'choices'">
+            <mat-select formControlName="value"
+                        placeholder="Value" required>
+              <mat-option
+                *ngFor="let item of attrByName(conditions['controls'][i].value.attribute).choices; let index = index"
+                [value]="item">
+                {{attrByName(conditions['controls'][i].value.attribute).choices_display ?
+                attrByName(conditions['controls'][i].value.attribute).choices_display[index]:item}}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="97" fxFlexOffset="3"
+                          *ngIf="getFilterValueInputType(
+                            pricingRuleForm.controls.conditions['controls'][i].value.attribute
+                          ) === 'textarea'">
+            <textarea matInput formControlName="value" placeholder="Value"></textarea>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="97" fxFlexOffset="3"
+                          *ngIf="getFilterValueInputType(
+                            pricingRuleForm.controls.conditions['controls'][i].value.attribute
+                          ) === 'number'">
+            <input matInput formControlName="value" placeholder="Value" type="number">
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="97" fxFlexOffset="3"
+                          *ngIf="getFilterValueInputType(
+                            pricingRuleForm.controls.conditions['controls'][i].value.attribute
+                          ) === 'datetime'">
+            <input matInput [matDatepicker]="picker" formControlName="value" placeholder="Choose a date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="97" fxFlexOffset="3"
+                          *ngIf="showAttributeUnitForFiltersModifiers(
+                            pricingRuleForm.controls.conditions['controls'][i].value.attribute
+                          )">
+            <mat-select formControlName="attribute_unit"
+                        placeholder="Attribute unit" required>
+              <mat-option
+                *ngFor="let key of objectKeys(createOptions.attribute_units)"
+                [value]="key">
+                {{createOptions.attribute_units[key]}}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <div>
+            <button (click)="removeFilter(i)" class="fl-margin-top-medium" fl-tooltip="Remove filter" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+    </div>
+  </ng-container>
+
+  <div fxLayout="row"
+       *ngIf="selectedResource && (selectedResource.attribute_display || selectedResource.type === 'internal')">
+    <button mat-mini-fab class="add-item-button" fl-tooltip="Add filter" fl-tooltip-direction="right"
+            (click)="addFilter()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <!-- MODIFIERS -->
+  <div fxLayout="row" class="fl-margin-top fl-margin-bottom"
+  *ngIf="selectedResource && selectedResource.attribute_display">
+    <span class="pr-header">Price modifiers</span>
+  </div>
+
+  <ng-container *ngIf="selectedResource && selectedResource.attribute_display">
+    <div formArrayName="modifiers"
+      *ngFor="let item of pricingRuleForm.controls.modifiers['controls']; let i = index;">
+        <div [formGroupName]="i" fxFlex="100" fxLayout.lt-sm="column">
+          <div fxLayout="row" fxLayout.lt-sm="column">
+            <mat-form-field fxFlex="20">
+              <input matInput formControlName="name" placeholder="Name" type="text">
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="15" fxFlexOffset="3">
+              <mat-select formControlName="attribute"
+                          (selectionChange)="modifierAttributeChanged(i)"
+                          placeholder="Attribute name" required>
+                <mat-option *ngFor="let attribute of attributes" [value]="attribute.name">{{attribute.name}}</mat-option>
+              </mat-select>
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="15" fxFlexOffset="3">
+              <mat-select formControlName="operator"
+                          placeholder="Operator" required>
+                <mat-option
+                  *ngFor="let key of objectKeys(getOperatorsForAttribute(pricingRuleForm.controls.modifiers['controls'][i].value.attribute))"
+                  [value]="key">
+                  {{getOperatorsForAttribute(pricingRuleForm.controls.modifiers['controls'][i].value.attribute)[key]}}
+                </mat-option>
+              </mat-select>
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="15" fxFlexOffset="3"
+                            *ngIf="getFilterValueInputType(
+                              pricingRuleForm.controls.modifiers['controls'][i].value.attribute
+                            ) === 'choices'">
+              <mat-select formControlName="value"
+                          placeholder="Value" required>
+                <mat-option
+                  *ngFor="let item of attrByName(
+                    pricingRuleForm.controls.modifiers['controls'][i].value.attribute
+                  ).choices"
+                  [value]="item">
+                  {{item}}
+                </mat-option>
+              </mat-select>
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="15" fxFlexOffset="3"
+                            *ngIf="getFilterValueInputType(
+                              pricingRuleForm.controls.modifiers['controls'][i].value.attribute
+                            ) === 'textarea'">
+              <textarea matInput formControlName="value" placeholder="Value"></textarea>
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="15" fxFlexOffset="3"
+                            *ngIf="getFilterValueInputType(
+                              pricingRuleForm.controls.modifiers['controls'][i].value.attribute
+                            ) === 'number'">
+              <input matInput formControlName="value" placeholder="Value" type="number">
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="15" fxFlexOffset="3"
+                            *ngIf="getFilterValueInputType(
+                              pricingRuleForm.controls.modifiers['controls'][i].value.attribute
+                            ) === 'datetime'">
+              <input matInput [matDatepicker]="picker" formControlName="value" placeholder="Choose a date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="15" fxFlexOffset="3"
+                            *ngIf="showAttributeUnitForFiltersModifiers(
+                              pricingRuleForm.controls.modifiers['controls'][i].value.attribute
+                            )">
+              <mat-select formControlName="attribute_unit"
+                          placeholder="Attribute unit" required>
+                <mat-option
+                  *ngFor="let key of objectKeys(createOptions.attribute_units)"
+                  [value]="key">
+                  {{createOptions.attribute_units[key]}}
+                </mat-option>
+              </mat-select>
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <div fxHide.lt-sm>
+              <button (click)="removeModifier(i)" class="fl-margin-top-medium"
+                      fl-tooltip="Remove modifier" mat-icon-button>
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxLayout="row">
+            <mat-checkbox [color]="'primary'" fxFlex="20" formControlName="price_is_percent">
+              Price is percent
+            </mat-checkbox>
+          </div>
+          <div fxLayout="row" fxLayout.lt-sm="column" class="fl-margin-top-small">
+            <mat-form-field fxFlex="20" *ngIf="pricingPlan">
+              <input matInput formControlName="price"
+                     placeholder="{{pricingRuleForm.controls.modifiers['controls'][i].value.price_is_percent ?
+                     'Percent (%)' : 'Price (' + pricingPlan.currency +')'}}"
+                     type="number">
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="20" fxFlexOffset="3"
+                            *ngIf="!pricingRuleForm.controls.modifiers['controls'][i].value.price_is_percent">
+              <mat-select formControlName="time_unit"
+                          placeholder="Time unit" required>
+                <mat-option
+                  *ngFor="let key of objectKeys(createOptions.time_units)"
+                  [value]="key">
+                  {{createOptions.time_units[key]}}
+                </mat-option>
+              </mat-select>
+              <mat-error>{{'This field is required!'}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div fxHide.gt-sm>
+            <button (click)="removeModifier(i)" class="fl-margin-top-medium"
+                    fl-tooltip="Remove modifier" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+    </div>
+  </ng-container>
+
+  <div fxLayout="row" *ngIf="selectedResource && selectedResource.attribute_display" class="fl-margin-top">
+    <button mat-mini-fab class="add-item-button" fl-tooltip="Add price modifier" fl-tooltip-direction="right"
+            (click)="addModifier()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+
+</form>

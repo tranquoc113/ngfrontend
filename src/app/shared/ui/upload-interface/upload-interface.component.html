@@ -1,0 +1,24 @@
+<div [formGroup]="form">
+  <div *ngFor="let fileInputNr of fileInputs">
+    <input type="file" id="fileInputId{{fileInputNr}}" (change)="fileInputChanged($event, fileInputNr)"
+           #actualFileInputs fxHide>
+    <a mat-raised-button
+       id="fileInputBtn{{fileInputNr}}"
+       (click)="selectFile(fileInputNr)"
+       [attr.fl-tooltip]="maxSizeReadable ? maxSizeReadable : ''"
+       aria-label="attach_file">
+      <span translate>Choose file</span>
+    </a>
+    <mat-form-field class="fl-margin-top-medium fl-margin-left-small">
+      <input matInput formControlName="{{'file' + fileInputNr}}" id="{{'file' + fileInputNr}}"
+             type="text" placeholder="No file chosen" readonly>
+      <a (click)="removeSelection(fileInputNr)" mat-button matSuffix mat-icon-button aria-label="Clear"
+         [attr.fl-tooltip]="'Remove attachment'">
+        <mat-icon>close</mat-icon>
+      </a>
+    </mat-form-field>
+  </div>
+  <a *ngIf="multipleFileSelectors" mat-raised-button (click)="addMoreAtt()">
+    <mat-icon class="vertical-align-middle">add</mat-icon>
+  </a>
+</div>

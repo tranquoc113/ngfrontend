@@ -1,0 +1,12 @@
+<div>
+  <app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+  <div fxLayout="column" class="fl-margin-bottom">
+    <p class="mat-error">Warning: instance resize will cause downtime. The instance will shutdown and the disk image will be copied to a
+      new disk. This may take a while, depending on the disk size.</p>
+    <p class="fl-detail">Notes: you can only select flavors larger than your current flavor. After the resize is completed, the instance
+      will have the state "VERIFY RESIZE".</p>
+    <p class="fl-detail">Check if everything is ok with your data and then click on "Confirm resize" in the instance menu.</p>
+  </div>
+  <app-flavors-as-cards #flavorsAsCards [flavors]="flavors" [flavorIncompatibility]="flavorIncompatibility">
+  </app-flavors-as-cards>
+</div>

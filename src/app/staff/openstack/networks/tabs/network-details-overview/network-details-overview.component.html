@@ -1,0 +1,88 @@
+<div *ngIf="object" fxLayout="column" class="fl-content fl-content-min-height">
+  <div layout="row" layout-align="space-between start">
+    <div class="detail-block">
+      <p class="fl-detail">
+        ID:&nbsp;{{ object.id }}</p>
+      <p class="fl-detail">
+        Project:&nbsp;{{ object.project }}</p>
+      <p class="fl-detail">
+        Region:&nbsp;{{ object.region }}</p>
+      <p class="fl-detail">
+        Created at:&nbsp;{{ object.created_at }}</p>
+      <p class="fl-detail" *ngIf="object.updated_at">
+        Updated at:&nbsp;{{ object.updated_at }}</p>
+      <p class="fl-detail" *ngIf="object.router_external">
+        Is default:&nbsp;{{ object.is_default }}</p>
+      <p class="fl-detail">
+        Shared:&nbsp;{{object.shared | yesNo}}
+      </p>
+      <p class="fl-detail">
+        Status:&nbsp;{{ object.status }}
+      </p>
+      <p class="fl-detail">
+        Admin state: {{object.admin_state_up ? 'UP' : 'DOWN'}}
+      </p>
+      <p class="fl-detail" *ngIf="object.description">
+        Description:&nbsp;{{ object.description || 'n/a' }}
+      </p>
+      <div *ngIf="object.extra">
+        <span class="fl-detail">Extra:</span>
+        <ul class="fl-detail">
+          <ng-container *ngFor="let extra of object.extra | keyvalue">
+            <li *ngIf="extra.value && extra.value.length > 0">
+              {{ extra.key }} = {{ extra.value }}
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+      <div class="fl-margin-top" *ngIf="auth.feature('openstack.ports')">
+        <a [routerLink]="[config.getPanelUrl('openstack/ports')]"
+           [queryParams]="{'filtering': 'network:' + object.id}"
+           class="active-link">
+          See related ports
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="fl-margin-top">
+    <h2 class="fl-detail">Subnets</h2>
+    <hr>
+  </div>
+
+  <table *ngIf="object.subnets && object.subnets.length" class="full-width" mat-table [dataSource]="object.subnets">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td class="position-relative" mat-cell *matCellDef="let subnet">
+        {{subnet.name}}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="network_address">
+      <th mat-header-cell *matHeaderCellDef>Network address</th>
+      <td mat-cell *matCellDef="let subnet">
+        {{subnet.cidr}}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="ip_version">
+      <th mat-header-cell *matHeaderCellDef>IP version</th>
+      <td mat-cell *matCellDef="let subnet">
+        {{subnet.ip_version }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="gateway_ip">
+      <th mat-header-cell *matHeaderCellDef>Gateway IP</th>
+      <td mat-cell *matCellDef="let subnet">
+        {{subnet.gateway_ip }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="(actions)">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let subnet">
+        <app-object-actions [objectActions]="subnetActions[subnet.id]" [maxVisibleActions]="2">
+        </app-object-actions>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

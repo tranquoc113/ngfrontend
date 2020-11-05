@@ -1,0 +1,148 @@
+<div class="no-objects-message-container" *ngIf="tableData && !tableData.rows.length">
+  <span class="no-objects-message">{{objectsListController.objectListUIService.noItemsMessage || 'No items'}}</span>
+</div>
+<div class="table-wrapper" [class.table-wrapper-extra]="tableData.fullWidthMobile"
+     *ngIf="tableData && tableData.rows.length">
+  <table mat-table matSort [dataSource]="tableDataSource" [trackBy]="tableData.trackByFunction" multiTemplateDataRows
+         matSortActive="{{activeOrdering.active}}" matSortDirection="{{activeOrdering.direction}}"
+         (matSortChange)="sort($event)" fxLayout="column"
+         class="mat-elevation-z2">
+    <ng-container *ngFor="let column of tableData.header.columns; let last=last"
+                  matColumnDef="{{column.fieldName}}">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.enableSort"
+          [class.padding-right]="!last"
+          [class.currency-col]="column.type === ColumnType.Currency" class="table-header-cell"
+          fxFlex="{{column.flex}}" fxFlex.xs="{{column.flexXs}}"
+          fxHide.xs="{{!!column.hide['xs']}}" fxHide.sm="{{!!column.hide['sm']}}"
+          fxHide.lt-sm="{{!!column.hide['lt-sm']}}" fxHide.md="{{!!column.hide['md']}}"
+          fxHide.lt-md="{{!!column.hide['lt-md']}}" fxHide.lg="{{!!column.hide['lg']}}"
+          fxHide.lt-lg="{{!!column.hide['lt-lg']}}" fxHide.lt-xl="{{!!column.hide['lt-xl']}}">
+        <span *ngIf="column.type === ColumnType.Value || column.type === ColumnType.Image
+        || column.type === ColumnType.Currency">
+          {{column.displayName || ''}}
+        </span>
+      </th>
+      <td mat-cell *matCellDef="let row" class="table-cell"
+          [class.table-cell-image]="column.type === ColumnType.Image"
+          [class.padding-right]="!last"
+          fxFlex="{{column.flex}}" fxFlex.xs="{{column.flexXs}}"
+          fxLayoutAlign="{{column.type === ColumnType.Actions?'end center': 'start center'}}"
+          fxHide.xs="{{!!column.hide['xs']}}" fxHide.sm="{{!!column.hide['sm']}}"
+          fxHide.lt-sm="{{!!column.hide['lt-sm']}}" fxHide.md="{{!!column.hide['md']}}"
+          fxHide.lt-md="{{!!column.hide['lt-md']}}" fxHide.lg="{{!!column.hide['lg']}}"
+          fxHide.lt-lg="{{!!column.hide['lt-lg']}}" fxHide.lt-xl="{{!!column.hide['lt-xl']}}"
+          [class.table-cell-actions-selector]="column.type === ColumnType.Actions && row.actions"
+          [class.fl-bold]="row.boldText"
+          (click)="toggleRowDetails(row, column)">
+        <a *ngIf="(column.type === ColumnType.Value || column.type === ColumnType.Currency) &&
+        (row.url || row.cells[column.fieldName].url); else noLink"
+           [routerLink]="row.cells[column.fieldName].url || row.url" class="text-cell">
+          <div *ngIf="column.type === ColumnType.Value || column.type === ColumnType.Currency" fxLayout="column"
+               [class.currency-col]="column.type === ColumnType.Currency">
+            <div *ngIf="row.cells[column.fieldName].text; else noText"
+                 [class.fl-ellipsis-text]="!!!column.wrap">
+              <span [class.fl-green-color]="row.cells[column.fieldName].textColor === LineColor.Green"
+                    [class.fl-red-color]="row.cells[column.fieldName].textColor === LineColor.Red"
+                    [class.fl-orange-color]="row.cells[column.fieldName].textColor === LineColor.Orange"
+                    [class.fl-gray-color]="row.cells[column.fieldName].textColor === LineColor.Gray"
+                    [class.fl-bold]="row.cells[column.fieldName].textBold === true">
+                {{row.cells[column.fieldName].text}}
+              </span>
+            </div>
+            <ng-template #noText>
+              <span *ngIf="!row.cells[column.fieldName].tags && !row.cells[column.fieldName].subtext">
+                &nbsp;<!-- this ensure link works on cells with no text-->
+              </span>
+            </ng-template>
+            <div *ngIf="row.cells[column.fieldName].subText" class="fl-ellipsis-text">
+              <span *ngIf="!row.cells[column.fieldName].subTextLink" class="sub-text">
+                {{row.cells[column.fieldName].subText}}
+              </span>
+              <a *ngIf="row.cells[column.fieldName].subTextLink" class="sub-text sub-text-with-link"
+                 [routerLink]="row.cells[column.fieldName].subTextLink">
+                {{row.cells[column.fieldName].subText}}
+              </a>
+            </div>
+            <div *ngIf="row.cells[column.fieldName].tags" fxLayout="row" fxLayoutGap="5px">
+              <span *ngFor="let tag of row.cells[column.fieldName].tags" class="fl-tag" translate>
+                {{tag}}
+              </span>
+            </div>
+          </div>
+        </a>
+        <ng-template #noLink>
+          <div *ngIf="column.type === ColumnType.Value" fxLayout="column" class="text-cell">
+            <div [class.fl-ellipsis-text]="!!!column.wrap">
+              <span [class.fl-green-color]="row.cells[column.fieldName].textColor === LineColor.Green"
+                    [class.fl-red-color]="row.cells[column.fieldName].textColor === LineColor.Red"
+                    [class.fl-orange-color]="row.cells[column.fieldName].textColor === LineColor.Orange"
+                    [class.fl-gray-color]="row.cells[column.fieldName].textColor === LineColor.Gray"
+                    [class.fl-bold]="row.cells[column.fieldName].textBold === true">
+                {{row.cells[column.fieldName].text}}
+              </span>
+            </div>
+            <div *ngIf="row.cells[column.fieldName].subText" class="fl-ellipsis-text">
+              <span *ngIf="!row.cells[column.fieldName].subTextLink" class="sub-text">
+                {{row.cells[column.fieldName].subText}}
+              </span>
+              <a *ngIf="row.cells[column.fieldName].subTextLink" class="sub-text sub-text-with-link"
+                 [routerLink]="row.cells[column.fieldName].subTextLink">
+                {{row.cells[column.fieldName].subText}}
+              </a>
+            </div>
+            <div *ngIf="row.cells[column.fieldName].tags" fxLayout="row" fxLayoutGap="5px">
+              <div *ngFor="let tag of row.cells[column.fieldName].tags" class="fl-tag" translate>
+                {{tag}}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+        <div *ngIf="column.type === ColumnType.Image">
+          <app-icon *ngIf="!row.icon.gravatarEmail" [icon]="row.icon"></app-icon>
+          <app-gravatar *ngIf="row.icon.gravatarEmail" [email]="row.icon.gravatarEmail" [customStyle]="{
+            width: '24px',
+            borderRadius: '100%',
+            marginLeft: '5px',
+            marginRight: '15px',
+            verticalAlign: 'middle'
+          }"></app-gravatar>
+        </div>
+
+        <app-status-line *ngIf="row.status && column.type === ColumnType.Status"
+                         [direction]="LineDirection.Vertical"
+                         [type]="row.status.type" [color]="row.status.value"></app-status-line>
+        <app-object-actions *ngIf="column.type === ColumnType.Actions && row.actions" [objectActions]="row.actions"
+                            [maxVisibleActions]="tableData.header.visibleActions"></app-object-actions>
+      </td>
+    </ng-container>
+
+    <ng-container *ngIf="tableData.expandableRows" matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="tableData.header.columnNames.length"
+          class="detail-cell">
+        <div class="detail-container" [@detailExpand]="row.object.id === expandedObjectId ? 'expanded' : 'collapsed'"
+             fxLayout="row">
+          <ng-template *ngIf="row.object.id === expandedObjectId"
+                       appComponentHost [component]="tableData.detailComponent" [data]="row.detailComponentData"
+                       [objectController]="objectsListController.controller(row.object)">
+          </ng-template>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container *ngIf="!tableData.header.hideHeader">
+      <tr mat-header-row *matHeaderRowDef="tableData.header.columnNames"
+          [class.always-show-actions]="tableData.alwaysShowActions"></tr>
+    </ng-container>
+    <tr mat-row *matRowDef="let row; columns: tableData.header.columnNames;"
+        class="main-row"
+        [class.always-show-actions]="tableData.alwaysShowActions"
+        [ngClass]="{'fl-cursor-pointer': row.expandable}">
+    </tr>
+    <ng-container *ngIf="tableData.expandableRows">
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']"
+          [class.always-show-actions]="tableData.alwaysShowActions"
+          class="detail-row"></tr>
+    </ng-container>
+  </table>
+</div>

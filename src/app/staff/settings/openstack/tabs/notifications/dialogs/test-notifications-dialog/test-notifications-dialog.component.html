@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>Test results</h1>
+<div mat-dialog-content class="fl-dialog">
+  <app-fl-backdrop *ngIf="checkingSettings === true"></app-fl-backdrop>
+  <div *ngIf="testError" class="fl-red-color">One or more url is not valid</div>
+  <table *ngIf="testResults" class="fl-table fl-table-auto-height fl-detail">
+    <thead>
+    <th class="text-middle fl-ellipsis-text">Url</th>
+    <th class="text-middle fl-margin-left">Status</th>
+    <th class="text-middle" fxShow.xs="false">Error</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let result of testResults.results">
+      <td class="fl-flex-150 no-overflow-hidden" [attr.fl-tooltip]="result.url">
+        <p class="fl-ellipsis-text">
+          {{result.url | slice: 0:26}}
+        </p>
+      </td>
+      <td class="text-middle fl-flex-50 fl-margin-left no-overflow-hidden">
+        <i *ngIf="!result.exception" [attr.fl-tooltip]="'Successfully connected'" fl-tooltip-direction="right"
+           class="material-icons fl-green-color">
+          check
+        </i>
+        <i *ngIf="result.exception" [attr.fl-tooltip]="'Connection was not successful'" fl-tooltip-direction="right"
+           class="material-icons fl-red-color" >
+          priority_high
+        </i>
+      </td>
+      <td class="text-middle fl-flex-150 fl-multi-line-text" fxShow.xs="false"><p>
+        {{result.exception ? result.exception : "-"}}
+      </p></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Ok</button>
+</div>

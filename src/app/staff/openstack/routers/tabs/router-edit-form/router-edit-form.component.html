@@ -1,0 +1,53 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="createOptions" [formGroup]="routerForm" fxLayout="column">
+  <app-form-errors #formErrors [formGroup]="routerForm"></app-form-errors>
+  <mat-form-field *ngIf="!object.id">
+    <input matInput placeholder="Client" type="text" formControlName="client" required
+           [matAutocomplete]="autocompleteClient" (click)="clearClient()">
+    <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+      <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+        {{client.first_name}} {{client.last_name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['client']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="!object.id">
+    <mat-select formControlName="region" placeholder="Region" required>
+      <mat-option *ngFor="let region of createOptions.regions" [value]="region.id">
+        {{ region.id }}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['region']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Description" type="text" formControlName="description">
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="!object.id">
+    <mat-select formControlName="external_network_id" placeholder="External network selection">
+      <mat-option value="">
+        No network
+      </mat-option>
+      <mat-option *ngFor="let externalNetwork of externalNetworks" [value]="externalNetwork.id">
+        {{ externalNetwork.name }} - {{externalNetwork.region}}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['external_network_id']}}</mat-error>
+  </mat-form-field>
+
+  <div *ngIf="!externalNetworks || (externalNetworks && !externalNetworks.length)" class="fl-margin-bottom">
+    <span>No external networks available</span>
+  </div>
+
+  <mat-checkbox formControlName="admin_state_up">
+    Admin state up
+  </mat-checkbox>
+</form>

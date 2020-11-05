@@ -1,0 +1,18 @@
+<form>
+  <mat-form-field class="filtering-input-width">
+    <input type="text" placeholder="Search..." aria-label="custom" matInput [formControl]="myControl"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option (click)="onItemSelection(option)" *ngFor="let option of filteredItems" [value]="option">
+        <span *ngIf="option.id">{{option[filterOption.itemsDisplayField]}}</span>
+        <span *ngIf="option.id === null">Filter items without related record</span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
+<div><!--pushes checkbox on new line--></div>
+<mat-checkbox [(ngModel)]="exclude" [color]="'primary'">Exclude</mat-checkbox>
+<div><!--pushes button on new line--></div>
+<button class="fl-margin-top-medium" (click)="applyFiltering()" mat-flat-button>
+  Apply
+</button>

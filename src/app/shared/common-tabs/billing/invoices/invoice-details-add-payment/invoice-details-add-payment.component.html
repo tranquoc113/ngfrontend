@@ -1,0 +1,55 @@
+<form [formGroup]="addPaymentForm" class="fl-content" *ngIf="paymentOptions">
+  <app-form-errors #formErrors [formGroup]="addPaymentForm"></app-form-errors>
+  <div fxLayout="column">
+    <div fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput [matDatepicker]="paymentDatePicker" formControlName="date_initiated"
+               placeholder="Payment date">
+        <mat-datepicker-toggle matSuffix [for]="paymentDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #paymentDatePicker></mat-datepicker>
+        <mat-error>{{'This field is required!'}}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="gateway" placeholder="Gateway">
+          <mat-option *ngFor="let gateway of paymentOptions.gateways" [value]="gateway.id">
+            {{gateway.display_name}}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{'This field is required!'}}</mat-error>
+      </mat-form-field>
+    </div>
+    <mat-form-field fxFlex="auto">
+      <input matInput placeholder="Transaction ID" type="text"
+             formControlName="external_id">
+      <mat-error>{{fieldErrors['external_id']}}</mat-error>
+    </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput placeholder="Amount" type="number"
+               formControlName="amount" required>
+        <mat-error>{{'This field is required!' }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Fee" type="number"
+               formControlName="fee" required>
+        <mat-error>{{'This field is required!' }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="currency" placeholder="Currency">
+          <mat-option *ngFor="let currency of paymentOptions.currencies" [value]="currency.code">{{currency.code}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-form-field>
+      <input matInput placeholder="Extra information" type="text"
+             formControlName="extra_info">
+      <mat-error>{{fieldErrors['extra_info']}}</mat-error>
+    </mat-form-field>
+    <div fxLayout="row">
+      <button (click)="addPayment()" mat-button color="primary">
+        Add payment
+      </button>
+    </div>
+  </div>
+</form>

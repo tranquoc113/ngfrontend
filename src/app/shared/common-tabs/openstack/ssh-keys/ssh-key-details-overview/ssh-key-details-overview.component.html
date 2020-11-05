@@ -1,0 +1,11 @@
+<div fxLayout="column" *ngIf="object">
+  <p class="fl-detail">Created on: {{object.created_at}}</p>
+  <p class="fl-detail">User: {{object.user.username}}</p>
+  <p class="fl-detail">Fingerprint: {{object.fingerprint}}</p>
+  <p class="fl-detail wrap-text-content">Public key:
+    <span class="fl-indent display-inline-block">{{object.public_key}}</span>
+    <button mat-button color="primary" (click)="clipboard.copyTextToClipboard(object.public_key)">
+      Copy to clipboard
+    </button>
+  </p>
+</div>

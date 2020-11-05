@@ -1,0 +1,225 @@
+<div class="fl-bordered-box">
+  <div>
+    <app-icon [icon]="{name: bootSourceIcon(), class: 'fl-icons'}"></app-icon>
+  </div>
+  <div class="selected-source-display">
+    <span *ngIf="!selectedBootSource.object">No boot source selected</span>
+    <span *ngIf="selectedBootSource && selectedBootSource.object" class="fl-ellipsis-text">
+      {{selectedBootSource.object.display_name || selectedBootSource.object.name || selectedBootSource.object.id}}
+    </span>
+    <div class="mat-caption selected-source-display-details" *ngIf="selectedBootSource.type">{{selectedBootSource.type}}
+      <span *ngIf="selectedBootSource && selectedBootSource.type && selectedBootSource.type !== 'volume' &&
+      selectedBootSource.type !== 'volume_snapshot' && selectedBootSource.createNewVolume">
+        - create {{selectedBootSource.volumeSize}} GB volume
+      </span>
+    </div>
+    <div class="mat-caption" *ngIf="!selectedBootSource.type">Click change to select a boot source.</div>
+  </div>
+  <div>
+    <button mat-button color="primary" (click)="showSideDialog()">Change</button>
+  </div>
+</div>
+<div [@openCloseDialog]="showSources ? {value: 'open', params: { leftSize: leftSize}} : 'closed'"
+     class="boot-source-select-dialog">
+  <div class="boot-source-select-backdrop" [ngStyle]="showSources ? {} : {left: '100%'}" (click)="cancelSelection()"></div>
+  <div class="boot-source-select-dialog-container">
+    <p class="mat-subheading-2 fl-no-margin-bottom">Select boot source</p>
+    <p class="mat-caption fl-no-margin-top">Choose from an existing image, volume, instance snapshot or volume snapshot</p>
+
+    <mat-tab-group #bootSourcesTabGroup [dynamicHeight]="true" [animationDuration]="'0'"
+                   (selectedTabChange)="changedTab($event)"
+                   [(selectedIndex)]="selectedTab">
+      <mat-tab label="Public images" *ngIf="!requestedBootSource">
+        <p *ngIf="images && !images.length" class="fl-detail fl-margin-top">No items to choose from.</p>
+        <mat-radio-group
+          aria-labelledby="Image boot source"
+          class="boot-source-radio-group"
+          (change)="changedSource('image')"
+          [(ngModel)]="selectedBootSource.objectId">
+          <mat-radio-button [color]="'primary'" *ngFor="let image of images" [value]="image.id"
+                            [disabled]="!image.assigned_to_flavor || image.disabled"
+                            (change)="setBootSourceObject(image)" (dblclick)="doubleClickedSource()">
+            <div [attr.fl-tooltip]="getImageTooltip(image)" fl-tooltip-direction="right">
+              <span>{{image.display_name || image.id}}</span>
+              <span class="mat-caption boot-source-caption">
+                {{image.os_distro}} {{image.os_version}} {{image.architecture}} {{image.created_at | date}}
+              </span>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-tab>
+      <mat-tab label="Client images" *ngIf="!requestedBootSource">
+        <p *ngIf="ownedImages && !ownedImages.length" class="fl-detail fl-margin-top">No items to choose from.</p>
+        <mat-radio-group
+          aria-labelledby="Image boot source"
+          class="boot-source-radio-group"
+          (change)="changedSource('owned_image')"
+          [(ngModel)]="selectedBootSource.objectId">
+          <mat-radio-button [color]="'primary'" *ngFor="let image of ownedImages" [value]="image.id"
+                            [disabled]="!image.assigned_to_flavor || image.disabled"
+                            (change)="setBootSourceObject(image)" (dblclick)="doubleClickedSource()">
+            <div [attr.fl-tooltip]="getImageTooltip(image)" fl-tooltip-direction="right">
+              <span>{{image.display_name || image.id}}</span>
+              <span class="mat-caption boot-source-caption">
+                {{image.os_distro}} {{image.os_version}} {{image.architecture}} {{image.created_at | date}}
+              </span>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-tab>
+      <mat-tab label="Community images" *ngIf="!requestedBootSource">
+        <p *ngIf="communityImages && !communityImages.length" class="fl-detail fl-margin-top">No items to choose from.</p>
+        <mat-radio-group
+          aria-labelledby="Image boot source"
+          (change)="changedSource('community_image')"
+          class="boot-source-radio-group"
+          [(ngModel)]="selectedBootSource.objectId">
+          <mat-radio-button [color]="'primary'" *ngFor="let image of communityImages" [value]="image.id"
+                            [disabled]="!image.assigned_to_flavor || image.disabled"
+                            (change)="setBootSourceObject(image)" (dblclick)="doubleClickedSource()">
+            <div [attr.fl-tooltip]="getImageTooltip(image)" fl-tooltip-direction="right">
+              <span>{{image.display_name || image.id}}</span>
+              <span class="mat-caption boot-source-caption">
+                {{image.os_distro}} {{image.os_version}} {{image.architecture}} {{image.created_at | date}}
+              </span>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-tab>
+      <mat-tab label="Shared images" *ngIf="!requestedBootSource">
+        <p *ngIf="sharedImages && !sharedImages.length" class="fl-detail fl-margin-top">No items to choose from.</p>
+        <mat-radio-group
+          aria-labelledby="Image boot source"
+          (change)="changedSource('shared_image')"
+          class="boot-source-radio-group"
+          [(ngModel)]="selectedBootSource.objectId">
+          <mat-radio-button [color]="'primary'" *ngFor="let image of sharedImages" [value]="image.id"
+                            [disabled]="!image.assigned_to_flavor || image.disabled"
+                            (change)="setBootSourceObject(image)" (dblclick)="doubleClickedSource()">
+            <div [attr.fl-tooltip]="getImageTooltip(image)" fl-tooltip-direction="right">
+              <span>{{image.display_name || image.id}}</span>
+              <span class="mat-caption boot-source-caption">
+                {{image.os_distro}} {{image.os_version}} {{image.architecture}} {{image.created_at | date}}
+              </span>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-tab>
+      <mat-tab label="Volumes" *ngIf="!requestedBootSource">
+        <p *ngIf="volumes && !volumes.length" class="fl-detail fl-margin-top">No items to choose from.</p>
+        <mat-radio-group
+          aria-labelledby="Volume boot source"
+          (change)="changedSource('volume')"
+          class="boot-source-radio-group"
+          [(ngModel)]="selectedBootSource.objectId">
+          <mat-radio-button [color]="'primary'" *ngFor="let volume of volumes" [value]="volume.id"
+                            (change)="setBootSourceObject(volume)" (dblclick)="doubleClickedSource()">
+            <span>{{volume.name || volume.id}}</span>
+            <span class="mat-caption boot-source-caption">
+              <span *ngIf="volume.description">{{volume.description}}</span>
+              <span *ngIf="!volume.description">{{volume.size}} GB created on {{volume.created_at | date}}</span>
+            </span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-tab>
+      <mat-tab label="Volume snapshots" *ngIf="!requestedBootSource">
+        <p *ngIf="volumeSnapshots && !volumeSnapshots.length" class="fl-detail fl-margin-top">No items to choose from.</p>
+        <mat-radio-group
+          aria-labelledby="Volume boot source"
+          (change)="changedSource('volume_snapshot')"
+          class="boot-source-radio-group"
+          [(ngModel)]="selectedBootSource.objectId">
+          <mat-radio-button [color]="'primary'" *ngFor="let volumeSnapshot of volumeSnapshots"
+                            [value]="volumeSnapshot.id" (change)="setBootSourceObject(volumeSnapshot)"
+                            (dblclick)="doubleClickedSource()">
+            <span>{{volumeSnapshot.name || volumeSnapshot.id}}</span>
+            <span class="mat-caption boot-source-caption">
+              <span *ngIf="volumeSnapshot.description">{{volumeSnapshot.description}}</span>
+              <span *ngIf="!volumeSnapshot.description">
+                {{volumeSnapshot.size}} GB created on {{volumeSnapshot.created_at | date}}
+              </span>
+            </span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-tab>
+
+      <mat-tab label="Requested image" *ngIf="requestedBootSource">
+        <p *ngIf="requestedImages && !requestedImages.length" class="fl-detail fl-margin-top">
+          No items to choose from.
+        </p>
+        <mat-radio-group
+          aria-labelledby="Requested image"
+          (change)="changedSource('requested_image')"
+          class="boot-source-radio-group"
+          [(ngModel)]="selectedBootSource.objectId">
+          <mat-radio-button [color]="'primary'" *ngFor="let image of requestedImages" [value]="image.id"
+                            [disabled]="image.disabled"
+                            (change)="setBootSourceObject(image)" (dblclick)="doubleClickedSource()">
+            <div [attr.fl-tooltip]="getImageTooltip(image)" fl-tooltip-direction="right">
+              <span>{{image.display_name || image.id}}</span>
+              <span class="mat-caption boot-source-caption">
+                {{image.os_distro}} {{image.os_version}} {{image.architecture}} {{image.created_at | date}}
+              </span>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- TODO: add requested volume -->
+
+    <div class="boot-source-select-dialog-footer">
+      <a [routerLink]="config.getPanelUrl('openstack/images/create')"
+         [queryParams]="{from_instance_create: true}"
+         *ngIf="((selectedBootSource.type && selectedBootSource.type !== 'volume'
+         && selectedBootSource.type !== 'volume_snapshot') || !selectedBootSource.type)
+         && authService.feature('openstack.images.updatecreate')"
+         class="upload-img-btn" mat-stroked-button>
+        Upload new image
+      </a>
+      <div *ngIf="selectedBootSource.type && isImageType.indexOf(selectedBootSource.type) > -1 && showStorageSelection">
+        <div fxLayout="row">
+          <mat-form-field fxFlex="20" fxFlex.lt-md="40">
+            <mat-label>Storage type</mat-label>
+            <mat-select [(ngModel)]="selectedBootSource.storageType"
+                        (selectionChange)="storageTypeChanged()">
+              <mat-option [value]="'local'" *ngIf="config.current.settings.instanceForm.localComputeStorageEnabled &&
+              ((selectedFlavor && selectedFlavor.root_gb > 0) || !selectedFlavor)">
+                Local storage
+              </mat-option>
+              <ng-container *ngIf="showVolumeOptions()">
+                <mat-option *ngFor="let volType of volumeTypes" [value]="volType.name">
+                  {{volType.description}}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field fxFlex="10" fxFlex.lt-md="20" fxFlexOffset="2" *ngIf="selectedBootSource.createNewVolume">
+            <input  matInput placeholder="Volume size (GB)"
+                   [step]="sizeIncrement"
+                   [min]="minimumSize"
+                   type="number"
+                    [ngModelOptions]="{standalone: true}"
+                   [(ngModel)]="selectedBootSource.volumeSize">
+            <span *ngIf="!validVolumeSize()" class="mat-error invalid-vol-size">Invalid volume size.</span>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" class="fl-margin-bottom">
+          <div *ngIf="!selectedBootSource.createNewVolume">Disk is determined by flavor</div>
+          <mat-checkbox [(ngModel)]="selectedBootSource.deleteOnTermination" [color]="'primary'"
+                        *ngIf="selectedBootSource.createNewVolume">
+            Auto delete volume when instance is terminated
+          </mat-checkbox>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="boot-source-select-dialog-actions">
+        <button mat-raised-button color="primary"
+                [disabled]="!!!selectedBootSource.object || (selectedBootSource.createNewVolume && !validVolumeSize())"
+                [attr.fl-tooltip]="!!!selectedBootSource.object ? 'Select a boot source' : ''"
+                (click)="makeSelection()">Select</button>
+        <button mat-button (click)="cancelSelection()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

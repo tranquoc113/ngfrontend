@@ -1,0 +1,49 @@
+.card-container {
+  display: flex;
+  justify-content: center;
+}
+
+.card-header {
+  position: relative;
+}
+
+.card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.object-actions {
+  position: absolute;
+  right: 33px;
+  display: inline;
+}
+
+.card-details-title {
+  max-width: 75%;
+}
+
+.subtext-icon::ng-deep mat-icon {
+  vertical-align: middle;
+}
+
+.card-details-avatar {
+  width: unset;
+  height: unset;
+  background: #f8f8f8;
+  border-radius: unset;
+  padding-top: 26px;
+  padding-left: 16px;
+}
+
+.card-details-avatar app-icon::ng-deep mat-icon {
+  margin-right: 25px;
+  font-size: 45px;
+}
+
+@media screen and (max-width: 720px) {
+  .fl-card-styling {
+    width: 100%;
+  }
+}

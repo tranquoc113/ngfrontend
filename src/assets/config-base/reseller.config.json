@@ -1,0 +1,42 @@
+{
+  "urls": {
+    "backendApiUrl": "//localhost:8000/resellerapi/",
+    "homeName": "reseller"
+  },
+  "settings": {
+    "appIdleTimeout": 30,
+    "baseTitle": "Fleio Reseller",
+    "defaultLanguage": "en",
+    "imagesPath": "assets/img/reseller/",
+    "logoDark": null,
+    "logoLight": null,
+    "defaultTheme": "spring",
+    "availableThemes": [
+      "spring",
+      "navy",
+      "dusk"
+    ],
+    "paginateBy": 20,
+    "itemsDisplayAsList": false,
+    "instanceForm": {
+      "hideNetworksIfOnlyOneAvailable": true,
+      "preselectPublicNetworks": true,
+      "showUserData": true,
+      "flavorsAsCards": false,
+      "showRootPasswordField": true,
+      "rootPasswordFieldMandatory": false,
+      "localComputeStorageEnabled": true,
+      "hideVolumeSelectionForFlavorsWithDisk": false,
+      "defaultVolumeType": null
+    },
+    "logoutRedirect": null,
+    "usernameInputLabel": null,
+    "refreshIntervals": {
+      "defaultInterval": 10000,
+      "clientDetailsInterval": 5000,
+      "operationsListInterval": 1000,
+      "operationDetailsInterval": 1000,
+      "operationsInProgressInterval": 5000
+    }
+  }
+}

@@ -1,0 +1,20 @@
+<div *ngIf="pluginsNotifications">
+  <app-plugin-ui fxHide.lt-lg *ngFor="let plugin of pluginsNotifications.plugins" class="plugin-ui-notifications-wrapper"
+                 [plugin]="plugin.plugin" panelName="staff" componentName="PluginNotifications"
+                 [componentData]="plugin">
+  </app-plugin-ui>
+  <div fxHide.gt-md matRipple [matRippleDisabled]="true" [matMenuTriggerFor]="menu" class="plugins-notifications-dropdown"
+       fl-tooltip="Plugins" fl-tooltip-direction="down">
+    <app-icon [icon]="{name: 'plugins', class: 'fl-icons'}">
+    </app-icon>
+    <div *ngIf="pluginsNotifications.total_notification_count > 0" class="notification-circle">
+      {{pluginsNotifications.total_notification_count}}
+    </div>
+  </div>
+  <mat-menu fxHide.gt-md #menu="matMenu" xPosition="before" yPosition="below">
+    <app-plugin-ui *ngFor="let plugin of pluginsNotifications.plugins"
+                   [plugin]="plugin.plugin" panelName="staff" componentName="PluginNotifications"
+                   [componentData]="plugin">
+    </app-plugin-ui>
+  </mat-menu>
+</div>

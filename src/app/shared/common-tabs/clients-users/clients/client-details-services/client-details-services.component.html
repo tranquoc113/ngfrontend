@@ -1,0 +1,35 @@
+<div class="fl-content fl-content-min-height">
+  <app-fl-backdrop *ngIf="!services"></app-fl-backdrop>
+  <div *ngIf="services" fxLayout="column">
+    <table class="full-width" mat-table [dataSource]="services">
+      <ng-container matColumnDef="display_name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let service">
+          <a class="active-link" [routerLink]="config.getPanelUrl('billing/services/') + service.id">
+            {{service.display_name}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="cycle">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Cycle</th>
+        <td mat-cell *matCellDef="let service" fxHide.xs fxHide.sm>
+          {{service.cycle ? service.cycle.display_name : ''}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="activated">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Activated</th>
+        <td mat-cell *matCellDef="let service" fxHide.xs fxHide.sm>{{service.activated_at | date}}</td>
+      </ng-container>
+      <ng-container matColumnDef="paid_until">
+        <th mat-header-cell *matHeaderCellDef>Paid until</th>
+        <td mat-cell *matCellDef="let service">{{service.paid_until | date}}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let service">{{service.status}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

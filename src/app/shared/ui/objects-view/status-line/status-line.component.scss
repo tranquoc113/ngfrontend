@@ -1,0 +1,93 @@
+.status-line {
+  z-index: 2;
+}
+
+.status-line-horizontal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  z-index: 2;
+}
+
+.status-line-vertical {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 2px;
+}
+
+.status-line-color-none {
+}
+
+.status-line-color-green {
+  background-color: #4CAF50;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-green .mat-progress-bar-buffer {
+  background-color: #9CFFA0;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-green .mat-progress-bar-fill::after {
+  background-color: #4CAF50;
+}
+
+.status-line-color-gray {
+  background-color: gray;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-gray .mat-progress-bar-buffer {
+  background-color: #E3E3E3;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-gray .mat-progress-bar-fill::after {
+  background-color: gray;
+}
+
+.status-line-color-orange {
+  background-color: orange;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-orange .mat-progress-bar-buffer {
+  background-color: #FFF5C0;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-orange .mat-progress-bar-fill::after {
+  background-color: orange;
+}
+
+.status-line-color-yellow {
+  background-color: yellow;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-yellow .mat-progress-bar-buffer {
+  background-color: #FFFFCC;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-yellow .mat-progress-bar-fill::after {
+  background-color: yellow;
+}
+
+.status-line-color-red {
+  background-color: red;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-red .mat-progress-bar-buffer {
+  background-color: #FFCCCC;
+}
+
+//noinspection CssInvalidPseudoSelector
+::ng-deep .status-line-color-red .mat-progress-bar-fill::after {
+  background-color: red;
+}

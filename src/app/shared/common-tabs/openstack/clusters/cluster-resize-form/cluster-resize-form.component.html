@@ -1,0 +1,14 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)" [formGroup]="resizeClusterForm">
+  <app-form-errors #formErrors [formGroup]="resizeClusterForm"></app-form-errors>
+  <div fxLayout="column">
+    <mat-form-field>
+      <input matInput placeholder="Node count" type="number" step="1" min="1" formControlName="node_count" required>
+      <mat-error>{{fieldErrors['node_count']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Nodes to remove (comma separated IDs)" type="text"
+             formControlName="nodes_to_remove">
+      <mat-error>{{fieldErrors['nodes_to_remove']}}</mat-error>
+    </mat-form-field>
+  </div>
+</form>

@@ -1,0 +1,37 @@
+<ng-container *ngIf="option">
+  <div *ngIf="option.widget === 'drop'">
+    <mat-form-field>
+      <mat-select [placeholder]="option.name" [value]="value" (valueChange)="emitValueChange($event)">
+        <mat-option *ngFor="let choice of option.choices" [value]="choice.choice">
+          {{choice.label}}({{choice.cycle.price}} {{choice.cycle.currency}})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div *ngIf="option.widget === 'yesno'">
+    <mat-checkbox color="primary" [checked]="value === 'yes'"
+                  (change)="emitValueChange($event.checked ? 'yes' : 'no')">
+      {{option.name}}({{option.cycle.price}} {{option.cycle.currency}})
+    </mat-checkbox>
+  </div>
+  <div *ngIf="option.widget === 'radio'">
+    <p>{{option.name}}</p>
+    <mat-radio-group fxLayout="column" fxLayoutGap="5px" [value]="value" (change)="emitValueChange($event.value)">
+      <mat-radio-button *ngFor="let choice of option.choices" [value]="choice.choice" color="primary">
+        {{choice.label}}({{choice.cycle.price}} {{choice.cycle.currency}})
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div *ngIf="option.widget === 'num_in'">
+    <mat-form-field>
+      <input matInput type="number" [placeholder]="option.name" [value]="value"
+             (change)="emitValueChange($event.target.value)" (keyup)="emitValueChange($event.target.value)">
+    </mat-form-field>
+  </div>
+  <div *ngIf="option.widget === 'text_in'">
+    <mat-form-field>
+      <input matInput type="text" [placeholder]="option.name" [value]="value"
+             (change)="emitValueChange($event.target.value)" (keyup)="emitValueChange($event.target.value)">
+    </mat-form-field>
+  </div>
+</ng-container>

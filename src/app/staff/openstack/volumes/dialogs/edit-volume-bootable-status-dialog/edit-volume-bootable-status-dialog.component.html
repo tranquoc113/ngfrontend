@@ -1,0 +1,18 @@
+<ng-container *ngIf="data.volume">
+<h1 mat-dialog-title>Change volume {{data.volume.name}} bootable status</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="changeBootableFlag()" [formGroup]="bootableStatusForm">
+    <app-form-errors #formErrors [formGroup]="bootableStatusForm"></app-form-errors>
+    <mat-checkbox formControlName="bootable" color="primary">
+      Is bootable
+    </mat-checkbox>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!bootableStatusForm.dirty" (click)="changeBootableFlag()"
+          [color]="'primary'">
+    Change bootable flag
+  </button>
+</div>
+</ng-container>

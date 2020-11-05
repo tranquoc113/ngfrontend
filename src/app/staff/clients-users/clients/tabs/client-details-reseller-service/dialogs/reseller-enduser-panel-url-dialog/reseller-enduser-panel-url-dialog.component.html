@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Change service pricing plan</h1>
+<div mat-dialog-content class="fl-dialog" fxLayout="column">
+  <form appFormSubmit (ngSubmit)="changeUrl()" [formGroup]="changeUrlFrom">
+    <mat-form-field fxFlex="90">
+      <input matInput placeholder="Enduser panel url" type="text" formControlName="enduser_panel_url">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="changeUrl()"
+          [color]="'primary'">
+    Change url
+  </button>
+</div>

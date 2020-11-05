@@ -1,0 +1,39 @@
+<h1 *ngIf="data && data.instance" mat-dialog-title>Move {{data.instance.name}}</h1>
+<div mat-dialog-content class="position-relative">
+  <app-fl-backdrop *ngIf="loading" [spinnerDiameter]="50"></app-fl-backdrop>
+  <form appFormSubmit (ngSubmit)="move()" [formGroup]="instanceMoveForm" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="instanceMoveForm"></app-form-errors>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Client" aria-label="Client" [matAutocomplete]="auto"
+             (click)="clickedClientInput()"
+             formControlName="client">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClientFn">
+        <mat-option *ngFor="let client of filteredClients" [value]="client">
+          <app-gravatar [email]="client.email" [customStyle]="{
+            width: '24px',
+            borderRadius: '100%',
+            marginLeft: '5px',
+            marginRight: '15px',
+            verticalAlign: 'middle'
+          }"></app-gravatar>
+          <span>{{client.name}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{backendErrors['client'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+  </form>
+  <div>
+    <p>When you press Move instance we will attempt to move the instance to selected client.</p>
+    <p>Moving an instance means stopping the instance, creating a snapshot of the instance, removing the IPs from
+      instance and then creating a new instance from snapshot for the select client with the same IPs.</p>
+    <p>Once the operation is completed the snapshot will be deleted and the old instance will suffixed with (MOVED)
+      and remain stopped.</p>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="move()"
+          [color]="'primary'">
+    Move instance
+  </button>
+</div>

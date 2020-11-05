@@ -1,0 +1,57 @@
+<div class="fl-margin-bottom fl-padding-left fl-content">
+  <div class="fl-subheader fl-margin-bottom">End-user index.html customization</div>
+  <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column"
+       *ngFor="let insertion_point of endUserInsertionPoints">
+    <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+      <div class="fl-margin-bottom">
+        <mat-checkbox color="primary" [(ngModel)]="customCode.custom_code[insertion_point].data.active">
+          Insert code at {{ customCode.custom_code[insertion_point].display_name }}
+        </mat-checkbox>
+      </div>
+      <div class="fl-margin-bottom">
+          <textarea matInput placeholder="Enter custom code here" rows="10" class="code-editor"
+                    [(ngModel)]="customCode.custom_code[insertion_point].data.code">
+          </textarea>
+      </div>
+    </div>
+    <div fxLayout="column" class="fl-help-text" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+      <h3 class="fl-multi-line-text">
+        Code at
+        {{ customCode.custom_code[insertion_point].display_name }}
+      </h3>
+      <p class="fl-detail">{{ customCode.custom_code[insertion_point].helptext }}</p>
+    </div>
+  </div>
+
+  <div class="fl-subheader fl-margin-bottom">Staff index.html customization</div>
+  <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column"
+       *ngFor="let insertion_point of staffInsertionPoints">
+    <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+      <div class="fl-margin-bottom">
+        <mat-checkbox color="primary" [(ngModel)]="customCode.custom_code[insertion_point].data.active">
+          Insert code at {{ customCode.custom_code[insertion_point].display_name }}
+        </mat-checkbox>
+      </div>
+      <div class="fl-margin-bottom">
+          <textarea matInput placeholder="Enter custom code here" rows="10" class="code-editor"
+                    [(ngModel)]="customCode.custom_code[insertion_point].data.code">
+          </textarea>
+      </div>
+    </div>
+    <div fxLayout="column" class="fl-help-text" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+      <h3 class="fl-multi-line-text">
+        Code at
+        {{ customCode.custom_code[insertion_point].display_name }}
+      </h3>
+      <p class="fl-detail">{{ customCode.custom_code[insertion_point].helptext }}</p>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <button [color]="'primary'" (click)="saveCustomizations()" mat-button>
+      Save customizations
+    </button>
+    <button [color]="'primary'" (click)="updateFrontend()" mat-button>
+      Update frontend
+    </button>
+  </div>
+</div>

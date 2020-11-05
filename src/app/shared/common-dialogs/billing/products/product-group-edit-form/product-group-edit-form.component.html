@@ -1,0 +1,26 @@
+<h1 *ngIf="!addForm" mat-dialog-title>Edit product group</h1>
+<h1 *ngIf="addForm" mat-dialog-title>Create product group</h1>
+<div mat-dialog-content class="fl-dialog">
+  <app-fl-backdrop *ngIf="loading" [spinnerDiameter]="30"></app-fl-backdrop>
+  <form appFormSubmit (ngSubmit)="saveProductGroup()" [formGroup]="productGroupForm" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="productGroupForm"></app-form-errors>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Name" type="text"
+             formControlName="name" required>
+      <mat-error>{{backendErrors['name'] || 'This field is required'}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Description" type="text"
+             formControlName="description" required>
+      <mat-error>{{backendErrors['description'] || 'This field is required'}}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="saveProductGroup()"
+          [color]="'primary'"
+          [disabled]="productGroupForm.invalid">
+    Save product group
+  </button>
+</div>

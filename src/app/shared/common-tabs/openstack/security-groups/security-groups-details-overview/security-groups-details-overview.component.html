@@ -1,0 +1,87 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <p class="fl-detail">Region: {{ object.region }}</p>
+  <p class="fl-detail">Created: {{ object.created_at | date:'medium'}}</p>
+  <p class="fl-detail">ID: {{ object.id }}</p>
+  <p class="fl-detail">Project: {{ object.project }}</p>
+  <span class="fl-detail" *ngIf="object.associated_instances.length">
+    Associated instances:
+    <ul class="fl-detail">
+      <li *ngFor="let instance of object.associated_instances">
+        <a class="active-link"
+           [routerLink]="[config.getPanelUrl('openstack/instances'), instance.id]">
+          <strong>{{ instance.name }}</strong>
+        </a>
+      </li>
+    </ul>
+  </span>
+  <div class="fl-margin-top">
+    Rules
+    <hr>
+    <table class="full-width" mat-table [dataSource]="object.security_group_rules">
+      <ng-container matColumnDef="direction">
+        <th mat-header-cell *matHeaderCellDef>Direction</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.direction}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef fxHide.lt-md>Type</th>
+        <td mat-cell *matCellDef="let element" fxHide.lt-md>
+          {{element.ethertype}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="protocol">
+        <th mat-header-cell *matHeaderCellDef>Protocol</th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element.protocol">{{element.protocol}}</ng-container>
+          <ng-container *ngIf="!element.protocol">Any</ng-container>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="ports">
+        <th mat-header-cell *matHeaderCellDef>Ports</th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="element.protocol !== 'icmp'">
+            <span *ngIf="element.port_range_min === element.port_range_max">{{element.port_range_min}}</span>
+            <span *ngIf="element.port_range_min !== element.port_range_max &&
+            (element.port_range_min !== 1 || element.port_range_max !== 65535)">
+              {{ element.port_range_min }} - {{ element.port_range_max }}
+            </span>
+            <span *ngIf="!element.port_range_min || (element.port_range_min === 1 && element.port_range_max === 65535)">
+              Any
+            </span>
+          </span>
+          <span *ngIf="element.protocol === 'icmp'">n/a</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="cidr">
+        <th mat-header-cell *matHeaderCellDef>CIDR</th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element.remote_ip_prefix">{{element.remote_ip_prefix}}</ng-container>
+          <ng-container *ngIf="!element.remote_ip_prefix">-</ng-container>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="remote_group">
+        <th mat-header-cell *matHeaderCellDef fxHide.lt-md>Remote group</th>
+        <td mat-cell *matCellDef="let element" fxHide.lt-md>
+          <ng-container *ngIf="element.remote_group">
+            <a class="active-link"
+               [routerLink]="[config.getPanelUrl('openstack/security-groups'), element.remote_group]">
+              {{element.remote_group_name}}
+            </a>
+          </ng-container>
+          <ng-container *ngIf="!element.remote_group">-</ng-container>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element" class="right-align">
+          <button mat-icon-button (click)="deleteRule(element.id)" [attr.fl-tooltip]="'Delete rule'">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

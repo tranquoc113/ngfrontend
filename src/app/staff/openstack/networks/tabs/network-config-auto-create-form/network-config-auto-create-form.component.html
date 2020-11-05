@@ -1,0 +1,79 @@
+<form *ngIf="regions" [formGroup]="networkOptionsForm" fxLayout="column" fxLayoutGap="10px"
+      class="fl-content fl-content-min-height">
+  <app-form-errors #formErrors [formGroup]="networkOptionsForm"></app-form-errors>
+  <ng-container *ngIf="autoCreateNetworkOptions">
+    <span>Current config:</span>
+    <ul>
+      <li *ngIf="autoCreateNetworkOptions.options.config.network">
+        <strong>Network:</strong>&nbsp;{{autoCreateNetworkOptions.options.config.network.name}}
+      </li>
+      <li *ngIf="autoCreateNetworkOptions.options.config.ipv4_subnetpool">
+        <strong>IPv4 subnet pool:</strong>&nbsp;{{autoCreateNetworkOptions.options.config.ipv4_subnetpool.name}}
+      </li>
+      <li *ngIf="autoCreateNetworkOptions.options.config.ipv6_subnetpool">
+        <strong>IPv6 subnet pool:</strong>&nbsp;{{autoCreateNetworkOptions.options.config.ipv6_subnetpool.name}}
+      </li>
+    </ul>
+  </ng-container>
+  <mat-form-field>
+    <mat-select formControlName="region" placeholder="Region" required>
+      <mat-option *ngFor="let region of regions.objects" [value]="region.id">
+        {{region.id}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="autoCreateNetworkOptions">
+    <div fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field *ngIf="autoCreateNetworkOptions.options.networks.length; else noNetworks" fxFlex="auto">
+        <mat-select formControlName="network" placeholder="Network">
+          <mat-option *ngFor="let network of autoCreateNetworkOptions.options.networks" [value]="network.id">
+            {{network.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <ng-template #noNetworks>
+        <p fxFlex="auto">No networks available, create one by pressing the add button</p>
+      </ng-template>
+      <button mat-fab mat-mini-fab fl-tooltip="Create network" fl-tooltip-direction="left" color="primary"
+              [routerLink]="config.getPanelUrl('openstack/networks/create')">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field *ngIf="autoCreateNetworkOptions.options.ipv4_subnetpools.length; else noIPv4Pools" fxFlex="auto">
+        <mat-select formControlName="ipv4_subnetpool" placeholder="IPv4 subnet pool">
+          <mat-option *ngFor="let subnetPool of autoCreateNetworkOptions.options.ipv4_subnetpools"
+                      [value]="subnetPool.id">
+            {{subnetPool.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <ng-template #noIPv4Pools>
+        <p fxFlex="auto">No IPv4 subnet pools available, create one by pressing the add button</p>
+      </ng-template>
+      <button mat-fab mat-mini-fab fl-tooltip="Create subnet pool" fl-tooltip-direction="left" color="primary"
+              [routerLink]="config.getPanelUrl('openstack/subnet-pools/create')">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field  *ngIf="autoCreateNetworkOptions.options.ipv4_subnetpools.length; else noIPv6Pools" fxFlex="auto">
+        <mat-select formControlName="ipv6_subnetpool" placeholder="IPv6 subnet pool">
+          <mat-option *ngFor="let subnetPool of autoCreateNetworkOptions.options.ipv6_subnetpools"
+                      [value]="subnetPool.id">
+            {{subnetPool.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <ng-template #noIPv6Pools>
+        <p fxFlex="auto">No IPv6 subnet pools available, create one by pressing the add button</p>
+      </ng-template>
+      <button mat-fab mat-mini-fab fl-tooltip="Create subnet pool" fl-tooltip-direction="left" color="primary"
+              [routerLink]="config.getPanelUrl('openstack/subnet-pools/create')">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </ng-container>
+</form>

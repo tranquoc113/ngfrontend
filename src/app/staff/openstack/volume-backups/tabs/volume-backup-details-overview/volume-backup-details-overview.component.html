@@ -1,0 +1,28 @@
+<div *ngIf="object" fxLayout="column" class="fl-content fl-content-min-height">
+  <p class="fl-detail">ID: {{ object.id }}</p>
+  <p class="fl-detail">Size: {{ object.size | number }} GB</p>
+  <p class="fl-detail">Created at: {{ object.created_at | date:'medium' }}</p>
+  <p class="fl-detail">Is incremental: {{ object.is_incremental | yesNo }}</p>
+  <p class="fl-detail">Object count: {{ object.object_count }}</p>
+  <p class="fl-detail">Has dependent backups: {{ object.has_dependent_backups | yesNo }}</p>
+  <p class="fl-detail" *ngIf="object.client">Client:
+    <a [routerLink]="config.getPanelUrl('clients-users/clients/' + object.client.id)" class="active-link">
+      {{ object.client.name }}
+    </a>
+  </p>
+  <p class="fl-detail" *ngIf="object.project">
+    Project:
+    <a [routerLink]="config.getPanelUrl('openstack/projects' + object.project)" class="active-link">
+      {{ object.project }}
+    </a>
+  </p>
+  <p class="fl-detail" *ngIf="object.volume">
+    Volume:
+    <a [routerLink]="config.getPanelUrl('openstack/projects' + object.volume)" class="active-link">
+      {{ object.related_volume_name || object.volume }}
+    </a>
+  </p>
+  <p class="fl-detail">
+    Description: {{ object.description || 'n/a' }}
+  </p>
+</div>

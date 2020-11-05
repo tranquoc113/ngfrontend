@@ -1,0 +1,4 @@
+::ng-deep .mat-dialog-container {
+  width: 500px;
+  position: relative; // in order for backdrop to be contained inside dialog
+}

@@ -1,0 +1,22 @@
+<div class="images-wrap" fxLayout="row">
+  <div *ngFor="let image of images"
+       (click)="selectedImage = image"
+       class="fl-image-card-container"
+       [class.fl-selected-checkmark]="selectedImage && selectedImage.id === image.id">
+    <mat-icon class="fl-icons fl-image-selected-checkmark mat-primary">check</mat-icon>
+    <div class="image-card"
+         [class.fl-selected]="selectedImage && selectedImage.id === image.id">
+      <div class="fl-ellipsis-text">
+        <span title="{{image.name}}" class="image-title">
+          <app-icon [icon]="{name: image.os_distro || 'otheros', class: 'fl-icons'}"></app-icon>
+        </span>
+      </div>
+      <mat-divider></mat-divider>
+      <div>
+        <div class="image-card-info-row">
+          {{image.name}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

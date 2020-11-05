@@ -1,0 +1,40 @@
+<div *ngIf="object">
+  <p class="fl-detail">Operation type: {{object.operation_type}}</p>
+  <p class="fl-detail">Created at: {{object.created_at | date: 'medium'}}</p>
+  <p class="fl-detail">
+    Created by:
+    <a class="active-link" *ngIf="object.initiating_user"
+       [routerLink]="[configService.getPanelUrl('clients-users/users'), object.initiating_user.id]">
+      {{object.initiating_user.full_name}}
+    </a>
+    <span *ngIf="!object.initiating_user">n/a</span>
+  </p>
+  <p class="fl-detail">Completed: {{object.completed ? 'yes' : 'no'}}</p>
+
+  <p class="fl-subheader">Progress</p>
+  <p class="fl-detail">Steps completed: {{object.progress.completed_steps}}/{{object.progress.total_steps}}</p>
+  <div fxLayout="row" *ngFor="let step of object.progress.steps_details">
+    <span class="fl-detail">
+      <mat-icon *ngIf="step.status === 'in progress'" class="vertical-align-middle fl-margin-right-small">
+        restore
+      </mat-icon>
+      <mat-icon *ngIf="step.status === 'succeeded'" class="vertical-align-middle fl-margin-right-small active-link">
+        done_all
+      </mat-icon>
+      <mat-icon *ngIf="step.status === 'failed' || step.status === 'aborted'"
+                class="vertical-align-middle fl-margin-right-small fl-red-color">
+        clear
+      </mat-icon>
+      <span class="vertical-align-middle">
+        {{step.display}}:
+        <span [class.fl-green-color]="step.status === 'succeeded'"
+              [class.fl-red-color]="step.status === 'failed' || step.status === 'aborted'">
+          {{step.status}}
+          <div *ngIf="step.error_message">
+            {{step.error_message}}
+          </div>
+        </span>
+      </span>
+    </span>
+  </div>
+</div>

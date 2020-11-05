@@ -1,0 +1,18 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="createOptions" [formGroup]="routerForm" fxLayout="column">
+  <app-form-errors #formErrors [formGroup]="routerForm"></app-form-errors>
+
+  <mat-form-field>
+    <mat-select formControlName="subnet" placeholder="Subnet" required>
+      <mat-option *ngFor="let subnet of createOptions.subnets" [value]="subnet.id">
+        {{ subnet.name }}: {{ subnet.cidr }} ({{ subnet.name }})
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['subnet']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Ip" type="text" formControlName="ip" required>
+    <mat-error>{{fieldErrors['ip']}}</mat-error>
+  </mat-form-field>
+</form>

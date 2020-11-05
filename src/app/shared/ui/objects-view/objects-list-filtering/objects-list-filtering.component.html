@@ -1,0 +1,50 @@
+<span *ngIf="filterConfig">
+  <button mat-icon-button [matMenuTriggerFor]="menu" #filterMenuTrigger="matMenuTrigger"
+          class="filtering-menu-button">
+    <mat-icon class="fl-icons" fl-tooltip="Filter" fl-tooltip-direction="down">
+      filtering
+    </mat-icon>
+  </button>
+  <mat-menu #menu="matMenu" xPosition="before" yPosition="below" class="filtering-menu-container">
+    <div class="filtering-menu-wrapper">
+      <div *ngIf="showDetail" class="filtering-detail-wrapper" (click)="$event.stopPropagation()">
+        <div>
+          <button mat-icon-button (click)="showDetailSwitch($event)">
+            <mat-icon>close</mat-icon>
+          </button>
+          <span *ngIf="activeFilterOption && activeFilterOption.display">
+            Filter by {{activeFilterOption.display.toLowerCase()}}
+          </span>
+          <div class="filter-choice-wrapper">
+            <app-objects-list-filtering-date *ngIf="activeFilterOption.type === FilterTypes.Date"
+                                             [filterOption]="activeFilterOption">
+            </app-objects-list-filtering-date>
+            <app-objects-list-filtering-custom-model *ngIf="activeFilterOption.type === FilterTypes.CustomModel"
+                                                     [filterOption]="activeFilterOption">
+            </app-objects-list-filtering-custom-model>
+            <app-objects-list-filtering-choices *ngIf="activeFilterOption.type === FilterTypes.Choices"
+                                                [filterOption]="activeFilterOption">
+            </app-objects-list-filtering-choices>
+            <app-objects-list-filtering-wild-card *ngIf="activeFilterOption.type === FilterTypes.WildCard"
+                                                  [filterOption]="activeFilterOption">
+            </app-objects-list-filtering-wild-card>
+            <app-objects-list-filtering-decimal *ngIf="activeFilterOption.type === FilterTypes.Decimal"
+                                                [filterOption]="activeFilterOption">
+            </app-objects-list-filtering-decimal>
+            <app-objects-list-filtering-boolean *ngIf="activeFilterOption.type === FilterTypes.Boolean"
+                                                [filterOption]="activeFilterOption">
+            </app-objects-list-filtering-boolean>
+          </div>
+        </div>
+      </div>
+      <span *ngIf="!showDetail">
+        <button *ngFor="let filterOption of filterConfig.availableOptions"
+                (click) = "showDetailSwitch($event, filterOption)"
+                mat-menu-item
+                class="filtering-menu-items">
+          {{filterOption.display}}
+        </button>
+      </span>
+    </div>
+  </mat-menu>
+</span>

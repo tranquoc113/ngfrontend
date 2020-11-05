@@ -1,0 +1,77 @@
+<div class="fl-content fl-content-min-height">
+  <div class="fl-row">
+    <div class="fl-col fl-margin-top-small" *ngFor="let key of cloudSummaryKeys">
+      <div class="fl-subheader">{{cloudSummary[key].name}}</div>
+      <span class="fl-detail fl-margin-left-small" *ngIf="!cloudSummary[key].objects.length">&nbsp;-</span>
+      <ul class="fl-margin-bottom-small">
+        <ng-container *ngIf="cloudSummary[key].name === 'Instances'">
+          <li *ngFor="let cloudObject of cloudSummary[key].objects"
+              class="fl-list-element fl-margin-left">
+            <app-openstack-resource-link [resourceId]="cloudObject.id" path="openstack/instances/">
+              {{cloudObject.name}}
+            </app-openstack-resource-link>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="cloudSummary[key].name === 'SSH keys'">
+          <li *ngFor="let cloudObject of cloudSummary[key].objects"
+              class="fl-list-element fl-margin-left">
+            <app-openstack-resource-link [resourceId]="cloudObject.id" path="openstack/ssh-keys/">
+              {{cloudObject.name}}
+            </app-openstack-resource-link>
+        </ng-container>
+        <ng-container *ngIf="cloudSummary[key].name === 'Volumes'">
+          <li *ngFor="let cloudObject of cloudSummary[key].objects"
+              class="fl-list-element fl-margin-left">
+            <app-openstack-resource-link [resourceId]="cloudObject.id" path="openstack/volumes/">
+              {{cloudObject.name || cloudObject.id}}
+            </app-openstack-resource-link>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="cloudSummary[key].name === 'Networks'">
+          <li *ngFor="let cloudObject of cloudSummary[key].objects"
+              class="fl-list-element fl-margin-left">
+            <app-openstack-resource-link [resourceId]="cloudObject.id" path="openstack/networks/">
+              {{cloudObject.name}}
+            </app-openstack-resource-link>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="cloudSummary[key].name === 'Routers'">
+          <li *ngFor="let cloudObject of cloudSummary[key].objects"
+              class="fl-list-element fl-margin-left">
+            <app-openstack-resource-link [resourceId]="cloudObject.id" path="openstack/routers/">
+              {{cloudObject.name || cloudObject.id}}
+            </app-openstack-resource-link>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="cloudSummary[key].name === 'Images'">
+          <li *ngFor="let cloudObject of cloudSummary[key].objects"
+              class="fl-list-element fl-margin-left">
+            <app-openstack-resource-link [resourceId]="cloudObject.id" path="openstack/images/">
+              {{cloudObject.name || cloudObject.id}}
+            </app-openstack-resource-link>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="cloudSummary[key].name === 'Ports'">
+          <li *ngFor="let cloudObject of cloudSummary[key].objects"
+              class="fl-list-element fl-margin-left">
+            <app-openstack-resource-link [resourceId]="cloudObject.id" path="openstack/ports/">
+              {{cloudObject.name || cloudObject.id}}
+            </app-openstack-resource-link>
+            <div>
+              <ul>
+                <li class="fl-list-element fl-margin-left" *ngFor="let fixed_ip of cloudObject.fixed_ips">
+                  {{ fixed_ip.ip_address }}
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ng-container>
+      </ul>
+      <div class="fl-margin-bottom fl-margin-top"
+           *ngIf="cloudSummary[key].count <= cloudSummary[key].load_count"></div>
+      <app-openstack-resource-link *ngIf="cloudSummary[key].count > cloudSummary[key].load_count" button="Show all"
+                               [clientId]="object.id" [resourceType]="key" [projectId]="clientOsProjectId">
+      </app-openstack-resource-link>
+    </div>
+  </div>
+</div>

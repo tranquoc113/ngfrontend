@@ -1,0 +1,23 @@
+<h1 *ngIf="data && data.product" mat-dialog-title>Associate option</h1>
+<div mat-dialog-content class="fl-dialog">
+  <app-fl-backdrop [spinnerDiameter]="40" *ngIf="loading"></app-fl-backdrop>
+  <div *ngIf="availableOptions && !availableOptions.length">
+    There are no available options.
+  </div>
+  <form [formGroup]="associateOptionForm" *ngIf="availableOptions && availableOptions.length">
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="selectedOption" placeholder="Select configurable option">
+        <mat-option *ngFor="let option of availableOptions" [value]="option.id">
+          {{option.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!(this.selectedOption && this.selectedOption.value)" (click)="associateOption()"
+          [color]="'primary'">
+    Associate option
+  </button>
+</div>

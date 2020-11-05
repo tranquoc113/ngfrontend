@@ -1,0 +1,14 @@
+<mat-form-field class="filtering-input-width">
+  <mat-label>Select a value...</mat-label>
+  <mat-select [(ngModel)]="selectedValue">
+    <mat-option *ngFor="let choice of choices" [value]="choice.value">
+      {{choice.display}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<div><!--pushes checkbox on new line--></div>
+<mat-checkbox [(ngModel)]="exclude" [color]="'primary'">Exclude</mat-checkbox>
+<div class="fl-margin-top-medium"><!--pushes button on new line--></div>
+<button (click)="applyFiltering()" mat-flat-button>
+  Apply
+</button>

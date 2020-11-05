@@ -1,0 +1,89 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="addRuleForm" fxLayout="column">
+  <app-fl-backdrop [verticalAlignMiddle]="true" *ngIf="loading"></app-fl-backdrop>
+  <app-form-errors #formErrors [formGroup]="addRuleForm"></app-form-errors>
+  <mat-form-field>
+    <mat-select formControlName="ruleType" placeholder="Rule protocol" (selectionChange)="changedRuleType()" required>
+      <mat-option *ngFor="let ruleType of ruleTypes | keyvalue" [value]="ruleType.key">
+        {{ruleType.key}}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['ruleType']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field *ngIf="protocolField">
+    <input matInput placeholder="Protocol" type="number" min="1" max="255" name="protocol"
+           formControlName="protocol" required>
+    <mat-error>{{fieldErrors['protocol']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field *ngIf="portField">
+    <input matInput placeholder="Port or range" type="text" maxlength="11" name="port_range"
+           formControlName="port_range" pattern="([0-9]{1,5})([:][0-9]{1,5})?" [required]="portRequired">
+    <mat-error>{{fieldErrors['port_range']}}</mat-error>
+    <mat-hint>Enter one port or port range as such: port_min:port_max</mat-hint>
+  </mat-form-field>
+  <mat-checkbox color="primary" *ngIf="portField" (change)="changedAllPorts($event)">
+      All ports
+  </mat-checkbox>
+  <div fxLayout="row" fxFlex="100" fxLayoutGap="10px" *ngIf="icmpTypeField && icmpCodeField">
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="ICMP type" type="number" min="0" max="255" name="icmp_type"
+             formControlName="icmp_type">
+      <mat-error>{{fieldErrors['icmp_type']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="ICMP code" type="number" min="0" max="255" name="icmp_code"
+             formControlName="icmp_code">
+      <mat-error>{{fieldErrors['icmp_code']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-form-field>
+    <input matInput placeholder="Description" type="text" formControlName="description">
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select formControlName="direction" placeholder="Select source type" required>
+      <mat-option value="ingress">
+        Ingress - Incoming
+      </mat-option>
+      <mat-option value="egress">
+        Egress - Outgoing
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select formControlName="remote" placeholder="Remote source of traffic"
+                (selectionChange)="changedRemoteSource()" required>
+      <mat-option value="cidr">
+        IP Addresses
+      </mat-option>
+      <mat-option value="secgroup">
+        Security group
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['remote']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field *ngIf="addRuleForm.controls.remote.value === 'cidr'">
+    <input matInput placeholder="Remote IP prefix" type="text" formControlName="remote_ip_prefix">
+    <mat-error>{{fieldErrors['remote_ip_prefix']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field *ngIf="addRuleForm.controls.remote.value === 'secgroup'">
+    <mat-select formControlName="remote_group_id" placeholder="Remote security group" required>
+      <mat-option *ngFor="let remoteGroup of securityGroups" [value]="remoteGroup.id">
+        {{remoteGroup.name || remoteGroup.id}}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['remote_group_id']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field *ngIf="addRuleForm.controls.remote.value === 'secgroup'">
+    <mat-select formControlName="ethertype" placeholder="Ether type" required>
+      <mat-option value="IPv4">
+        IPv4
+      </mat-option>
+      <mat-option value="IPv6">
+        IPv6
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['ethertype']}}</mat-error>
+  </mat-form-field>
+</form>

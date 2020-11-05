@@ -1,0 +1,10 @@
+.currency-dialog-content {
+  width: 400px;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 1024px) {
+  .currency-dialog-content {
+    width: 300px;
+  }
+}

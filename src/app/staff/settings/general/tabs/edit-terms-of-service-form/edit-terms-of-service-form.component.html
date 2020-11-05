@@ -1,0 +1,53 @@
+<form appFormSubmit (ngSubmit)="saveTermsOfService()" [formGroup]="termsOfServiceForm" fxLayout="column">
+  <app-form-errors #formErrors [formGroup]="termsOfServiceForm"></app-form-errors>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="25px">
+    <div fxLayout="column" fxFlex="50" fxLayout.xs="100">
+      <mat-form-field>
+        <input matInput placeholder="Title" type="text" formControlName="title" required>
+        <mat-error>{{backendErrors['title'] || 'This field is required!' }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Version" type="text" formControlName="version">
+        <mat-error>{{backendErrors['version'] || 'This field is required!' }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxFlex="50" fxHide.xs>
+      <h3>Version</h3>
+      <p>
+        Be consistent when defining version as the latest version TOS is the first one in the TOS list
+        automatically ordered by the version!
+        <br>
+        Use for example: "2019.09", "2019.10", "2019.10.1" or "a.0", "a.1", "b", etc.
+      </p>
+    </div>
+  </div>
+
+  <mat-checkbox [color]="'primary'" formControlName="draft"
+                class="fl-margin-bottom">
+    Draft (drafts won't be taken into consideration)
+  </mat-checkbox>
+
+  <div fxLayout="column" class="fl-margin-bottom">
+    <p class="fl-subheader-md fl-no-margin-top">Content ...</p>
+    <div class="fl-tinymce-placeholder">
+    <span *ngIf="tinyMCEOptions">
+      <editor [init]="tinyMCEOptions" formControlName="content"></editor>
+      <mat-error *ngIf="termsOfServiceForm.controls.content.invalid &&
+      ((termsOfServiceForm.controls.content.touched && termsOfServiceForm.dirty) || tosSaveSubmitted)">
+        {{backendErrors['content'] || 'This field is required'}}
+      </mat-error>
+    </span>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <a mat-button [routerLink]="[config.getPanelUrl('settings/general')]"
+            fragment="terms of service">
+      Cancel
+    </a>
+    <button mat-button id="save_tos" type="submit" [color]="'primary'">
+      {{isNew ? 'Add new terms of service' : 'Save terms of service'}}
+    </button>
+  </div>
+</form>

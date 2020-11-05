@@ -1,0 +1,54 @@
+<form [formGroup]="customFieldsForm">
+  <div *ngFor="let category of fieldCategories; let i = index;">
+    <p *ngIf="category.name">
+      <a (click)="toggleCategory(i)" class="active-link">{{ category.name }}</a>
+    </p>
+    <div *ngIf="!category.collapsed || !category.name">
+      <div *ngFor="let item of category.fields | keyvalue">
+        <div *ngIf="item.value.fieldType === 'input' && item.value.visible">
+          <mat-form-field>
+            <mat-label>{{item.value.label }}</mat-label>
+            <input matInput name="{{item.key}}" [formControlName]="item.key"
+                   [required]="item.value.required" *ngIf="item.value.type === 'text'">
+            <input type="password" matInput
+                   name="{{item.key}}" [formControlName]="item.key"
+                   [required]="item.value.required" *ngIf="item.value.type === 'password'">
+
+            <input type="email" matInput name="{{item.key}}" [formControlName]="item.key"
+                   [required]="item.value.required" *ngIf="item.value.type === 'email'">
+
+            <input type="number" matInput name="{{item.key}}" [formControlName]="item.key"
+                   [required]="item.value.required" *ngIf="item.value.type === 'int'" step="1">
+
+            <input type="number" matInput name="{{item.key}}" [formControlName]="item.key"
+                   [required]="item.value.required" *ngIf="item.value.type === 'decimal'"
+                   step="0.01">
+
+            <textarea cols="1" rows="8"
+                      matInput
+                      [formControlName]="item.key"
+                      name="{{item.key}}"
+                      [required]="item.value.required"
+                      *ngIf="item.value.type === 'textarea'"></textarea>
+            <mat-error>{{backendErrors[item.key] || 'This field is required!' }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="item.value.fieldType === 'select' && item.value.visible">
+          <mat-form-field>
+            <mat-label>{{item.value.label }}</mat-label>
+            <mat-select [formControlName]="item.key" [required]="item.value.required">
+              <mat-option *ngFor="let option of item.value.choices" [value]="option.value">
+                {{option.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="item.value.fieldType === 'check' && item.value.visible">
+          <mat-checkbox [formControlName]="item.key" color="primary">
+            {{item.value.label}}
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

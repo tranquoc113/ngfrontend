@@ -1,0 +1,18 @@
+<app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+<form [formGroup]="upgradeClusterForm">
+  <app-form-errors #formErrors [formGroup]="upgradeClusterForm"></app-form-errors>
+  <div fxLayout="column">
+    <mat-form-field>
+      <input matInput placeholder="Cluster template" type="text"
+             formControlName="cluster_template" required
+             [matAutocomplete]="autocompleteInput"
+             (click)="clearClusterTemplate()">
+      <mat-autocomplete #autocompleteInput="matAutocomplete" [displayWith]="clusterTemplateDisplay">
+        <mat-option *ngFor="let clusterTemplate of filteredClusterTemplates$ | async" [value]="clusterTemplate">
+          {{clusterTemplate.name ? clusterTemplate.name + ' - ' + clusterTemplate.id.toString() : clusterTemplate.id.toString()}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['cluster_template']}}</mat-error>
+    </mat-form-field>
+  </div>
+</form>

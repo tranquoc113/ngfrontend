@@ -1,0 +1,13 @@
+.tos-content {
+  margin: 0;
+  height: 45px;
+  width: 150px;
+  overflow: hidden;
+  align-content: center;
+}
+
+@media screen and (max-width: 480px) {
+  .tos-content {
+    width: 100px;
+  }
+}

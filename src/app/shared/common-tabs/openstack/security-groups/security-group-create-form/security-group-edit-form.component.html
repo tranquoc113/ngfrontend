@@ -1,0 +1,39 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="securityGroupForm" fxLayout="column">
+  <app-fl-backdrop [verticalAlignMiddle]="true" *ngIf="loading"></app-fl-backdrop>
+  <app-form-errors #formErrors [formGroup]="securityGroupForm"></app-form-errors>
+  <mat-form-field fxFlex="100" *ngIf="isCreateForm">
+    <input matInput placeholder="Client" aria-label="Client" [matAutocomplete]="clientAuto"
+           (click)="clickedAutocompleteInput('client')"
+           formControlName="client" required>
+    <mat-autocomplete #clientAuto="matAutocomplete" [displayWith]="displayClientFn">
+      <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+        <app-gravatar [email]="client.email" [customStyle]="{
+          width: '24px',
+          borderRadius: '100%',
+          marginLeft: '5px',
+          marginRight: '15px',
+          verticalAlign: 'middle'
+        }"></app-gravatar>
+        <span>{{client.name || client.id}}</span>
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['client']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field fxFlex="100" *ngIf="isCreateForm && createOptions">
+    <mat-select formControlName="region" placeholder="Region" required>
+      <mat-option *ngFor="let region of createOptions.regions"
+                  [value]="region.id">
+        {{region.id}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Description" type="text" formControlName="description">
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+</form>

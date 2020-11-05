@@ -1,0 +1,27 @@
+<h1 *ngIf="data" mat-dialog-title>Link a ticket</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="linkTicket()" [formGroup]="linkTicketForm" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="linkTicketForm" [maxWidth]="'300px'"></app-form-errors>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Ticket" aria-label="Ticket" [matAutocomplete]="auto"
+             (click)="clickedTicketInput()"
+             formControlName="linked_ticket">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayTicketFn">
+        <mat-option *ngFor="let ticket of filteredTickets" [value]="ticket">
+          <span>#{{ticket.id}} - {{ticket.title}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{backendErrors['ticket'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+    <mat-checkbox formControlName="symmetrical" color="primary">
+      Create link both ways
+    </mat-checkbox>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="linkTicket()"
+          [color]="'primary'">
+    Link ticket
+  </button>
+</div>

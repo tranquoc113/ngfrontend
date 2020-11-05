@@ -1,0 +1,32 @@
+<h1 *ngIf="data && data.client" mat-dialog-title>Edit credit for {{data.client.name}}</h1>
+<div mat-dialog-content class="fl-dialog">
+  <app-fl-backdrop *ngIf="loading" [spinnerDiameter]="30"></app-fl-backdrop>
+  <form [formGroup]="changeCreditForm" (ngSubmit)="changeCredit()">
+  <app-form-errors #formErrors [formGroup]="changeCreditForm"></app-form-errors>
+    <div class="fl-margin-top-medium">
+      <mat-radio-group
+        formControlName="change_type">
+        <mat-radio-button class="fl-block" [color]="'primary'" [value]="'add'">
+          Add credit
+        </mat-radio-button>
+        <mat-radio-button class="fl-block fl-margin-top-medium" [color]="'primary'" [value]="'subtract'">
+          Subtract credit
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="fl-margin-top">
+      <mat-form-field *ngIf="data && data.client" fxFlex="90">
+        <input matInput placeholder="Amount ({{data.client.currency}})"
+               type="number" formControlName="amount" min="0.01" required>
+        <mat-error>{{backendErrors['amount'] || 'This field is required!' }}</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!changeCreditForm.valid" (click)="changeCredit()"
+          [color]="'primary'">
+    Submit
+  </button>
+</div>

@@ -1,0 +1,95 @@
+<app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="volumeForm" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="volumeForm"></app-form-errors>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <div fxLayout="column" [fxFlex]="object && !object.id ? 50 : 100">
+      <mat-form-field>
+        <input matInput placeholder="Client" type="text" formControlName="client" required (click)="clearClient()"
+               [matAutocomplete]="autocompleteClient">
+        <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+          <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+            {{client.first_name}} {{client.last_name}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error>{{fieldErrors['name']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="region" placeholder="Region" required>
+          <mat-option *ngFor="let region of createOptions.regions"
+                      [value]="region.id" (onSelectionChange)="volumeTypeChanged(null)">
+            {{region.id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Name" type="text" formControlName="name" required>
+        <mat-error>{{fieldErrors['name']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Description" type="text" formControlName="description">
+        <mat-error>{{fieldErrors['description']}}</mat-error>
+      </mat-form-field>
+      <ng-container formGroupName="source">
+        <mat-form-field>
+          <mat-select formControlName="source_type" placeholder="Select source type" required>
+            <mat-option *ngFor="let sourceType of sourceTypes"
+                        [value]="sourceType.name">
+              {{sourceType.description}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="volumeForm.value.source.source_type === 'image'">
+          <input matInput placeholder="Image" type="text" formControlName="source" required
+                 [matAutocomplete]="autocompleteImage">
+          <mat-autocomplete #autocompleteImage="matAutocomplete" [displayWith]="imageDisplay">
+            <mat-option *ngFor="let image of filteredImages$ | async" [value]="image">
+              {{image.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </ng-container>
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Size (GB)" type="number"
+               formControlName="size" required
+               [step]="selectedVolumeType ? selectedVolumeType.sizeIncrement: 1"
+               [min]="selectedVolumeType ? selectedVolumeType.minimumSize: 1">
+        <mat-error>{{fieldErrors['size']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="type" placeholder="Volume type" required>
+          <mat-option *ngFor="let volumeType of createOptions.types"
+                      [value]="volumeType.name" (onSelectionChange)="volumeTypeChanged(volumeType)">
+            {{volumeType.type_display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="object && !object.id" fxLayout="column" fxFlex="50">
+      <p>
+        <strong>New OpenStack Volume</strong><br>
+        You can create a new Volume by first selecting a Client with an OpenStack project assigned <br>
+        then a Region where the volume will be created then setting <br>
+        the name and a description for it.<br>
+      </p>
+      <p>
+        <strong>Source Selection</strong><br>
+        You can create an empty volume or use an image or an existing volume as a source.<br>
+        Selecting a source will copy the data from that source to the new volume.<br>
+        In the case you select a bootable image, the volume will also be marked as bootable <br>
+        and you will be able to boot directly from that volume. <br>
+      </p>
+      <p>
+        <strong>Size</strong><br>
+        Enter the size of the new volume. This size must be equal of higher than the source size if <br>
+        any source is selected. For example, if an image has a minimum size of 3GB, the new volume size <br>
+        must be at least 3GB.
+      </p>
+      <p>
+        <strong>Type</strong><br>
+        A volume type can also be set while creating the volume. <br>
+        All volume types available in the selected region will be available to select from.<br>
+      </p>
+    </div>
+  </div>
+</form>

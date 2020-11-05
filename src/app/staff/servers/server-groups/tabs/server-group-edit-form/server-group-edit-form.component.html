@@ -1,0 +1,42 @@
+<div fxLayout="row" fxLayoutGap="10px">
+  <form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+        [formGroup]="serverGroupForm" fxLayout="column" fxFlex="auto">
+    <app-form-errors #formErrors [formGroup]="serverGroupForm"></app-form-errors>
+    <mat-form-field>
+      <input matInput placeholder="Group name" type="text" formControlName="name" required>
+      <mat-error>{{backendErrors['name'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Group description" type="text" formControlName="description">
+      <mat-error>{{backendErrors['description'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+
+    <mat-radio-group formControlName="placement" fxLayout="column">
+      <mat-radio-button [color]="'primary'" [value]="1">
+        Create accounts on each server in order
+      </mat-radio-button>
+      <mat-radio-button class="fl-margin-top-medium" [color]="'primary'" [value]="2">
+        Create on the least used server
+      </mat-radio-button>
+    </mat-radio-group>
+  </form>
+  <div fxLayout="column" fxHide.xs fxFlex="50">
+    <p>
+      <strong>Server group name</strong><br>
+      An easy to remember name, used only for display.
+    </p>
+    <p>
+      <strong>Group description</strong><br>
+      A detailed description of this group.
+    </p>
+    <p>
+      <strong>Account placement type</strong><br>
+      How accounts are created on servers from this group <br>
+      <strong>Create in order</strong> will use the first available server in the list until it's filled
+      and continue with the next server.<br>
+      <strong>Create on the least used server</strong> will always try to find the least used server and
+      create new accounts there.
+    </p>
+  </div>
+</div>

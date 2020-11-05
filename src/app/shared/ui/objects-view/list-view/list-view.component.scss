@@ -1,0 +1,116 @@
+.table-wrapper {
+  margin: 20px;
+  position: relative;
+}
+
+table {
+  width: 100%;
+  margin-right: 10px;
+}
+
+.table-header-cell {
+  display: flex;
+}
+
+.table-cell {
+  position: relative;
+}
+
+.table-cell-image {
+  width: 48px;
+}
+
+.padding-right {
+  padding-right: 5px;
+}
+
+.text-cell {
+  width: 100%;
+}
+
+th, td span {
+  font-size: 14px;
+}
+
+.no-objects-message-container {
+  text-align: center;
+}
+
+.no-objects-message {
+  font-size: 22px;
+  color: #6F6F6F;
+  position: fixed;
+  width: 100%;
+  background-color: #F1F1F1;
+  left: 0;
+  top: 200px;
+}
+
+tr.detail-row {
+  display: flex;
+  height: auto;
+}
+
+tr.detail-row td {
+  border: 0 !important;
+}
+
+.detail-cell {
+  padding-left: 0 !important;
+  display: flex;
+  width: 100%;
+  padding-right: 0 !important;
+}
+
+.detail-container {
+  display: flex;
+  width: 100%;
+}
+
+.currency-col {
+  flex-direction: row-reverse !important;
+}
+
+th.currency-col {
+  padding-right: 30px;
+}
+
+.sub-text {
+  color: gray;
+  font-weight: lighter !important;
+  font-size: smaller !important;
+  margin-top: 1px;
+}
+
+.sub-text-with-link:hover {
+  text-decoration: underline;
+  color: #1E88E5;
+}
+
+tr.mat-row.main-row {
+  height: auto;
+  min-height: 48px;
+}
+
+@media screen and (max-width: 768px) {
+  .table-wrapper-extra {
+    margin: 0 !important;;
+  }
+}
+
+@media screen and (min-width: 599px) {
+  /* require hover for actions only on screens larger than xs */
+  ::ng-deep .table-cell-actions-selector .actions-container {
+    opacity: 0;
+    transition: 0.2s;
+    -webkit-transition: 0.2s;
+  }
+
+  ::ng-deep tr:hover .actions-container {
+    opacity: 1;
+  }
+}
+
+::ng-deep tr.always-show-actions .actions-container {
+  opacity: 1 !important;
+}

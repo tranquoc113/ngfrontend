@@ -1,0 +1,152 @@
+<div *ngIf="object" fxLayout="column" class="fl-content fl-content-min-height">
+  <p class="fl-detail">ID: {{ object.id }}</p>
+  <p class="fl-detail">Project: {{ object.project_id }}</p>
+  <p class="fl-detail">Created at: {{ object.created_at | date:'medium' }}</p>
+  <p class="fl-detail">Updated at: {{ object.updated_at | date:'medium' }}</p>
+  <p class="fl-detail">Email: {{ object.email }}</p>
+  <p class="fl-detail">TTL: {{ object.ttl }}</p>
+  <p class="fl-detail">Type: {{ object.type }}</p>
+  <div class="fl-detail">
+    Masters:&nbsp;
+    <ul *ngIf="object.masters.length; else noMasters" class="fl-margin-left">
+      <li *ngFor="let master of object.masters">
+        {{ master }}
+      </li>
+    </ul>
+    <ng-template #noMasters>n/a</ng-template>
+  </div>
+  <p class="fl-detail">Description: {{ object.description || 'n/a' }} </p>
+  <p class="fl-detail">
+    Attributes:&nbsp;
+    <ng-container *ngIf="object.attributes.length; else noAttributes">
+      <span *ngFor="let attr of object.attributes; let last=last">
+        {{ attr }}
+        <ng-container *ngIf="!last">, </ng-container>
+      </span>
+    </ng-container>
+    <ng-template #noAttributes>n/a</ng-template>
+  </p>
+
+  <div class="fl-margin-top">
+    Records
+    <span *ngIf="loading"> - loading {{loadedCount}}/{{totalCount}}</span>
+    <hr fxHide.xs>
+  </div>
+
+  <form *ngIf="recordsList" [formGroup]="recordsForm">
+    <app-form-errors #formErrors [formGroup]="recordsForm"></app-form-errors>
+    <div class="fl-detail">
+      <div fxLayout="row" fxHide.xs class="fl-bold recordsets-titles" fxLayoutGap="10px">
+        <p fxFlex="200px">Subdomain</p>
+        <p fxFlex="100px">TTL</p>
+        <p fxFlex="100px">Type</p>
+        <p fxFlex="auto">Record</p>
+      </div>
+      <!-- Read only recordsets -->
+      <div *ngFor="let recordset of recordsList.read_only_recordsets" class="recordset-row"
+           fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+        <div fxFlex="200px" fxFlex.xs="auto" class="fl-ellipsis-text">
+          {{ recordset.name }}
+        </div>
+        <div fxFlex="100px" fxFlex.xs="auto">
+          {{ recordset.ttl }}
+        </div>
+        <div fxFlex="100px" fxFlex.xs="auto" class="fl-ellipsis-text">
+          {{ recordset.type }}
+        </div>
+        <div fxFlex="auto" fxLayout="column">
+          <div *ngFor="let record of recordset.records">
+            {{record}}
+          </div>
+        </div>
+      </div>
+
+      <!-- Editable recordsets -->
+      <ng-container *ngFor="let recordset of displayRecordsets; let recordsetIndex=index">
+        <div *ngIf="!recordset.deleted" [formGroup]="recordsetGroups[recordsetIndex].recordset"
+             class="recordset-row"
+             [class.invalid-recordset]="recordset.status === 'ERROR'"
+             fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+          <mat-form-field fxFlex="200px" fxFlex.xs="auto"
+                          [class.mat-form-field-invalid]="recordset.status === 'ERROR'">
+            <input matInput type="text" formControlName="name" placeholder="Subdomain" required>
+            <mat-error>This field is required</mat-error>
+            <mat-hint *ngIf="recordset.status === 'ERROR'">
+              <span class="fl-red-color">Status: {{recordset.status}}</span>
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field fxFlex="100px" fxFlex.xs="auto"
+                          [class.mat-form-field-invalid]="recordset.status === 'ERROR'">
+            <input matInput type="number" formControlName="ttl" placeholder="TTL" min="1" required>
+            <mat-error>This field is required</mat-error>
+          </mat-form-field>
+          <div fxFlex="100px" fxFlex.xs="auto" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start start">
+            <mat-form-field fxFlex="70px"
+                            [class.mat-form-field-invalid]="recordset.status === 'ERROR'">
+              <mat-select formControlName="type" placeholder="" required>
+                <mat-option *ngFor="let type of recordsList.record_types" [value]="type">
+                  {{type}}
+                </mat-option>
+              </mat-select>
+              <mat-error>This field is required</mat-error>
+            </mat-form-field>
+            <div fxFlex="20px" fxHide.xs>
+              <mat-icon *ngIf="recordsetGroups[recordsetIndex].recordset.controls.type.value === 'TXT'"
+                        fl-tooltip="If input value exceeds 255 characters\n split it using spaces.">
+                info
+              </mat-icon>
+            </div>
+          </div>
+          <div fxFlex="auto" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center"
+               fxLayoutAlign.xs="start start">
+            <div fxLayout="column" fxFlex="auto">
+              <div *ngFor="let record of recordset.records; let recordIndex=index"
+                   [formGroup]="recordsetGroups[recordsetIndex].recordArray[recordIndex]"
+                   fxLayout="row">
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px" [ngClass.xs]="{'fl-margin-bottom': true}">
+                  <div fxLayout="row" fxLayout.xs="column" fxFlex="auto" fxLayoutGap="10px">
+                    <mat-form-field *ngFor="let fieldName of recordsetGroups[recordsetIndex].fieldNames"
+                                    [fxFlex]="recordsetGroups[recordsetIndex].flex" fxFlex.xs="auto"
+                                    [class.mat-form-field-invalid]="recordset.status === 'ERROR'">
+                      <input matInput type="text" [formControlName]="fieldName" placeholder="{{fieldName}}" required>
+                      <mat-error>This field is required</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <button mat-icon-button *ngIf="recordsetGroups[recordsetIndex].canDeleteRecords" fxFlex="30px"
+                          (click)="deleteRecord(recordsetIndex, recordIndex)" fl-tooltip="Delete record">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="row">
+              <button fxFlex="50px" mat-icon-button fl-tooltip="Add new record" (click)="addRecord(recordsetIndex)">
+                <mat-icon>add</mat-icon>
+              </button>
+              <button fxFlex="50px" mat-icon-button fl-tooltip="Delete recordset"
+                      (click)="deleteRecordset(recordsetIndex)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="fl-margin-top">
+      <p *ngIf="loading">
+        Loading recordsets, please wait ...
+      </p>
+      <button mat-fab (click)="addRecordset()" [disabled]="loading">
+        <mat-icon>add</mat-icon>
+      </button>
+      <span class="fl-detail">Add recordset</span>
+    </div>
+    <div fxLayout="row" fxLayoutAlign.xs="center center">
+      <button mat-button mat-raised-button color="primary" (click)="saveChanges()"
+              [disabled]="saving || !permissions['dns.synchronize_records'] || !recordsList.recordsets.length">
+        Save changes
+      </button>
+    </div>
+  </form>
+</div>

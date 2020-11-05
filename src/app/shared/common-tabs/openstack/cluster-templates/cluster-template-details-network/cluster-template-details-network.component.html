@@ -1,0 +1,24 @@
+<div class="fl-content fl-content-min-height" fxLayoutGap="10px" fxLayout="row" fxLayout.lt-md="column" *ngIf="object">
+  <div fxLayout="column" fxFlex="100">
+    <p>Network driver: {{object.network_driver}}</p>
+    <p>External network: {{object.external_network_id}}</p>
+    <p>HTTP proxy: {{object.http_proxy ? object.http_proxy : '-'}}</p>
+    <p>HTTPS proxy: {{object.https_proxy ? object.https_proxy : '-'}}</p>
+    <p>No proxy: {{object.no_proxy ? object.no_proxy : '-'}}</p>
+    <p>DNS nameserver: {{object.dns_nameserver ? object.dns_nameserver : '-'}}</p>
+  </div>
+  <div fxLayout="column" fxFlex="100">
+    <p>
+      Fixed network: {{object.fixed_network ? object.fixed_network : '-'}}
+    </p>
+    <p>
+      Fixed subnet: {{object.fixed_subnet ? object.fixed_subnet : '-'}}
+    </p>
+    <mat-checkbox [color]="'primary'" disabled [ngModel]="object.master_lb_enabled">
+      Master LB
+    </mat-checkbox>
+    <mat-checkbox [color]="'primary'" disabled [ngModel]="object.floating_ip_enabled">
+      Floating IP
+    </mat-checkbox>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="fl-content fl-content-min-height" fxLayoutGap="10px" fxLayout="row" fxLayout.lt-md="column" *ngIf="object">
+  <div fxLayout="column" fxFlex="100">
+    <p>Created at: {{object.created_at | date:'medium'}}</p>
+    <p>COE: {{object.coe}}</p>
+    <p>Server type: {{object.server_type}}</p>
+    <p *ngIf="object.client">
+      Client:
+      <a [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]" class="active-link">
+        {{ object.client.name }}
+      </a>
+    </p>
+  </div>
+  <div fxLayout="column" fxFlex="100">
+    <mat-checkbox class="fl-margin-top" [color]="'primary'" disabled [ngModel]="object.public">
+      Public
+    </mat-checkbox>
+    <mat-checkbox [color]="'primary'" disabled [ngModel]="object.registry_enabled">
+      Enable registry
+    </mat-checkbox>
+    <mat-checkbox [color]="'primary'" disabled [ngModel]="object.tls_disabled">
+      Disable TLS
+    </mat-checkbox>
+  </div>
+</div>

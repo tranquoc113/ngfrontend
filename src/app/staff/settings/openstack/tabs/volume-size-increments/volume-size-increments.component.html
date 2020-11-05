@@ -1,0 +1,55 @@
+<div class="min-height-content fl-content">
+  <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+    <div *ngIf="regions.length > 0" fxLayout="column" fxFlex="50" fxFlex.xs="100">
+      <div *ngFor="let region of regions" fxLayout="column">
+        <div class="fl-margin-bottom">Region name: {{ region }}</div>
+        <div *ngFor="let vsi of volumeSizes.volume_size_increments[region] | keyvalue"
+             fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+          <mat-form-field fxFlex="100" class="fl-margin-top-small">
+            <input matInput type="number" name="{{ region }}_{{ vsi.key }}"
+                   [(ngModel)]="volumeSizes.volume_size_increments[region][vsi.key]"
+                   [placeholder]="vsi.key + ' size increment'"
+                   (ngModelChange)="volumeSizes.volume_minimum_sizes[region][vsi.key] = $event"
+                   step="1" min="1">
+          </mat-form-field>
+          <mat-form-field fxFlex="100" class="fl-margin-top-small">
+            <input matInput type="number" name="minimum_{{ region }}_{{ vsi.key }}"
+                   [(ngModel)]="volumeSizes.volume_minimum_sizes[region][vsi.key]"
+                   [placeholder]="vsi.key + ' minimum size'"
+                   [step]="volumeSizes.volume_size_increments[region][vsi.key]"
+                   [min]="volumeSizes.volume_size_increments[region][vsi.key]">
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayout.xs="column">
+        <button mat-button (click)="save()" [color]="'primary'">
+          Save
+        </button>
+      </div>
+    </div>
+    <div *ngIf="regions.length === 0" fxLayout="column" fxFlex="50" fxFlex.xs="100">
+      <p>No volume types found.</p>
+    </div>
+    <div fxLayout="column" fxShow.xs="false">
+      <p class="mat-caption">
+        <strong>Volume size increments</strong><br>
+        Set the minimum step size that can be used when extending or shrinking a volume. <br>
+        For example, some storage types allow a minimum of 8GB when increasing or decreasing the <br>
+        available space. <br>
+        The default value is 1 GB for every volume type. <br>
+        Note that this feature is only supported in Fleio. The default <br>
+        OpenStack behaviour is to automatically round up the volum size if <br>
+        invalid values are provided.
+      </p>
+      <p class="mat-caption">
+        <strong>Minimum volume sizes</strong><br>
+        Set minimum volume size to be used when creating a volume. <br>
+        The value should be greater than zero and a multiple of volume size increment. <br>
+        The default value is 1 GB for every volume type. <br>
+        Note that this feature is only supported in Fleio. The default <br>
+        OpenStack behaviour is to automatically round up the volum size if <br>
+        invalid values are provided.
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="fl-content fl-content-min-height" fxLayout="column" [formGroup]="flavorPropertiesForm">
+  <app-fl-backdrop [verticalAlignMiddle]="true" *ngIf="loading"></app-fl-backdrop>
+  <app-form-errors #formErrors [formGroup]="flavorPropertiesForm"></app-form-errors>
+  <div formArrayName="properties" *ngFor="let item of formProperties['controls']; let i = index;">
+    <div [formGroupName]="i" fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="100">
+        <input matInput formControlName="key" placeholder="Key" type="text" required>
+        <mat-error>{{fieldErrors['key'] || 'This field is required'}}</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="100">
+        <input matInput formControlName="value" placeholder="Value" type="text">
+        <mat-error>{{fieldErrors['value']}}</mat-error>
+      </mat-form-field>
+      <div fxFlex="100">
+        <button class="white-bg" mat-mini-fab color="primary"
+                (click)="deletePropertyFromList(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button class="white-bg" mat-mini-fab color="primary" (click)="addPropertyToList()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <span class="fl-margin-left-small">Add flavor property</span>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<ng-container *ngIf="linkOptions && linkOptions.useLink;else withoutLink">
+  <a *ngIf="linkOptions.customLink" href="{{linkOptions.customLink}}">
+    <img [ngStyle]="customStyle" src="{{logoPath}}">
+  </a>
+  <a *ngIf="!linkOptions.customLink" [routerLink]="config.getPanelHomeUrl()">
+    <img [ngStyle]="customStyle" src="{{logoPath}}">
+  </a>
+</ng-container>
+<ng-template #withoutLink><img [ngStyle]="customStyle" src="{{logoPath}}"></ng-template>

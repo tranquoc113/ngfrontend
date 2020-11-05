@@ -1,0 +1,21 @@
+<h1 *ngIf="data && data.user" mat-dialog-title>Select a group and add {{data.user.username}} to it</h1>
+<div mat-dialog-content>
+  <form [formGroup]="associateUserForm" (ngSubmit)="associateUser()">
+    <mat-form-field fxFlex>
+      <input matInput placeholder="User group" type="text" formControlName="selectedUserGroup" required
+               [matAutocomplete]="auto" (click)="clickedGroupInput()">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserGroupFn">
+        <mat-option *ngFor="let group of filteredUserGroups" [value]="group">
+          <span>{{group.name}}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!(selectedUserGroup && selectedUserGroup.value)" (click)="associateUser()"
+          [color]="'primary'">
+    Add user to group
+  </button>
+</div>

@@ -1,0 +1,35 @@
+<div class="fl-content fl-content-min-height">
+  <div *ngIf="userGroups && !userGroups.length" class="fl-subheader-md fl-gray-color">No user groups</div>
+  <div *ngIf="userGroups && userGroups.length" fxLayout="column">
+    <table class="full-width" mat-table [dataSource]="userGroups">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let userGroup">
+          <a [routerLink]="[config.getPanelUrl('clients-users/user-groups'), userGroup.id]">
+            {{userGroup.id}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let userGroup">
+          <a [routerLink]="[config.getPanelUrl('clients-users/user-groups'), userGroup.id]">
+            {{userGroup.name}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="(actions)">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let userGroup">
+          <app-object-actions [objectActions]="userGroupActions[userGroup.id]" [maxVisibleActions]="2">
+          </app-object-actions>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+  <button mat-button color="primary" class="fl-margin-top" (click)="addToGroup()">
+    Add user to group
+  </button>
+</div>

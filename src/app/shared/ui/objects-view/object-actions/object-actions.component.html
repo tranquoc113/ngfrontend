@@ -1,0 +1,94 @@
+<div *ngIf="objectActions && !listStateActions" class="actions-container" fxLayout="row">
+  <div *ngFor="let action of visibleActions">
+    <button mat-icon-button [attr.fl-tooltip]="action.tooltip" fl-tooltip-direction="down"
+            (click)="action.execute(notificationService, refreshService, null, $event)"
+            (auxclick)="action.execute(notificationService, refreshService, null, $event)"
+            [disabled]="action.noPermissions || action.isRunning || action.disabled"
+            *ngIf="action.type !== actionTypes.RouterLinkAction; else visibleWithRouterLink">
+      <app-icon [icon]="action.icon"></app-icon>
+    </button>
+    <ng-template #visibleWithRouterLink>
+      <a mat-icon-button [attr.fl-tooltip]="action.tooltip" fl-tooltip-direction="down"
+         [routerLink]="action.routerUrl"
+         [queryParams]="action.queryParams"
+         [disabled]="action.noPermissions || action.isRunning || action.disabled">
+        <app-icon [icon]="action.icon"></app-icon>
+      </a>
+    </ng-template>
+  </div>
+  <div *ngIf="inMenuActions.length" class="actions-menu">
+    <button mat-icon-button [matMenuTriggerFor]="menu" fl-tooltip="More" fl-tooltip-direction="down">
+      <mat-icon class="fl-icons">more</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <div *ngFor="let action of inMenuActions">
+        <button mat-menu-item
+                (click)="action.execute(notificationService, refreshService, null, $event)"
+                (auxclick)="action.execute(notificationService, refreshService, null, $event)"
+                [disabled]="action.noPermissions || action.isRunning || action.disabled"
+                *ngIf="action.type !== actionTypes.RouterLinkAction; else inMenuWithRouterLink">
+          <app-icon [icon]="action.icon"></app-icon>
+          {{action.name}}
+        </button>
+        <ng-template #inMenuWithRouterLink>
+          <a mat-menu-item [attr.fl-tooltip]="action.tooltip" fl-tooltip-direction="down"
+             [routerLink]="action.routerUrl"
+             [queryParams]="action.queryParams"
+             [disabled]="action.noPermissions || action.isRunning || action.disabled">
+            <app-icon [icon]="action.icon"></app-icon>
+            {{action.name}}
+          </a>
+        </ng-template>
+      </div>
+    </mat-menu>
+  </div>
+</div>
+<div *ngIf="objectActions && listStateActions" class="actions-container">
+  <div *ngIf="objectActions.length === 1">
+    <button mat-fab color="accent" class="list-page-action-button"
+            (click)="objectActions[0].execute(notificationService, refreshService, null, $event)"
+            (auxclick)="objectActions[0].execute(notificationService, refreshService, null, $event)"
+            [attr.fl-tooltip]="objectActions[0].tooltip" fl-tooltip-direction="left"
+            [disabled]="objectActions[0].noPermissions || objectActions[0].isRunning || objectActions[0].disabled"
+            *ngIf="objectActions[0].type !== actionTypes.RouterLinkAction; else listStateActionWithRouterLink">
+      <app-icon [icon]="objectActions[0].icon"></app-icon>
+    </button>
+    <ng-template #listStateActionWithRouterLink>
+      <a mat-fab color="accent" class="list-page-action-button"
+         [routerLink]="objectActions[0].routerUrl"
+         [queryParams]="objectActions[0].queryParams"
+         [attr.fl-tooltip]="objectActions[0].tooltip" fl-tooltip-direction="left"
+         [disabled]="objectActions[0].noPermissions || objectActions[0].isRunning || objectActions[0].disabled">
+        <app-icon [icon]="objectActions[0].icon"></app-icon>
+      </a>
+    </ng-template>
+  </div>
+  <div *ngIf="objectActions.length > 1" (mouseleave)="showMultipleFABs = false" class="fab-container">
+    <ng-container *ngIf="showMultipleFABs">
+      <ng-container *ngFor="let action of objectActions">
+        <button @fabItems [attr.fl-tooltip]="action.tooltip" color="accent"
+                (click)="action.execute(notificationService, refreshService, null, $event)"
+                (auxclick)="action.execute(notificationService, refreshService, null, $event)"
+                [disabled]="action.noPermissions || action.isRunning || action.disabled"
+                *ngIf="action.type !== actionTypes.RouterLinkAction; else multipleFabWithRouterLink"
+                fl-tooltip-direction="left" mat-fab>
+          <app-icon [icon]="action.icon"></app-icon>
+        </button>
+        <ng-template #multipleFabWithRouterLink>
+          <a @fabItems [attr.fl-tooltip]="action.tooltip" color="accent"
+             [disabled]="action.noPermissions || action.isRunning || action.disabled"
+             [routerLink]="action.routerUrl"
+             [queryParams]="action.queryParams"
+             fl-tooltip-direction="left" mat-fab>
+            <app-icon [icon]="action.icon"></app-icon>
+          </a>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+    <button (mouseover)="showMultipleFABs = true" (click)="showMultipleFABs = !showMultipleFABs"
+            mat-fab color="accent" fl-tooltip="Actions..."
+            fl-tooltip-direction="left">
+      <mat-icon>more_horiz</mat-icon>
+    </button>
+  </div>
+</div>

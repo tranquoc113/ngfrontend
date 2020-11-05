@@ -1,0 +1,17 @@
+<div class="fl-content fl-content-min-height" fxLayoutGap="10px" fxLayout="row" fxLayout.lt-md="column" *ngIf="object">
+  <div fxLayout="column" fxFlex="100">
+    <p>Region: {{object.region}}</p>
+    <p>Image: {{object.image_id}}</p>
+    <p>Keypair: {{object.keypair_id}}</p>
+    <p>Flavor: {{object.flavor_id}}</p>
+    <p>Master flavor: {{object.master_flavor_id}}</p>
+  </div>
+  <div fxLayout="column" fxFlex="100">
+    <p>Volume driver: {{object.volume_driver}}</p>
+    <p>Docker storage driver: {{object.docker_storage_driver}}</p>
+    <p>Docker volume size (GB): {{object.docker_volume_size}}</p>
+    <p class="wrap-text-content">
+      Insecure registry: {{object.insecure_registry ? object.insecure_registry : '-'}}
+    </p>
+  </div>
+</div>

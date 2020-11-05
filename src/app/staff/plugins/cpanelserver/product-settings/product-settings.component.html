@@ -1,0 +1,16 @@
+<div class="fl-subheader-md fl-margin-top fl-margin-bottom-small">cPanel module configuration</div>
+
+<form [formGroup]="productSettingsForm" fxLayout="column">
+  <mat-form-field>
+    <mat-select formControlName="server_group" placeholder="Server group" required>
+      <mat-option *ngFor="let srvGroup of serverGroups" [value]="srvGroup.id">
+        {{ srvGroup.name }}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{backendErrors['server_group'] || 'This field is required'}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="cPanel plan" type="text" formControlName="default_plan" required>
+    <mat-error>{{backendErrors['default_plan'] || 'This field is required'}}</mat-error>
+  </mat-form-field>
+</form>

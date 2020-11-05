@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content class="currency-dialog-content" *ngIf="createOptions">
+  <form appFormSubmit (ngSubmit)="save()" [formGroup]="currencyForm" fxLayout="column" fxLayoutGap="10px">
+    <app-form-errors #formErrors [formGroup]="currencyForm"></app-form-errors>
+    <mat-form-field>
+      <input matInput placeholder="Code" aria-label="Code" [matAutocomplete]="auto"
+             formControlName="code" required>
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let code of createOptions.codes" [value]="code">
+          <span>{{code}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{backendErrors['code'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Rate" type="number" formControlName="rate" required>
+      <mat-error>{{backendErrors['rate'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+    <mat-checkbox class="fl-margin-bottom" formControlName="is_default" color="primary">
+      Is default
+    </mat-checkbox>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!currencyForm.valid" (click)="save()"
+          [color]="'primary'">
+    {{creating ? 'Create' : 'Save' }}
+  </button>
+</div>

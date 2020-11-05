@@ -1,0 +1,110 @@
+<div *ngIf="dynamicUsage" class="full-width" fxLayout="row" fxLayout.xs="column">
+  <div fxFlex="100" fxLayout="column">
+    <ng-container *ngIf="dynamicUsage.usage">
+      <div *ngFor="let usage_details of dynamicUsage.usage.usage_details">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="half-width">
+              {{usage_details.resource_name | uppercase}}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{usage_details.price}} {{dynamicUsage.usage.currency.code}}
+              <ng-container *ngIf="getCostUsageDetails(usage_details)">
+                ({{getCostUsageDetails(usage_details).price}} {{dynamicUsageCost.usage.currency.code}})
+              </ng-container>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="full-width" *ngIf="usage_details.usage.length">
+            <table [dataSource]="usage_details.usage" class="full-width" mat-table multiTemplateDataRows>
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell>Name</th>
+                <td *matCellDef="let usage" class="fl-detail" mat-cell>{{usage.display_name}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="region">
+                <th *matHeaderCellDef mat-header-cell>Region</th>
+                <td *matCellDef="let usage" class="fl-detail" mat-cell>{{usage.region}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="price">
+                <th *matHeaderCellDef mat-header-cell><p class="price-cell">Price</p></th>
+                <td *matCellDef="let usage" class="fl-detail" mat-cell>
+                  <p class="fl-detail price-cell">
+                    {{usage.price}} {{dynamicUsage.usage.currency.code}}
+                    <ng-container *ngIf="getCostUsage(usage_details, usage)">
+                      ({{getCostUsage(usage_details, usage).price}} {{dynamicUsageCost.usage.currency.code}})
+                    </ng-container>
+                  </p>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="expandedDetail">
+                <td *matCellDef="let usage" [colSpan]="detailColumns.length" mat-cell>
+                  <div [@detailExpand]="usage == expandedElement ? 'expanded' : 'collapsed'"
+                       class="element-detail">
+                    <div fxLayout="column">
+                      <p class="fl-detail">Usage history:</p>
+                      <div *ngFor="let history of usage.history">
+                        <p class="fl-detail">
+                          {{history.name}} - {{history.price_details.units}} {{history.price_details.unit_display}}
+                          ({{history.price}} {{dynamicUsage.usage.currency.code}})
+                        </p>
+                        <div *ngFor="let modifier of history.modifiers" class="indent">
+                          <p class="fl-detail">
+                            {{modifier.name}} - {{modifier.price_details.units}}&nbsp;
+                            {{modifier.price_details.unit_display}}
+                            ({{modifier.price}} {{dynamicUsage.usage.currency.code}})
+                          </p>
+                        </div>
+                      </div>
+                      <ng-container *ngIf="getCostUsage(usage_details, usage)">
+                        <p class="fl-detail">Cost history:</p>
+                        <div *ngFor="let history of getCostUsage(usage_details, usage).history">
+                          <p class="fl-detail">
+                            {{history.name}} - {{history.price_details.units}} {{history.price_details.unit_display}}
+                            ({{history.price}} {{dynamicUsage.usage.currency.code}})
+                          </p>
+                          <div *ngFor="let modifier of history.modifiers" class="indent">
+                            <p class="fl-detail">
+                              {{modifier.name}} - {{modifier.price_details.units}}&nbsp;
+                              {{modifier.price_details.unit_display}}
+                              ({{modifier.price}} {{dynamicUsage.usage.currency.code}})
+                            </p>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr *matHeaderRowDef="detailColumns" mat-header-row></tr>
+              <tr mat-row (click)="expandedElement = expandedElement === usage ? null : usage"
+                  *matRowDef="let usage; columns: detailColumns;" class="example-element-row">
+              </tr>
+              <tr *matRowDef="let row; columns: ['expandedDetail']" class="details-row" mat-row></tr>
+            </table>
+          </div>
+          <div class="full-width" *ngIf="!usage_details.usage.length">
+            <p class="fl-detail">n/a</p>
+          </div>
+        </mat-expansion-panel>
+        <p class="fl-detail total fl-margin-top-small">
+          Total {{usage_details.resource_name}} cost: {{usage_details.price}} {{dynamicUsage.usage.currency.code}}
+          <ng-container *ngIf="getCostUsageDetails(usage_details); else noCostTotal">
+            ({{getCostUsageDetails(usage_details).price}} {{dynamicUsageCost.usage.currency.code}})
+          </ng-container>
+          <ng-template #noCostTotal>
+            (n/a)
+          </ng-template>
+        </p>
+      </div>
+    </ng-container>
+    <div *ngIf="dynamicUsage" class="full-width">
+      <p class="total fl-margin-top-small">
+        Total cost: {{dynamicUsage.price}} {{dynamicUsage.client_currency.code}}
+      </p>
+    </div>
+  </div>
+</div>
+

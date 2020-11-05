@@ -1,0 +1,13 @@
+<div class="fl-content fl-content-min-height">
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <p class="fl-detail" *ngIf="!upgrades.length">No similar products found</p>
+  <mat-selection-list #upgradesList color="primary" *ngIf="upgrades.length">
+    <mat-list-option *ngFor="let product of upgrades" [value]="product.id"
+                     [selected]="upgradeProducts[product.id] === true">
+      {{ product.name}}
+    </mat-list-option>
+  </mat-selection-list>
+  <div class="fl-margin-top" *ngIf="upgrades.length">
+    <button mat-button color="primary" (click)="saveUpgradeOptions()">Save upgrade options</button>
+  </div>
+</div>

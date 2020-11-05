@@ -1,0 +1,16 @@
+<div *ngIf="object" class="fl-content fl-content-min-height" fxLayout="column" fxLayoutGap="10px">
+  <table class="fl-table">
+    <thead>
+    <th>Label</th>
+    <th>Name</th>
+    <th>Required</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let field of object.custom_fields | keyvalue">
+      <td>{{ field.value.label }}</td>
+      <td>{{ field.key }}</td>
+      <td>{{ field.value.optional ? 'No' : 'Yes' }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

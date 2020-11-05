@@ -1,0 +1,45 @@
+<h1 *ngIf="data" mat-dialog-title>Option billing cycle</h1>
+<div *ngIf="data.createOptions" class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="addCycle()"
+        [formGroup]="editCycleForm" fxLayout="column" fxLayoutGap="10px">
+    <app-form-errors #formErrors [formGroup]="editCycleForm" [maxWidth]="'300px'"></app-form-errors>
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+      <mat-form-field fxFlex="50">
+        <mat-select formControlName="cycle" placeholder="Cycle" required>
+          <mat-option *ngFor="let cycle of data.createOptions.cycles" [value]="cycle[0]">
+            {{cycle[1]}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex="50">
+        <input matInput type="number" formControlName="cycle_multiplier" placeholder="Cycle multiplier">
+      </mat-form-field>
+    </div>
+    <mat-form-field>
+      <mat-select formControlName="currency" placeholder="Currency" required>
+        <mat-option *ngFor="let currency of data.createOptions.currencies" [value]="currency.code">
+          {{currency.code}}<span *ngIf="currency.is_default">&nbsp;(default)</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-checkbox formControlName="is_relative_price" color="primary">
+      Auto calculate prices
+    </mat-checkbox>
+    <div *ngIf="!editCycleForm.controls.is_relative_price.value"
+         fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+      <mat-form-field fxFlex="50">
+        <input matInput type="number" formControlName="price" placeholder="Price">
+      </mat-form-field>
+      <mat-form-field fxFlex="50">
+        <input matInput type="number" formControlName="setup_fee" placeholder="Setup fee">
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="addCycle()"
+          [color]="'primary'">
+    {{ data.cycle ? 'Save cycle': 'Add cycle' }}
+  </button>
+</div>

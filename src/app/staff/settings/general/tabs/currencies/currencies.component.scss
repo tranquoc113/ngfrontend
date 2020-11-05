@@ -1,0 +1,18 @@
+.currency-row {
+  margin-top: 10px;
+  border-bottom: 1px solid #ececec;
+}
+
+.action-container-class {
+  margin-top: -15px;
+}
+
+::ng-deep .action-container-class .actions-container {
+  opacity: 0;
+  transition: 0.2s;
+  -webkit-transition: 0.2s;
+}
+
+::ng-deep .currency-row:hover .actions-container {
+  opacity: 1;
+}

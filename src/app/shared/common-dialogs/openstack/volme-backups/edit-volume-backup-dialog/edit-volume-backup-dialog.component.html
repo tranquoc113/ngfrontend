@@ -1,0 +1,41 @@
+<h1 *ngIf="data.backup" mat-dialog-title>Edit volume backup {{data.backup.name}}</h1>
+<h1 *ngIf="!data.backup && data.volume" mat-dialog-title>Backup volume {{data.volume.name || data.volume.id}}</h1>
+<h1 *ngIf="!data.backup && !data.volume" mat-dialog-title>Create volume backup</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="createOrUpdate()" [formGroup]="backupForm" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="backupForm"></app-form-errors>
+    <mat-checkbox *ngIf="!data.backup" formControlName="for_client" color="primary">
+      Create backup in client's project
+    </mat-checkbox>
+    <mat-form-field *ngIf="showVolumeSelect">
+      <input matInput placeholder="Volume" type="text" formControlName="volume" required
+             [matAutocomplete]="autocompleteVolume" (click)="clearVolume()">
+      <mat-autocomplete #autocompleteVolume="matAutocomplete" [displayWith]="volumeDisplay">
+        <mat-option *ngFor="let volume of filteredVolumes$ | async" [value]="volume">
+          {{volume.name ? volume.name + ' - ' + volume.id.toString() : volume.id.toString()}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Backup name" type="text" formControlName="name" required>
+      <mat-error>{{backendErrors['name'] || 'Field is required' }}</mat-error>
+    </mat-form-field>
+    <mat-checkbox *ngIf="!data.backup" formControlName="incremental" color="primary">
+      Incremental (the first backup of a volume has to be a full backup)
+    </mat-checkbox>
+    <mat-checkbox *ngIf="!data.backup" formControlName="force" color="primary">
+      Force (indicates whether to backup, even if the volume is attached)
+    </mat-checkbox>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Backup description" type="text" formControlName="description" required>
+      <mat-error>{{backendErrors['description'] || 'Field is required' }}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!backupForm.dirty" (click)="createOrUpdate()"
+          [color]="'primary'">
+    {{ data.backup ? 'Update backup' : 'Create backup' }}
+  </button>
+</div>

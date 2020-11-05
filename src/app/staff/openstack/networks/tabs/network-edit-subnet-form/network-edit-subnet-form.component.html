@@ -1,0 +1,175 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="subnetForm" fxLayout="column" fxLayoutGap="10px" class="fl-content fl-content-min-height">
+  <app-form-errors #formErrors [formGroup]="subnetForm"></app-form-errors>
+
+  <mat-form-field>
+    <input matInput placeholder="Name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+
+  <mat-radio-group formControlName="network_address_source" aria-label="Address source"
+                   fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+    <mat-radio-button [color]="'primary'" value="manually">
+      Enter address manually
+    </mat-radio-button>
+    <mat-radio-button [color]="'primary'" value="from_pool">
+      Select from subnet pool
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <ng-container *ngIf="subnetForm.controls.network_address_source.value === 'manually'">
+    <mat-form-field>
+      <input matInput placeholder="Network address" type="text" formControlName="cidr" required>
+      <mat-error>{{fieldErrors['cidr']}}</mat-error>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+      <mat-form-field>
+        <mat-select formControlName="setGatewayIp" placeholder="Gateway IP" required>
+          <mat-option [value]="'no-gateway'">
+            Do not set gateway IP
+          </mat-option>
+          <mat-option [value]="true">
+            Manually set gateway IP
+          </mat-option>
+          <mat-option [value]="false">
+            Set default gateway IP
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="subnetForm.controls.setGatewayIp.value === true">
+        <input matInput placeholder="Gateway IP" type="text" formControlName="gateway_ip">
+        <mat-error>{{fieldErrors['gateway_ip']}}</mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="subnetForm.controls.network_address_source.value !== 'manually'">
+    <mat-form-field>
+      <mat-select formControlName="subnet_pool" placeholder="Subnet address pool" required>
+        <mat-option *ngFor="let subnetPool of subnetCreateOptions.pools" [value]="subnetPool">
+          {{subnetPool.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="selectedPool" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput placeholder="Network maks" type="number" formControlName="network_mask"
+               [min]="selectedPool.min_prefixlen" [max]="selectedPool.max_prefixlen">
+        <mat-error>{{fieldErrors['network_mask']}}</mat-error>
+      </mat-form-field>
+      <p>
+        Fill in a number between {{selectedPool.min_prefixlen}} and {{selectedPool.max_prefixlen}}
+      </p>
+    </div>
+  </ng-container>
+
+  <mat-radio-group formControlName="ip_version" aria-label="IP version"
+                   fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+    <mat-radio-button [color]="'primary'" [value]="4">
+      IPv4
+    </mat-radio-button>
+    <mat-radio-button [color]="'primary'" [value]="6">
+      IPv6
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <ng-container *ngIf="subnetForm.controls.ip_version.value === 6">
+    <mat-form-field>
+      <mat-select formControlName="ipv6_ra_mode" placeholder="IPv6 ra mode">
+        <mat-option [value]="null">
+          Unset
+        </mat-option>
+        <mat-option *ngFor="let ipv6Mode of subnetCreateOptions.ipv6_modes" [value]="ipv6Mode">
+          {{ipv6Mode}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="ipv6_address_mode" placeholder="IPv6 address mode">
+        <mat-option [value]="null">
+          Unset
+        </mat-option>
+        <mat-option *ngFor="let ipv6Mode of subnetCreateOptions.ipv6_modes" [value]="ipv6Mode">
+          {{ipv6Mode}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-container>
+
+  <div class="fl-margin-top">
+    <h2 class="fl-detail">Subnet details</h2>
+    <hr>
+  </div>
+
+  <mat-checkbox formControlName="enable_dhcp" color="primary">
+    Enable DHCP
+  </mat-checkbox>
+
+  <ng-container *ngIf="subnetForm.controls.network_address_source.value === 'manually'">
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+      <div *ngFor="let allocationPool of allocationPools.controls; let index=index;"
+           fxLayout="row" fxLayoutGap="10px" [formGroup]="allocationPools.controls[index]">
+        <mat-form-field fxFlex="45">
+          <input matInput placeholder="Allocation pool start" type="text" formControlName="start">
+        </mat-form-field>
+        <mat-form-field fxFlex="45">
+          <input matInput placeholder="Allocation pool end" type="text" formControlName="end">
+        </mat-form-field>
+        <a mat-icon-button (click)="allocationPools.removeAt(index)">
+          <mat-icon>delete</mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="fl-margin-top">
+      <a mat-fab (click)="addAllocationPool()">
+        <mat-icon>add</mat-icon>
+      </a>
+      <span class="fl-detail">Add allocation pool</span>
+    </div>
+  </ng-container>
+
+  <div formArrayName="dns_nameservers" fxLayout="column" fxLayoutAlign="start stretch">
+    <div *ngFor="let dnsServer of dnsNameservers.controls; let index=index;" fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="DNS name server" type="text" [formControlName]="index">
+      </mat-form-field>
+      <a mat-icon-button (click)="dnsNameservers.removeAt(index)">
+        <mat-icon>delete</mat-icon>
+      </a>
+    </div>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="center center" class="fl-margin-top">
+    <a mat-fab (click)="addDnsServer()">
+      <mat-icon>add</mat-icon>
+    </a>
+    <span class="fl-detail">Add DNS name server</span>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch">
+    <div *ngFor="let hostRoute of hostRoutes.controls; let index=index;"
+         fxLayout="row" fxLayoutGap="10px" [formGroup]="hostRoutes[index]">
+      <mat-form-field fxFlex="45">
+        <input matInput placeholder="Destination (CIDR)" type="text" formControlName="destination">
+      </mat-form-field>
+      <mat-form-field fxFlex="45">
+        <input matInput placeholder="Nexthop (IP)" type="text" formControlName="nexthop">
+      </mat-form-field>
+      <a mat-icon-button (click)="hostRoutes.removeAt(index)">
+        <mat-icon>delete</mat-icon>
+      </a>
+    </div>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="center center" class="fl-margin-top">
+    <a mat-fab (click)="addHostRoute()">
+      <mat-icon>add</mat-icon>
+    </a>
+    <span class="fl-detail">Add host route</span>
+  </div>
+</form>

@@ -1,0 +1,17 @@
+<mat-form-field class="filtering-input-width">
+  <input matInput placeholder="Enter a value..." [(ngModel)]="searchValue">
+</mat-form-field>
+<div>
+  Wildcard available, use asterisk symbol to use it:
+  <ul class="filtering-wildcard-hints-list">
+    <li>abc* -> Image os distro name starts with "abc"</li>
+    <li>*abc -> Image os distro name ends with "abc"</li>
+    <li>*abc* -> Image os distro name contains "abc"</li>
+    <li>abc -> Image os distro name is exactly "abc"</li>
+  </ul>
+</div>
+<div><!--pushes button on new line--></div>
+<button (click)="applyFiltering()" mat-flat-button>
+  Apply
+</button>
+

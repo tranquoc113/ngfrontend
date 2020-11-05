@@ -1,0 +1,79 @@
+<div class="fl-content fl-content-min-height">
+  <div fxLayout="row" fxLayout.lt-md="column" *ngIf="object">
+    <div fxLayout="column" fxFlex="50" fxFlex.lt-md="100">
+      <p class="fl-detail">Code: {{ object.code }}</p>
+      <p class="fl-detail">Product type: {{ object.product_type }}</p>
+      <p class="fl-detail">Price model: {{ object.price_model_display }}</p>
+      <p class="fl-detail">Auto setup: {{ object.auto_setup_display }}</p>
+      <p class="fl-detail">Taxable: {{ object.taxable?'yes':'no' }}
+      <p class="fl-detail">
+        Group:
+        <span title="{{ object.group.description }}">{{ object.group.name }}</span>
+      </p>
+    </div>
+    <div fxLayout="column" fxFlex="50" fxFlex.lt-md="100">
+      <p class="fl-detail">Module:
+        <span class="fl-block fl-detail fl-margin-left">
+          Name: {{ object.module.name }}
+        </span>
+        <span class="fl-block fl-detail fl-margin-left">
+          Path: {{ object.module.path }}
+        </span>
+      </p>
+    </div>
+  </div>
+  <div>
+    <div class="fl-list-header fl-slightly-gray fl-margin-top">Current billing cycles</div>
+    <p class="fl-detail" *ngIf="object && object.price_model !== 'free' && object.cycles && !object.cycles.length">
+      <span class="fl-red-color">This product has no billing cycles.</span>
+      <span class="fl-block">
+        At least one billing cycle is required for end-users to be able to order the product.
+      </span>
+    </p>
+    <span *ngIf="object && object.price_model === 'free'" class="fl-detail">
+      This product is free and does not require a billing cycle
+    </span>
+    <table *ngIf="object && object.cycles && object.cycles.length" mat-table
+           [dataSource]="object.cycles" class="full-width fl-margin-bottom">
+      <ng-container matColumnDef="display_name">
+        <th mat-header-cell *matHeaderCellDef> Cycle </th>
+        <td mat-cell *matCellDef="let element">
+          <span class="fl-detail">{{element.display_name}}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="price_model">
+        <th mat-header-cell *matHeaderCellDef> {{priceHeading}} </th>
+        <td mat-cell *matCellDef="let element">
+          <span class="fl-detail">{{ element.fixed_price }} {{ element.currency }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="setup_fee">
+        <th mat-header-cell *matHeaderCellDef fxHide.lt-md> Setup fee </th>
+        <td mat-cell *matCellDef="let element" fxHide.lt-md>
+          <span class="fl-detail">{{ element.setup_fee }} {{ element.currency }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="is_relative_price">
+        <th mat-header-cell *matHeaderCellDef fxHide.lt-md> Relative price </th>
+        <td mat-cell *matCellDef="let element" fxHide.lt-md>
+          <span class="fl-detail text-capitalize">{{ element.is_relative_price ? 'yes' : 'no' }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element">
+          <span class="fl-detail text-capitalize">{{ element.status }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <app-object-actions [objectActions]="actions[element.id]" maxVisibleActions="2">
+          </app-object-actions>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

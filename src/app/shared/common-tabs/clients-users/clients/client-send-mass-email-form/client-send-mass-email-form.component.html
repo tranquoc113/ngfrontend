@@ -1,0 +1,62 @@
+<div class="fl-content fl-content-min-height" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+  <div fxLayout="column" fxFlex="60" fxFlex.lt-md="100">
+    <form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)" [formGroup]="massEmailForm">
+      <app-form-errors #formErrors [formGroup]="massEmailForm"></app-form-errors>
+      <div fxLayout="column">
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="From (see details for the correct format)"
+                 type="text" formControlName="from_name_addr" required>
+          <mat-error>{{fieldErrors['from_name_addr']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="Subject"
+                 type="text" formControlName="subject" required>
+          <mat-error>{{fieldErrors['subject']}}</mat-error>
+        </mat-form-field>
+        <div fxLayout="column">
+          <p class="fl-subheader-md">Email body</p>
+          <div class="fl-tinymce-placeholder">
+            <editor [init]="tinyMCEOptions" formControlName="body"></editor>
+            <mat-error>{{fieldErrors['body']}}</mat-error>
+          </div>
+        </div>
+        <div fxLayout="column">
+          <p class="fl-subheader-md fl-no-margin-bottom">Add attachments</p>
+          <app-upload-interface [maxSize]="maxAttachmentSize"
+                                [multipleFileSelectors]="true" #uploadInterface></app-upload-interface>
+        </div>
+        <div fxLayout="row" fxLayoutGap="10px" class="fl-margin-top">
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Send batch size"
+                   type="number" formControlName="send_batch_size" required>
+            <mat-error>{{fieldErrors['send_batch_size']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Send interval(between batches)"
+                   type="number" formControlName="send_interval" required>
+            <mat-error>{{fieldErrors['send_interval']}}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div fxLayout="column" class="fl-help-text" fxFlex="40" fxFlex.lt-md="100">
+    <h3>From</h3>
+    <p>
+      The name and email to send mails from.<br> e.g. Sender Name &lt;sender.name@example.com&gt;
+    </p>
+    <h3>Subject</h3>
+    <p>
+      The subject of the email. Parameters can be used to customize subject. See email body for details.
+    </p>
+    <h3>Email body</h3>
+    <p>
+      The body of the email. The following parameters can be used to customize email body:
+    </p>
+    <div *ngIf="createOptions" fxLayout="row" class="variables-container">
+      <span *ngFor="let item of createOptions.email_variables"
+            (click)="clickVariable(item)" class="fl-tag fl-cursor-pointer fl-margin-right-small fl-margin-bottom-small"
+            [attr.fl-tooltip]="'Click to copy'">{{item}}</span>
+    </div>
+  </div>
+</div>

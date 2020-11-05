@@ -1,0 +1,6 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <p class="fl-detail">Name: {{object.display_name}}</p>
+  <p class="fl-detail">Created at: {{object.created_at | date:'medium'}}</p>
+  <p class="fl-detail">Updated at: {{object.updated_at| date:'medium'}}</p>
+  <p class="fl-detail">Registrar connector: {{object.registrar_connector_display}}</p>
+</div>

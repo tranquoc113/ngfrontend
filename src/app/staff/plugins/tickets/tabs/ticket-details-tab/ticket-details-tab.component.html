@@ -1,0 +1,433 @@
+<div *ngIf="object">
+  <app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+  <p *ngIf="object.linked_tickets && object.linked_tickets.length">
+    Linked tickets:
+    <span *ngFor="let linkedTicketId of object.linked_tickets">
+      <a class="active-link vertical-align-middle" [routerLink]="getLinkedTicketRedirect(linkedTicketId)">
+        {{linkedTicketId}}
+      </a>
+      <a class="vertical-align-middle" (click)="removeLinking(linkedTicketId)">
+        <mat-icon class="fl-icons">delete</mat-icon>
+      </a>
+    </span>
+  </p>
+  <p>
+    Created by
+    <a class="active-link" *ngIf="object && object.created_by && object.created_by.id"
+       [routerLink]="[config.getPanelUrl('clients-users/users'), object.created_by.id]">
+        {{object.created_by_display}}
+    </a>
+    <a class="active-link" *ngIf="!object.created_by && object.created_by_email"
+       href="{{'mailto:' + object.created_by_email}}">
+        {{object.created_by_display}}
+    </a>
+    on {{object.created_at | date:'medium'}}
+  </p>
+  <p>
+      Assigned to
+      <a *ngIf="object.assigned_to" class="active-link"
+         [routerLink]="[config.getPanelUrl('clients-users/users'), object.assigned_to]">
+          {{object.assigned_to_display}}
+      </a>
+      <span *ngIf="!object.assigned_to">{{object.assigned_to_display}}</span>
+  </p>
+  <p *ngIf="object.department">
+      Department:
+      <a [routerLink]="[config.getPanelUrl('plugins/tickets/departments'), object.department]"
+         class="active-link">
+        {{object.department_display}}
+      </a>
+  </p>
+  <p>Client:
+      <a *ngIf="object.client"
+         class="active-link" [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client]">
+          {{object.client_display}}
+      </a>
+      <span *ngIf="!object.client">{{object.client_display}}</span>
+  </p>
+  <p *ngIf="object.service">
+      Related service: <a [routerLink]="config.getPanelUrl('billing/services/' + object.service)"
+                          class="active-link">
+    {{object.service}}
+  </a>
+  </p>
+  <p *ngIf="object.cc_recipients">
+      CC recipients: {{object.cc_recipients}}
+  </p>
+  <p class="pull-internal-status">Internal status: {{object.internal_status_display}}
+    <button mat-icon-button [matMenuTriggerFor]="menuInternalStatuses" [attr.fl-tooltip]="'Quick edit'"
+            fl-tooltip-direction="down">
+      <mat-icon class="fl-icons">edit</mat-icon>
+    </button>
+    <mat-menu #menuInternalStatuses="matMenu">
+      <div>
+        <button (click)="updateInternalStatus(null)" mat-menu-item>
+          Set to "N/A"
+        </button>
+        <button (click)="updateInternalStatus('open')" mat-menu-item>
+          Set to "open"
+        </button>
+        <button (click)="updateInternalStatus('done')" mat-menu-item>
+          Set to "done"
+        </button>
+        <button (click)="updateInternalStatus('in progress')" mat-menu-item>
+          Set to "in progress"
+        </button>
+      </div>
+    </mat-menu>
+  </p>
+
+  <p *ngIf="!object.description && object.main_attachments && object.main_attachments.length">
+    <span>Attachments:</span>
+    <span *ngFor="let attachment of object.main_attachments">
+      <button class="transparent-background attachments-menu-btn" mat-flat-button [disableRipple]="true"
+              [matMenuTriggerFor]="ticketMenuAttachmentsWithoutDescr">
+        <mat-icon class="fl-icons">attachment</mat-icon>
+        <span class="active-link">{{attachment.file_name}}</span>
+      </button>
+      <mat-menu #ticketMenuAttachmentsWithoutDescr="matMenu">
+        <div>
+          <button (click)="downloadAttachment(attachment.id)" mat-menu-item>
+            Download attachment
+          </button>
+          <button (click)="openAttachment(attachment.id)" mat-menu-item>
+            Open attachment
+          </button>
+          <button (click)="removeAttachment(attachment.id, attachment.file_name)" mat-menu-item>
+            Remove attachment
+          </button>
+        </div>
+      </mat-menu>
+    </span>
+  </p>
+
+  <div fxLayout="row"
+       *ngIf="object.description"
+       [class.fl-flex-right-align]="object.is_staff_generated === true">
+    <div class="ticket-message-owner-info" fxLayout="column" fxFlex="5">
+      <div>
+        <a *ngIf="object && object.created_by && object.created_by.id"
+           [routerLink]="[config.getPanelUrl('clients-users/users'), object.created_by.id]">
+          <app-gravatar
+            [email]="object.ticket_owner_email"
+            [imgTitle]="object.created_by_display + ' on ' + datePipe.transform(object.created_at, 'medium')"
+            [customStyle]="{
+              width: '35px',
+              borderRadius: '100%',
+              verticalAlign: 'middle'
+            }">
+          </app-gravatar>
+        </a>
+        <a *ngIf="!object.created_by && object.created_by_email"
+           href="{{'mailto:' + object.created_by_email}}">
+          <app-gravatar
+            [email]="object.ticket_owner_email"
+            [imgTitle]="object.created_by_display + ' on ' + datePipe.transform(object.created_at, 'medium')"
+            [customStyle]="{
+              width: '35px',
+              borderRadius: '100%',
+              verticalAlign: 'middle'
+            }">
+          </app-gravatar>
+        </a>
+      </div>
+    </div>
+    <div fxLayout="column" fxFlex="95">
+      <div class="ticket-message"
+           fxLayout="column"
+           (mouseover)="hoveredItems['mainMessage'] = true"
+           (mouseleave)="hoveredItems['mainMessage'] = false"
+           [class.foreign-ticket-message]="object.is_staff_generated === true">
+        <div [hidden]="!hoveredItems['mainMessage']" class="ticket-message-actions">
+          <button mat-icon-button [attr.fl-tooltip]="'Reply'" fl-tooltip-direction="down"
+                  (click)="replyToReply(object.description, object.created_by)">
+            <mat-icon class="fl-icons">reply</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="object.description" [innerHTML]="object.description">
+        </div>
+        <div *ngIf="object.main_attachments && object.main_attachments.length">
+          <span>Attachments:</span>
+          <span *ngFor="let attachment of object.main_attachments">
+            <button class="transparent-background attachments-menu-btn" mat-flat-button [disableRipple]="true"
+                    [matMenuTriggerFor]="ticketMenuAttachments">
+              <mat-icon class="fl-icons">attachment</mat-icon>
+              <span class="active-link">{{attachment.file_name}}</span>
+            </button>
+            <mat-menu #ticketMenuAttachments="matMenu">
+              <div>
+                <button (click)="downloadAttachment(attachment.id)" mat-menu-item>
+                  Download attachment
+                </button>
+                <button (click)="openAttachment(attachment.id)" mat-menu-item>
+                  Open attachment
+                </button>
+                <button (click)="removeAttachment(attachment.id, attachment.file_name)" mat-menu-item>
+                  Remove attachment
+                </button>
+              </div>
+            </mat-menu>
+          </span>
+        </div>
+        <div class="cma-container">
+            <div class="chat-message-arrow">
+            </div>
+        </div>
+      </div>
+      <div class="under-message"
+           [class.fl-margin-left]="object.is_staff_generated === false">
+        <a *ngIf="object && object.created_by && object.created_by.id"
+           [routerLink]="[config.getPanelUrl('clients-users/users'), object.created_by.id]"
+           class="active-link">
+          {{object.created_by_display}}
+        </a>
+        <a *ngIf="!object.created_by && object.created_by_email"
+           href="{{'mailto:' + object.created_by_email}}" class="active-link">
+          {{object.created_by_display}}
+        </a>
+        •
+        <span>{{object.created_at | date:'medium'}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngFor="let item of object.replies_and_notes"
+       fxLayout="row"
+       (mouseover)="hoveredItems[item.message_type + item.id] = true"
+       (mouseleave)="hoveredItems[item.message_type + item.id] = false"
+       [class.fl-flex-right-align]="item.is_staff_generated === true && !item.ticket_activity"
+       [class.fl-margin-top-small]="!item.ticket_activity">
+    <div *ngIf="item.ticket_activity === false" class="ticket-message-owner-info" fxLayout="column" fxFlex="5">
+      <div>
+        <a *ngIf="item.created_by && item.created_by.id"
+           [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+          <app-gravatar
+            [email]="item.message_owner_email"
+            [imgTitle]="item.created_by_display + ' on ' + datePipe.transform(item.created_at, 'medium')"
+            [customStyle]="{
+              width: '35px',
+              borderRadius: '100%',
+              verticalAlign: 'middle'
+            }">
+          </app-gravatar>
+        </a>
+        <a *ngIf="!item.created_by && item.message_owner_email"
+           href="{{'mailto:' + item.message_owner_email}}">
+          <app-gravatar
+            [email]="item.message_owner_email"
+            [imgTitle]="item.created_by_display + ' on ' + datePipe.transform(item.created_at, 'medium')"
+            [customStyle]="{
+              width: '35px',
+              borderRadius: '100%',
+              verticalAlign: 'middle'
+            }">
+          </app-gravatar>
+        </a>
+      </div>
+    </div>
+    <div *ngIf="item.ticket_activity === false" fxLayout="column" fxFlex="95">
+      <div class="ticket-message" fxLayout="column"
+         [class.foreign-ticket-message]="item.is_staff_generated"
+         [class.ticket-note-message]="item.message_type === 'ticketnote'">
+        <div [hidden]="!hoveredItems[item.message_type + item.id]"
+             [attr.fl-tooltip]="'Actions'"
+             fl-tooltip-direction="down"
+             class="ticket-message-actions">
+          <button mat-icon-button
+                  [matMenuTriggerFor]="menuItemReply">
+            <mat-icon class="fl-icons">more</mat-icon>
+          </button>
+          <mat-menu #menuItemReply="matMenu">
+            <div>
+              <button (click)="replyToReply(item.message, item.created_by)" mat-menu-item>
+                Reply
+              </button>
+              <button (click)="editMessage(item)" mat-menu-item>
+                Edit message
+              </button>
+              <button (click)="removeMessage(item.id, item.message_type)" mat-menu-item>
+                Delete message
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+        <div *ngIf="item.message" [innerHTML]="item.message"></div>
+        <div *ngIf="item.attachments.length">
+          <span>Attachments:</span>
+          <span *ngFor="let attachment of item.attachments">
+            <button class="transparent-background attachments-menu-btn" mat-flat-button [disableRipple]="true"
+                    [matMenuTriggerFor]="menuItemAttachment">
+              <mat-icon class="fl-icons">attachment</mat-icon>
+              <span class="active-link">{{attachment.file_name}}</span>
+            </button>
+            <mat-menu #menuItemAttachment="matMenu">
+              <div>
+                <button (click)="downloadAttachment(attachment.id)" mat-menu-item>
+                  Download attachment
+                </button>
+                <button (click)="openAttachment(attachment.id)" mat-menu-item>
+                  Open attachment
+                </button>
+                <button (click)="removeAttachment(attachment.id, attachment.file_name)" mat-menu-item>
+                  Remove attachment
+                </button>
+              </div>
+            </mat-menu>
+          </span>
+        </div>
+        <div *ngIf="item.last_edited" class="fl-detail">
+          - Last edited by
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.last_edited_by.id]">
+          {{item.last_edited_by.full_name}}
+          </a>
+          on {{item.last_edited | date:'medium'}}
+        </div>
+        <div class="cma-container">
+          <div class="chat-message-arrow">
+          </div>
+        </div>
+      </div>
+      <div class="under-message"
+         *ngIf="!item.ticket_activity"
+         [class.fl-margin-left]="item.is_staff_generated === false">
+        <a *ngIf="item.created_by && item.created_by.id"
+           [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]"
+           class="active-link">
+          {{item.created_by_display}}
+        </a>
+        <a *ngIf="!item.created_by && item.message_owner_email"
+           href="{{'mailto:' + item.message_owner_email}}" class="active-link">
+          {{item.created_by_display}}
+        </a>
+        •
+        <span *ngIf="item.message_type === 'ticketnote'">note from </span>
+        <span>{{item.created_at | date:'medium'}}</span>
+      </div>
+    </div>
+    <div *ngIf="item.ticket_activity" class="ticket-activity">
+      <div *ngIf="item.new_status && item.email_generated === false">
+        <p class="fl-detail">
+          <a class="active-link" *ngIf="item.created_by && item.created_by.id"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a>
+          <a class="active-link" *ngIf="!item.created_by && item.message_owner_email"
+             href="{{'mailto:' + item.message_owner_email}}">
+            {{item.created_by_display}}
+          </a>
+          changed status to
+          {{item.new_status}} on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.new_internal_status && item.email_generated === false">
+        <p class="fl-detail">
+          <a class="active-link" *ngIf="item.created_by && item.created_by.id"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a>
+          <a class="active-link" *ngIf="!item.created_by && item.message_owner_email"
+             href="{{'mailto:' + item.message_owner_email}}">
+            {{item.created_by_display}}
+          </a>
+          changed internal status to {{item.new_internal_status}} on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.email_generated === true && (item.new_status || item.new_internal_status)">
+        <p class="fl-detail">
+          <a class="active-link" *ngIf="item.created_by && item.created_by.id"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a>
+          <a class="active-link" *ngIf="!item.created_by && item.message_owner_email"
+             href="{{'mailto:' + item.message_owner_email}}">
+            {{item.created_by_display}}
+          </a>
+          <span *ngIf="!item.created_by && !item.message_owner_email"><b>{{item.created_by_display}}</b></span>
+           reopened ticket because of email reply on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.new_priority">
+        <p class="fl-detail">
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a> changed priority to
+          {{item.new_priority}} on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.new_assignee">
+        <p class="fl-detail">
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a> changed assignee to
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.new_assignee.id]">
+            {{item.new_assignee.display}}
+          </a> on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.new_department">
+        <p class="fl-detail">
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a> changed department to
+          {{item.new_department}} on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.new_cc">
+        <p class="fl-detail">
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a> added the following CC recipients:
+          {{item.new_cc}} on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.new_client">
+        <p class="fl-detail">
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a> changed client to
+          {{item.new_client}} on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.title_changed">
+        <p class="fl-detail">
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}</a> changed title on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+      <div *ngIf="item.description_changed">
+        <p class="fl-detail">
+          <a class="active-link"
+             [routerLink]="[config.getPanelUrl('clients-users/users'), item.created_by.id]">
+            {{item.created_by_display}}
+          </a> changed description on
+          {{item.created_at | date:'medium'}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="replyForm" class="fl-margin-top">
+    <div #textareaWrapper class="fl-tinymce-placeholder">
+      <editor [init]="tinyMCEOptions" formControlName="replyText"></editor>
+    </div>
+    <app-upload-interface [maxSize]="createOptions.MAX_TICKET_ATTACHMENT_SIZE"
+                          [multipleFileSelectors]="true" #uploadInterface></app-upload-interface>
+  </form>
+</div>

@@ -1,0 +1,26 @@
+<div class="app-container">
+  <mat-toolbar [@openCloseTopBar]="topBarVisible ? 'open' : 'closed'" class="topbar-container" color="primary">
+    <mat-progress-bar mode="indeterminate" color="accent" *ngIf="loading" class="loader"></mat-progress-bar>
+    <button mat-icon-button (click)="toggleSideBar()"
+            class="switch-sidebar-button">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <app-top-bar [panel]="panel" class="full-width"></app-top-bar>
+  </mat-toolbar>
+  <div class="content-container" fxLayout="row" [class.content-container-full]="!sideBarVisible">
+    <div [@openCloseSidebar]="sideBarVisible ? 'open' : 'closed'" class="sidenav-container">
+      <app-side-nav-menu></app-side-nav-menu>
+      <span class="powered-text">
+        <a href="http://fleio.com" target="_blank" *ngIf="auth.userData && !auth.userData.is_white_label">
+          Powered by Fleio v. {{version}}
+        </a>
+      </span>
+    </div>
+    <div class="main-content-container">
+      <div (click)="toggleSideBar()"
+           *ngIf="sideBarVisible" class="main-content-container-overlay">
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

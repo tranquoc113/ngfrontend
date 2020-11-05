@@ -1,0 +1,51 @@
+<div class="fl-content fl-content-min-height" fxLayout="column" *ngIf="object">
+  <p class="fl-detail">
+    Note: if you assign a client group to this flavor, only clients from that client group will be able to see the flavor.
+    If no client group is assigned to the flavor, it means that the end-user can see it regardless of its groups.
+  </p>
+  <form [formGroup]="showToClientGroupsForm" fxLayoutGap="15px" class="fl-margin-top">
+    <mat-form-field>
+      <input matInput placeholder="Client group" type="text" formControlName="clientGroup" required
+             [matAutocomplete]="autocompleteClient">
+      <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientGroupDisplay">
+        <mat-option *ngFor="let clientGroup of filteredClientGroups$ | async" [value]="clientGroup">
+          {{clientGroup.name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{'This field is required!'}}</mat-error>
+    </mat-form-field>
+    <button (click)="assignGroupToFlavor()" mat-raised-button color="primary">
+      Assign client group to flavor
+    </button>
+  </form>
+
+  <table mat-table [dataSource]="object.show_to_groups" class="full-width"
+         *ngIf="object.show_to_groups && object.show_to_groups.length">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let element">
+        <a [routerLink]="[config.getPanelUrl('clients-users/client-groups'), element.id]">
+          {{element.id}}
+        </a> </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element">
+        <a [routerLink]="[config.getPanelUrl('clients-users/client-groups'), element.id]">
+          {{element.name}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" class="right-align">
+        <button mat-icon-button (click)="removeGroup(element.id)"
+                [attr.fl-tooltip]="'Dissociate client group from flavor'">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

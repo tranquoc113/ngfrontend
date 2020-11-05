@@ -1,0 +1,10 @@
+<div fxLayout="row">
+  <div fxLayout="column" fxFlex="50" *ngIf="object">
+    <p class="fl-detail">ID:&nbsp;{{ object.id }}</p>
+    <p class="fl-detail">Name:&nbsp;{{ object.name }}</p>
+    <p class="fl-detail" *ngIf="object.project_name">Project name:&nbsp;{{ object.project_name }}</p>
+    <p class="fl-detail">Project ID:&nbsp;{{ object.default_project_id }}</p>
+    <p class="fl-detail">Domain ID:&nbsp;{{ object.domain_id }}</p>
+    <p class="fl-detail">Description:&nbsp;{{ object.description }}</p>
+  </div>
+</div>

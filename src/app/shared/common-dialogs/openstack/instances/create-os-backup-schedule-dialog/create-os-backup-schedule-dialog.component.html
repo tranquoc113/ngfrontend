@@ -1,0 +1,58 @@
+<h1 *ngIf="data && data.instance" mat-dialog-title>
+  Create backup schedule for instance {{data.instance.name || data.instance.id}}
+</h1>
+<div mat-dialog-content class="fl-dialog overflow-hidden">
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <p class="fl-important-text">Warning: instance will not be available during the backup process.</p>
+  <form appFormSubmit (ngSubmit)="createSchedule()" [formGroup]="backupScheduleForm">
+    <app-form-errors #formErrors [formGroup]="backupScheduleForm"></app-form-errors>
+    <div fxLayout="column">
+      <mat-form-field>
+        <input matInput placeholder="Backup schedule name" type="text" formControlName="backup_name" required>
+        <mat-error>{{backendErrors['backup_name'] || 'This field is required!' }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="backup_type" (selectionChange)="changedBackupType()"
+                    placeholder="Backup schedule type" required>
+          <mat-option [value]="'daily'">
+            Daily
+          </mat-option>
+          <mat-option [value]="'weekly'">
+            Weekly
+          </mat-option>
+        </mat-select>
+        <mat-error>{{backendErrors['backup_type'] || 'This field is required!' }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="hour" placeholder="Hour (UTC time)" required>
+          <mat-option *ngFor="let hour of hourChoices" [value]="hour">
+            {{hourDisplay(hour)}}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{backendErrors['hour'] || 'This field is required!' }}</mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="backupType.value === 'weekly'">
+        <mat-select formControlName="day" placeholder="Day" required>
+          <mat-option *ngFor="let day of daysChoices" [value]="day">
+            {{dayOfWeekAsString(day)}}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{backendErrors['day'] || 'This field is required!' }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Rotation" type="number" min="1" step="1" formControlName="rotation" required>
+        <mat-hint>Number of backups to keep (the rest of the selected type will be deleted)</mat-hint>
+        <mat-error>{{backendErrors['rotation'] || 'This field is required!' }}</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="createSchedule()"
+          [disabled]="backupScheduleForm.invalid"
+          [color]="'primary'">
+    Create backup schedule
+  </button>
+</div>

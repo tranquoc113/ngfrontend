@@ -1,0 +1,9 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="userNotificationsSettingsForm" fxLayout="column">
+  <app-form-errors #formErrors [formGroup]="userNotificationsSettingsForm"></app-form-errors>
+  <div *ngFor="let item of keysList; let i=index;">
+    <div [formGroupName]="item">
+      <mat-checkbox formControlName="enabled" [color]="'primary'">{{object.detail[item].display_name}}</mat-checkbox>
+    </div>
+  </div>
+</form>

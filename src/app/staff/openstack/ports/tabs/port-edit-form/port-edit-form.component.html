@@ -1,0 +1,47 @@
+<form *ngIf="!!object && !!createOptions" [formGroup]="portForm" fxLayout="row" fxLayoutGap="10px">
+  <div fxLayout="column" fxLayoutGap="10px" fxFlex="{{isEditForm ? 100: 50}}" fxFlex.xs="100">
+    <app-form-errors #formErrors [formGroup]="portForm"></app-form-errors>
+
+    <mat-form-field>
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+
+    <mat-checkbox color="primary" formControlName="admin_state_up">
+      Enable admin state
+    </mat-checkbox>
+
+    <mat-checkbox color="primary" formControlName="port_security_enabled">
+      Port security enabled
+    </mat-checkbox>
+
+    <mat-form-field>
+      <mat-select formControlName="vnic_type" placeholder="vNIC type">
+        <mat-option *ngFor="let vNICType of createOptions.vnic_types" [value]="vNICType[0]">
+          {{ vNICType[1] }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Description" type="text" formControlName="description">
+      <mat-error>{{fieldErrors['description']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div *ngIf="!isEditForm" fxLayout="column" fxFlex="50" fxHide.xs>
+    <p>
+      <strong>Project</strong><br>
+      The project that owns the resource. Leave blank to create the resource under admin project.
+    </p>
+    <p>
+      <strong>IP address or subnet</strong><br>
+      If you specify the subnet, OpenStack Networking allocates an available IP from that subnet to
+      the port. If you specify the IP address, OpenStack Networking tries to allocate the IP address
+      if the address is a valid IP for any of the subnets on the specified network.
+    </p>
+    <p>
+      <strong>MAC address</strong><br>
+      The MAC address of the port. If unspecified, a MAC address is automatically generated.
+    </p>
+  </div>
+</form>

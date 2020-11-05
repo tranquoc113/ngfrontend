@@ -1,0 +1,70 @@
+<div *ngIf="object" fxLayout="column" fxLayout.xs="column" class="fl-content fl-content-min-height">
+  <p class="fl-detail">Description:&nbsp;{{ object.description || 'n/a' }}</p>
+  <p class="fl-detail">Number of flavors in this group:&nbsp;{{ object.flavor_count }}</p>
+  <table *ngIf="flavors" class="full-width" mat-table [dataSource]="flavors">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td class="position-relative" mat-cell *matCellDef="let flavor">
+        <a [routerLink]="[config.getPanelUrl('openstack/flavors'), flavor.id]">
+          {{flavor.id}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let flavor">
+        <a [routerLink]="[config.getPanelUrl('openstack/flavors'), flavor.id]">
+          {{flavor.name}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="region">
+      <th mat-header-cell *matHeaderCellDef>Region</th>
+      <td mat-cell *matCellDef="let flavor">
+        <a [routerLink]="[config.getPanelUrl('openstack/flavors'), flavor.id]">
+          {{flavor.region }}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="(actions)">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let flavor">
+        <app-object-actions [objectActions]="flavorActions[flavor.id]" [maxVisibleActions]="2">
+        </app-object-actions>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div *ngIf="previousPage || nextPage" class="fl-margin-top">
+    <button mat-button (click)="changePage('previous')"
+            [disabled]="previousPage === false || loading === true" color="primary">
+      Previous page
+      <ng-container *ngIf="previousPage && loading !== true">({{currentPage - 1}})</ng-container>
+    </button>
+    <button mat-button (click)="changePage('next')"
+            [disabled]="nextPage === false || loading === true" color="primary">
+      Next page
+      <ng-container *ngIf="nextPage && loading !== true">({{currentPage + 1}})</ng-container>
+    </button>
+  </div>
+  <form appFormSubmit (ngSubmit)="addFlavorToGroup()" [formGroup]="flavorForm" fxLayout="row" class="fl-margin-top">
+    <mat-form-field fxFlex="30" fxFlex.sm="60" fxFlex.xs="100">
+      <input matInput placeholder="Flavor" aria-label="Flavor" [matAutocomplete]="auto"
+             (click)="clearFlavorInput()"
+             formControlName="flavor">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFlavor">
+        <mat-option *ngFor="let flavor of filteredFlavors$ | async" [value]="flavor">
+          <span>{{flavor.name}}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+  <div fxLayout="row">
+    <button [disabled]="!flavorForm.controls.flavor.value['id']" (click)="addFlavorToGroup()"
+            mat-button mat-raised-button color="primary">
+      Add flavor to group
+    </button>
+  </div>
+</div>

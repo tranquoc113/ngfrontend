@@ -1,0 +1,37 @@
+<form appFormSubmit (ngSubmit)="saveProperties()"
+      [formGroup]="imagePropertiesForm" class="fl-content fl-content-min-height"
+      fxLayout="column" fxLayoutGap="10px">
+  <app-form-errors #formErrors [formGroup]="imagePropertiesForm"></app-form-errors>
+  <ng-container *ngFor="let property of properties.controls; let index = index">
+    <div [formGroup]="property" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+      <mat-form-field fxFlex="auto" fxFlex.xs="120px">
+        <input matInput placeholder="Property key" type="text" formControlName="key" required>
+      </mat-form-field>
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Property value" type="text" formControlName="value" required>
+      </mat-form-field>
+      <a mat-button mat-icon-button fl-tooltip="Delete property"
+         fl-tooltip-direction="left"
+         (click)="deleteProperty(index)" fxFlex="50px">
+        <mat-icon>delete</mat-icon>
+      </a>
+    </div>
+  </ng-container>
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+    <a mat-mini-fab (click)="addProperty()" color="primary">
+      <mat-icon>add</mat-icon>
+    </a>
+    <p>
+      Add image property
+    </p>
+  </div>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign="end center"
+       fxLayoutAlign.xs="start center">
+    <a mat-button (click)="cancelEdit()">
+      Cancel
+    </a>
+    <a mat-button color="primary" (click)="saveProperties()">
+      Save properties
+    </a>
+  </div>
+</form>

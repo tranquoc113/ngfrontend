@@ -1,0 +1,40 @@
+<div class="fl-content">
+  <app-form-errors #formErrors [formGroup]="notificationTemplatesForm"></app-form-errors>
+  <div *ngIf="createOptions" fxLayout="row">
+    <form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+          [formGroup]="notificationTemplatesForm" fxLayout="column" fxFlex="60">
+      <mat-checkbox formControlName="disable_notification" color="primary">
+        Disable this notification
+      </mat-checkbox>
+      <div *ngFor="let template of notificationTemplates; let last = last" formGroupName="{{'template' + template.id}}">
+        <h2>Language: {{template.language_display}}</h2>
+
+        <mat-form-field>
+          <input matInput formControlName="title" required type="text" placeholder="Title">
+          <mat-error>{{fieldErrors['title']}}</mat-error>
+        </mat-form-field>
+
+        <editor [init]="tinyMCEOptions"
+                formControlName="content" required></editor>
+
+        <div fxLayout="row" class="fl-margin-bottom">
+          <a class="fl-margin-top" mat-button color="primary" (click)="deleteTemplate(template)">
+            Delete template
+          </a>
+        </div>
+
+        <mat-divider *ngIf="!last" [inset]="true" class="divider"></mat-divider>
+      </div>
+    </form>
+    <div fxLayout="column" fxFlex="40" fxFlex.xs="100" fxFlex.sm="100"
+         class="fl-padding-left fl-margin-top fl-margin-bottom">
+      <h2 class="fl-padding-lr" translate>Help text for {{templateName}} template</h2>
+      <p class="fl-padding-lr">{{createOptions['help_text_map'][templateName].detail}}</p>
+      <div fxLayout="row" flex class="fl-padding-lr variables-container">
+          <span *ngFor="let item of createOptions['help_text_map'][templateName].variables"
+                (click)="clickVariable(item)" class="fl-tag fl-margin-right-small fl-margin-bottom-small"
+                [attr.fl-tooltip]="'Click to copy'">{{item}}</span>
+      </div>
+    </div>
+  </div>
+</div>

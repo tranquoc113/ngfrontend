@@ -1,0 +1,29 @@
+<h1 *ngIf="data.backup" mat-dialog-title>Restore volume backup {{data.backup.name}}</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="createOrUpdate()" [formGroup]="restoreBackupForm">
+    <app-form-errors #formErrors [formGroup]="restoreBackupForm"></app-form-errors>
+    <mat-checkbox formControlName="newVolume" color="primary" (change)="changedNewVolume()">
+      Restore to a new volume
+    </mat-checkbox>
+    <mat-form-field *ngIf="restoreBackupForm.controls.newVolume.value" class="full-width">
+      <input matInput placeholder="New volume name" type="text" formControlName="name" required>
+      <mat-error>{{backendErrors['name'] || 'Field is required' }}</mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="!restoreBackupForm.controls.newVolume.value" class="full-width">
+      <input matInput placeholder="Volume" type="text" formControlName="volume" required
+             [matAutocomplete]="autocompleteVolume" (click)="clearVolume()">
+      <mat-autocomplete #autocompleteVolume="matAutocomplete" [displayWith]="volumeDisplay">
+        <mat-option *ngFor="let volume of filteredVolumes$ | async" [value]="volume">
+          {{volume.name ? volume.name + ' - ' + volume.id.toString() : volume.id.toString()}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!restoreBackupForm.dirty" (click)="createOrUpdate()"
+          [color]="'primary'">
+    Restore backup
+  </button>
+</div>

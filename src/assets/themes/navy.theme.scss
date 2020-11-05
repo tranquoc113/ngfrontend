@@ -1,0 +1,101 @@
+@import '~@angular/material/theming';
+$mat-navy-blue: (
+  50: #eceff1,
+  100: #cfd8dc,
+  200: #b0bec5,
+  300: #90a4ae,
+  400: #78909c,
+  500: #476190,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+$mat-navy-red: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  500: #ff5252,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+$navy-primary: mat-palette($mat-navy-blue, 500);
+$navy-accent: mat-palette($mat-navy-red, 500);
+$navy-warn: mat-palette($mat-red, 500);
+$navy-theme: mat-light-theme($navy-primary, $navy-accent, $navy-warn);
+.app-theme-navy {
+  @include angular-material-theme($navy-theme);
+  $navy-primary-color: #476190;
+  $navy-accent-color: #ff5252;
+  .notification-circle {
+    background-color: $navy-accent-color !important;
+  }
+  .topbar-items-container > div,
+  .mat-toolbar, .mat-toolbar .mat-icon,
+  .mat-raised-button.mat-primary > span, .mat-fab mat-icon {
+    color: #fff;
+  }
+  .sidenav-container, .sub-header {
+    background: #f1f1f1;
+  }
+  .fl-card-fixed,
+  .fl-card-fixed-md,
+  .fl-card-fixed-sm {
+    @include mat-elevation(2);
+  }
+  mat-icon {
+    color: grey;
+  }
+  button[disabled] .mat-icon {
+    color: lightgrey;
+  }
+  .mat-button-base {
+    text-transform: uppercase;
+  }
+  .active-link, .active-link mat-icon {
+    color: $navy-primary-color !important;
+  }
+  .object-card-content {
+    margin-left: 15px;
+    font-size: 14px;
+    line-height: 20px;
+    word-break: break-all;
+    color: #616161;
+  }
+  .fl-tag {
+    background-color: #878787;
+    color: white;
+    padding: 2px 8px 2px 8px;
+    border-radius: 2px;
+  }
+  .mat-form-field-appearance-legacy .mat-form-field-underline {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+}

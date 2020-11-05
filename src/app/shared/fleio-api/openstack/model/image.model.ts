@@ -1,0 +1,42 @@
+import { IBaseFleioObjectModel } from '../../base-model/base-fleio-object.model';
+import { IClientModel } from '../../client-user/model/client.model';
+
+export interface IImageModel extends IBaseFleioObjectModel {
+  tags: [];
+  client: IClientModel;
+  properties: {};
+  has_flavors_assigned: boolean;
+  is_iso: boolean;
+  display_name: string;
+  cleanup_date: Date;
+  name: string;
+  type: string;
+  owner: string;
+  status: string;
+  size: number;
+  virtual_size: number;
+  created_at: Date;
+  updated_at: Date;
+  deleted_at: Date;
+  os_distro: string;
+  hypervisor_type: string;
+  os_version: string;
+  architecture: string;
+  min_disk: number;
+  min_ram: number;
+  protected: boolean;
+  visibility: string;
+  container_format: string;
+  disk_format: string;
+  hw_qemu_guest_agent: boolean;
+  instance_uuid: string;
+  volume_snapshot_uuid: string;
+  region: string;
+  project: string;
+  reseller_resources: any;
+  display_for_clients: boolean;
+  backup_type?: any;
+  client_owned?: any;
+  assigned_to_flavor?: boolean;
+  disabled?: boolean;
+}

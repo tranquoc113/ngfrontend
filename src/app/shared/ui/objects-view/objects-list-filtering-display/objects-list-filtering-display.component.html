@@ -1,0 +1,37 @@
+<mat-chip-list [selectable]="false" [hidden]="showAppliedFilters === false">
+  <ng-container *ngFor="let appliedFilter of appliedFilteringOptions; let i = index">
+    <mat-basic-chip class="custom-filtering-chip" *ngIf="appliedFilter.showField && i < 4" [disableRipple]="true">
+      <span>
+        {{appliedFilter.display || appliedFilter.field}}: {{appliedFilter.valueDisplay || appliedFilter.value}}
+      </span>
+      <a (click)="clearFilter(appliedFilter)">
+        <mat-icon class="fl-icons" aria-label="remove">delete</mat-icon>
+      </a>
+    </mat-basic-chip>
+  </ng-container>
+  <mat-basic-chip class="custom-filtering-chip more-chip"
+                  *ngIf="appliedFilteringOptions && appliedFilteringOptions.length >= 5" [matMenuTriggerFor]="menu">
+    <span>
+      More <mat-icon class="more-icon">keyboard_arrow_right</mat-icon>
+    </span>
+    <mat-menu #menu="matMenu" xPosition="before" yPosition="below" class="filtering-display-mat-menu">
+      <div (click)="$event.stopPropagation()"
+           class="more-item-container fl-detail"
+           *ngFor="let subAppliedFilter of appliedFilteringOptions | slice:4; let i = index;">
+        <span>
+          {{subAppliedFilter.display || subAppliedFilter.field}}:&nbsp;
+          {{subAppliedFilter.valueDisplay || subAppliedFilter.value}}
+        </span>
+        <a (click)="clearFilter(subAppliedFilter)" class="more-icon-removal">
+          <mat-icon class="fl-icons fl-margin-top-small" aria-label="remove">delete</mat-icon>
+        </a>
+      </div>
+    </mat-menu>
+  </mat-basic-chip>
+  <button mat-icon-button [attr.fl-tooltip]="'Hide\napplied\nfilters'" fl-tooltip-direction="down"
+          class="hide-applied-filters-btn"
+          [fxHide.gt-md]="true"
+          (click)="showAppliedFilters = !showAppliedFilters">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</mat-chip-list>

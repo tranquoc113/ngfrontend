@@ -1,0 +1,59 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="object" [formGroup]="networkForm"
+      fxLayout="column" fxLayoutGap="10px" class="fl-content fl-content-min-height">
+  <app-form-errors #formErrors [formGroup]="networkForm"></app-form-errors>
+  <mat-form-field *ngIf="!object.id">
+    <input matInput placeholder="Client" type="text" formControlName="client" required (click)="clearClient()"
+           [matAutocomplete]="autocompleteClient">
+    <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+      <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+        {{client.first_name}} {{client.last_name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['client']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Description" type="text" formControlName="description">
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="!object.id">
+    <mat-select formControlName="region" placeholder="Region" required>
+      <mat-option *ngFor="let region of createOptions.regions" [value]="region.id">
+        {{region.id}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="!object.id">
+    <mat-select formControlName="provider_network_type" placeholder="Provider network type" required>
+      <mat-option *ngFor="let providerType of createOptions.provider_types | keyvalue" [value]="providerType.key">
+        {{providerType.value.display_name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+    <mat-checkbox color="primary" formControlName="admin_state_up" fxFlex="50" fxFlex.xs="none">
+      Admin state up
+    </mat-checkbox>
+    <mat-checkbox color="primary" formControlName="router_external" fxFlex="50" fxFlex.xs="none">
+      External
+    </mat-checkbox>
+  </div>
+
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+    <mat-checkbox color="primary" formControlName="is_default" fxFlex="50" fxFlex.xs="none">
+      Default
+    </mat-checkbox>
+    <mat-checkbox color="primary" formControlName="shared" fxFlex="50" fxFlex.xs="none">
+      Shared
+    </mat-checkbox>
+  </div>
+</form>

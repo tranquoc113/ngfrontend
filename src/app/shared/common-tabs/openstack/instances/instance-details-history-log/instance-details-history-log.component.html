@@ -1,0 +1,25 @@
+<div class="fl-content-min-height">
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <mat-accordion [displayMode]="'flat'">
+    <mat-expansion-panel *ngFor="let historyLog of historyLogs; let i = index"
+                         (opened)="openedLog(historyLog, i)" class="align-headers">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ historyLog.start_time | date: 'medium' }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ historyLog.action }} <span *ngIf="historyLog.message">{{historyLog.message}}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-progress-bar *ngIf="historyLog.loading === true" [mode]="'indeterminate'"></mat-progress-bar>
+      <ng-container *ngIf="historyLog.loading === false">
+        <div *ngFor="let logEvent of historyLog.events">
+          <span>{{logEvent.start_time | date: 'medium'}} - {{logEvent.finish_time | date: 'medium'}}</span>
+          <span fxFlexOffset="5">{{logEvent.event}}</span>
+          <span fxFlexOffset="5">{{logEvent.result}}</span>
+        </div>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <!-- TODO: implement pagination -->
+</div>

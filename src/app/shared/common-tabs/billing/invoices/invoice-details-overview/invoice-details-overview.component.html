@@ -1,0 +1,253 @@
+<div class="fl-content">
+  <div fxLayout="row" fxLayout.xs="column" class="full-width" *ngIf="object">
+    <div fxFlex="50">
+      <div>
+        <p class="fl-detail" *ngIf="object.is_fiscal">
+          Fiscal invoice issue date: {{object.fiscal_date | date:'yyyy-MM-dd' }}
+        </p>
+        <p class="fl-detail" *ngIf="object.is_fiscal">
+          Fiscal invoice due date: {{object.fiscal_due_date | date:'yyyy-MM-dd' }}
+        </p>
+        <p class="fl-detail">
+          Proforma issue date: {{object.issue_date | date:'yyyy-MM-dd' }}
+        </p>
+        <p class="fl-detail">
+          Proforma due date: {{object.due_date | date:'yyyy-MM-dd' }}
+        </p>
+        <p class="fl-detail">
+          <a [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]"
+             class="active-link">
+            {{object.company }}
+          </a>
+        </p>
+        <p class="fl-detail">
+          <a [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]"
+             class="active-link">
+            {{object.first_name }} {{object.last_name }}
+          </a>
+        </p>
+        <p class="fl-detail">
+          <a [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]"
+             class="active-link">{{object.address1 }}
+          </a>
+        </p>
+        <p class="fl-detail">
+          <a [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]"
+             class="active-link">{{object.address2 }}
+          </a>
+        </p>
+      </div>
+    </div>
+    <div fxFlex="50">
+      <pre [ngClass]="{'fl-detail': true, 'right-align': true}"
+           [ngClass.xs]="{'fl-detail': true}">{{object.fleio_info}}</pre>
+    </div>
+
+  </div>
+  <div class="fl-margin-top">
+    <h2 class="fl-detail">Items</h2>
+  </div>
+
+  <div fxLayout="column" *ngIf="object">
+    <div class="inv-table">
+      <div fxLayout="row" fxLayoutGap.lt-md="10px">
+        <div fxFlex="70">
+          <span>Name</span>
+        </div>
+        <div fxFlex="10" class="right-align">
+          <span>Quantity</span>
+        </div>
+        <div fxFlex="10" class="right-align">
+          <span>Unit price</span>
+        </div>
+        <div fxFlex="10" class="right-align">
+          <span>Sub total</span>
+        </div>
+      </div>
+      <hr>
+      <div fxLayout="column" fxLayoutGap="10px" *ngFor="let item of object.items">
+        <div fxLayout="row" class="inv-row" fxLayoutGap.lt-md="10px">
+          <div fxFlex="70">
+            <div>
+              <span class="wrap-text-content">
+                <a *ngIf="item.service;else descriptionWithoutUrl"
+                   routerLink="{{config.getPanelUrl('billing/services/') + item.service}}">
+                  {{item.description}}
+                </a>
+                <ng-template #descriptionWithoutUrl>{{item.description}}</ng-template>
+              </span>
+              <div *ngFor="let confOpt of item.configurable_options">
+                <span class="fl-detail">{{confOpt.display}}</span>
+                <span class="fl-detail" *ngIf="!confOpt.is_free">
+                ({{confOpt.price}} {{object.currency}})
+              </span>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="10" class="right-align">
+            <span *ngIf="!object.detailed_invoice || item.usage === null">
+              <a *ngIf="item.service;else quantityWithoutUrl"
+                 routerLink="{{config.getPanelUrl('billing/services/') + item.service}}">1</a>
+              <ng-template #quantityWithoutUrl>1</ng-template>
+            </span>
+          </div>
+          <div fxFlex="10" class="right-align">
+            <span *ngIf="!object.detailed_invoice || item.usage === null">
+              <a *ngIf="item.service;else unitPriceWithoutUrl"
+                 routerLink="{{config.getPanelUrl('billing/services/') + item.service}}">
+                {{item.amount}} {{object.currency }}
+              </a>
+              <ng-template #unitPriceWithoutUrl>{{item.amount}} {{object.currency }}</ng-template>
+            </span>
+          </div>
+          <div fxFlex="10" class="right-align">
+            <span *ngIf="!object.detailed_invoice || item.usage === null">
+              <a *ngIf="item.service;else subTotalWithoutUrl"
+                 routerLink="{{config.getPanelUrl('billing/services/') + item.service}}">
+                {{item.amount}} {{object.currency }}
+              </a>
+              <ng-template #subTotalWithoutUrl>{{item.amount}} {{object.currency }}</ng-template>
+            </span>
+          </div>
+        </div>
+        <ng-container *ngIf="object.detailed_invoice && item.usage">
+          <ng-container *ngFor="let resourceType of item.usage.resource_types">
+            <div fxLayout="row" class="fl-indent inv-row">
+              <span>{{resourceType.display_name}} resources</span>
+            </div>
+            <ng-container *ngFor="let resourceUsage of item.usage.resource_usages">
+              <ng-container *ngIf="resourceType.name === resourceUsage.resource_type.name">
+                <div fxLayout="row" *ngFor="let historyEntry of resourceUsage.history" class="inv-row"
+                     fxLayoutGap.lt-md="10px">
+                  <div fxFlex="70">
+                    <div class="fl-double-indent">
+                      <span class="wrap-text-content">
+                        {{resourceUsage.display_name}} - {{historyEntry.rule_display}}
+                      </span>
+                    </div>
+                  </div>
+                  <div fxFlex="10" class="right-align">
+                    <span>{{historyEntry.price_details.units}} {{historyEntry.price_details.unit_display}}</span>
+                  </div>
+                  <div fxFlex="10" class="right-align">
+                    <span>{{historyEntry.price_details.unit_price}} {{object.currency}}</span>
+                  </div>
+                  <div fxFlex="10" class="right-align">
+                    <span>{{historyEntry.price}} {{object.currency }}</span>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="fl-margin-top final-amt" fxLayout="row" fxLayoutAlign="right right">
+      <div fxFlex="auto"></div>
+      <div class="right-align">
+        Sub total: {{object.subtotal | number:'.2' }} {{object.currency}}
+        <br>
+        <span *ngFor="let tax of object.taxes">
+          {{tax.name}} {{tax.amount}} {{object.currency}}
+        </span>
+        <br>
+        Total: {{object.total}} {{object.currency }}
+      </div>
+    </div>
+  </div>
+
+  <div class="fl-margin-top">
+    <h2 class="fl-detail">Journal</h2>
+    <hr>
+  </div>
+
+  <div *ngIf="object && !object.journal.length">
+    No entries found
+  </div>
+
+  <table *ngIf="object && object.journal && object.journal.length"
+         class="full-width fl-table" mat-table [dataSource]="object.journal">
+    <ng-container matColumnDef="date_added">
+      <th mat-header-cell *matHeaderCellDef fxHide.lt-sm>Date added</th>
+      <td mat-cell *matCellDef="let journalEntry" fxHide.lt-sm>
+        <a [routerLink]="[config.getPanelUrl('billing/journal'), journalEntry.id]">
+          {{journalEntry.date_added | date: 'short'}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="source_info">
+      <th mat-header-cell *matHeaderCellDef>Source info</th>
+      <td mat-cell *matCellDef="let journalEntry" class="source-col">
+        <a [routerLink]="[config.getPanelUrl('billing/journal'), journalEntry.id]">
+          <span>
+            {{journalEntry.source_info.name}}
+          </span>
+          <br>
+          <span class="fl-detail" *ngIf="journalEntry.source_info.invoice">
+                Invoice {{journalEntry.source_info.invoice}}
+          </span>
+          <span class="fl-detail" *ngIf="journalEntry.source_info.transaction">
+                Transaction {{journalEntry.source_info.transaction}}
+          </span>
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="destination_info">
+      <th mat-header-cell *matHeaderCellDef>Destination info</th>
+      <td mat-cell *matCellDef="let journalEntry">
+        <a [routerLink]="[config.getPanelUrl('billing/journal'), journalEntry.id]">
+          <span>
+            {{journalEntry.destination_info.name}}
+          </span>
+          <br>
+          <span class="fl-detail" *ngIf="journalEntry.destination_info.invoice">
+            Invoice {{journalEntry.destination_info.invoice}}
+            </span>
+          <span class="fl-detail" *ngIf="journalEntry.destination_info.transaction">
+            Transaction {{journalEntry.destination_info.transaction}}
+          </span>
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="destination_amount">
+      <th mat-header-cell *matHeaderCellDef>Destination amount</th>
+      <td mat-cell *matCellDef="let journalEntry">
+        <div class="right-align">
+          <a [routerLink]="[config.getPanelUrl('billing/journal'), journalEntry.id]">
+            {{journalEntry.destination_amount }} {{journalEntry.destination_currency }}
+          </a>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="(actions)">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let journalEntry">
+        <div *ngIf="journalEntry.transaction">
+          <button mat-icon-button fl-tooltip="Delete" mat-button
+                  (click)="deleteTransaction(journalEntry.transaction)" class="md-icon-button fl-float-right">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-row *matRowDef="let row; columns: displayedJournalColumns;"></tr>
+  </table>
+
+  <div fxLayout="row" class="full-width">
+    <div fxFlex="auto"></div>
+    <div fxLayout="column">
+      <div class="fl-margin-top">
+        <span class="balance-container" *ngIf="object">
+          Balance {{object.balance }} {{object.currency }}
+        </span>
+      </div>
+
+      <div class="download-button fl-margin-top">
+        <a mat-button color="primary" href="{{downloadPdfUrl}}" target="_blank">
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

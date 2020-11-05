@@ -1,0 +1,78 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf=object [formGroup]="subnetPoolForm" fxLayout="column" fxLayoutGap="10px">
+  <app-form-errors #formErrors [formGroup]="subnetPoolForm"></app-form-errors>
+  <mat-form-field *ngIf="!this.object.id">
+    <input matInput placeholder="Project" type="text" formControlName="project_id" required
+           [matAutocomplete]="autocompleteProject" (click)="clearProject()">
+    <mat-autocomplete #autocompleteProject="matAutocomplete" [displayWith]="projectDisplay">
+      <mat-option *ngFor="let project of filteredProjects$ | async" [value]="project">
+        {{project.name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['project_id']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="!this.object.id">
+    <mat-select formControlName="region" placeholder="Region">
+      <mat-option *ngFor="let region of createOptions.regions" [value]="region.id">
+        {{region.id}}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['region']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Description" type="text" formControlName="description">
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Default prefix length" type="number" formControlName="default_prefixlen" required>
+    <mat-error>{{fieldErrors['default_prefixlen']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Min prefix length" type="number" formControlName="min_prefixlen" required>
+    <mat-error>{{fieldErrors['min_prefixlen']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Max prefix length" type="number" formControlName="max_prefixlen" required>
+    <mat-error>{{fieldErrors['max_prefixlen']}}</mat-error>
+  </mat-form-field>
+
+  <div fxLayout="row" fxLayout.xs="column">
+    <mat-checkbox *ngIf="!this.object.id" color="primary" formControlName="shared" fxFlex="50" fxFlex.xs="none">
+      Shared
+    </mat-checkbox>
+
+    <mat-checkbox color="primary" formControlName="is_default" fxFlex="50" fxFlex.xs="none">
+      Default
+    </mat-checkbox>
+  </div>
+
+  <div formArrayName="prefixes" fxLayout="column" fxLayoutAlign="start stretch">
+    <div *ngFor="let prefix of prefixes.controls; let index=index;" fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Prefix" type="text" [formControlName]="index" required>
+        <mat-error>{{fieldErrors['prefixes.' + index.toString()]}}</mat-error>
+      </mat-form-field>
+      <button *ngIf="prefixes.controls.length > 1" mat-icon-button (click)="deletePrefix(index)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="center center" class="fl-margin-top">
+    <button mat-fab (click)="addPrefix()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <span class="fl-detail">Add prefix</span>
+  </div>
+
+</form>

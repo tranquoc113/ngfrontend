@@ -1,0 +1,63 @@
+<form [formGroup]="refundForm" class="fl-content">
+  <div class="fl-subheader-md fl-margin-bottom-small">Refund invoice payment</div>
+  <p *ngIf="transactions && !transactions.length">No refundable transactions found</p>
+  <app-form-errors #formErrors [formGroup]="refundForm"></app-form-errors>
+  <div fxLayout="column" *ngIf="transactions && transactions.length">
+    <mat-form-field>
+      <mat-select formControlName="transactionIndex" placeholder="Select transaction to refund"
+                  (selectionChange)="updateRefundDetails()" required>
+        <mat-option *ngFor="let transaction of transactions; let i = index" [value]="i">
+          {{transaction.gateway.display_name}} {{transaction.external_id }}
+            ({{transaction.amount}} {{transaction.currency}})
+        </mat-option>
+      </mat-select>
+      <mat-error>{{backendErrors['transaction'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="refundDetails">
+      <mat-select formControlName="refundMethod" placeholder="Select refund method"
+                  (selectionChange)="updateRefundDetails()" required>
+        <mat-option [value]="refundMethods.refundThroughGateway" *ngIf="refundDetails.action">
+          Refund through gateway
+        </mat-option>
+        <mat-option [value]="refundMethods.refundManually">
+          Manual refund processed externally
+        </mat-option>
+        <mat-option *ngIf="refundDetails.canRefundToCredit" [value]="refundMethods.refundToCredit">
+          Add to client's credit balance
+        </mat-option>
+      </mat-select>
+      <mat-error>{{'This field is required!' }}</mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="this.refundForm.controls.refundMethod.value === refundMethods.refundManually">
+      <input matInput placeholder="External transaction id" type="text"
+             formControlName="externalTransactionId">
+    </mat-form-field>
+
+    <div *ngIf="refundDetails">
+      <div *ngIf="transaction">
+        <h4>
+          You choose to refund transaction {{refundDetails.transactionInfo}}, amount
+          {{refundDetails.transactionAmount}}.
+          <br>
+          When you refund this transaction the following will happen:
+        </h4>
+      </div>
+      <div>
+        <ul>
+          <li *ngFor="let journalEntry of refundDetails.journalEntries">
+              {{journalEntry.destination_amount}} {{journalEntry.destination_currency}} will be deducted from
+              {{journalEntry.destination_name}}
+            <span *ngIf="this.refundForm.controls.refundMethod.value === refundMethods.refundToCredit">
+              and added to client credit
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div fxLayout="row">
+      <button (click)="refund()" mat-button color="primary">
+        Refund
+      </button>
+    </div>
+  </div>
+</form>

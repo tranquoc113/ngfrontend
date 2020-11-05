@@ -1,0 +1,19 @@
+<div fxLayout="row">
+   <mat-form-field fxFlex="20">
+    <mat-select [(ngModel)]="countryCode" (ngModelChange)="changePhoneCountry()">
+      <mat-option *ngFor="let countryCode of sortedCountries" [value]="countryCode[1]">
+        <span class="flag-icon {{getFlagClass(countryCode[1])}}"></span>  {{countryCode[1]}}
+      </mat-option>
+    </mat-select>
+   </mat-form-field>
+  <mat-form-field fxFlexOffset="2" fxFlex="78" [class.mat-form-field-invalid]="!!error">
+    <mat-label>Phone number</mat-label>
+    <input name="phone"
+           matInput
+           id="phoneNr"
+           (ngModelChange)="updateFlagOnPhoneChange($event)"
+           type="text"
+           [(ngModel)]="phoneNumber">
+    <span class="mat-error fl-error" *ngIf="error">{{error}}</span>
+  </mat-form-field>
+</div>

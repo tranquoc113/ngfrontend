@@ -1,0 +1,33 @@
+.menu-item-container {
+  position: relative;
+  margin: 0;
+  padding-left: 16px;
+  border-radius: 0;
+  width: 100%;
+  height: 48px;
+  font-weight: normal;
+  text-transform: none;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 50px;
+  vertical-align: middle;
+  display: block;
+  text-align: left;
+  transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.menu-item-container mat-icon {
+  position: absolute;
+  top: 12px;
+  right: 5px;
+  color: rgba(0,0,0,0.54);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.menu-item-container:hover {
+  background-color: rgba(0,0,0,0.2);
+  transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}

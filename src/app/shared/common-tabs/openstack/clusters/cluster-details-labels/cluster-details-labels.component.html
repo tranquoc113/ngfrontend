@@ -1,0 +1,6 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <p *ngIf="!object.labels">No labels</p>
+  <p *ngFor="let item of labels | keyvalue">
+    {{item.key}} = {{item.value}}
+  </p>
+</div>

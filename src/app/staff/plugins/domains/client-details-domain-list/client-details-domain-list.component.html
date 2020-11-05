@@ -1,0 +1,49 @@
+<div *ngIf="domains && !domains.length" class="fl-subheader-md fl-gray-color">No domains</div>
+<app-fl-backdrop *ngIf="!domains || loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+<div *ngIf="domains && domains.length" fxLayout="column">
+  <table mat-table [dataSource]="domains">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let domain">
+        <a [routerLink]="[config.getPanelUrl('plugins/domains'), domain.id]">
+          {{domain.id}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Title</th>
+      <td mat-cell *matCellDef="let domain">
+        <a [routerLink]="[config.getPanelUrl('plugins/domains'), domain.id]">
+          {{domain.name}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="created_at">
+      <th mat-header-cell *matHeaderCellDef>Created at</th>
+      <td mat-cell *matCellDef="let domain">
+        <a [routerLink]="[config.getPanelUrl('plugins/domains'), domain.id]">
+          {{domain.created_at | date: 'medium'}}
+        </a>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div *ngIf="previousPage || nextPage" class="fl-margin-top">
+    <button mat-button (click)="changePage('previous')"
+            [disabled]="previousPage === false || loading === true" color="primary">
+      Previous page <ng-container *ngIf="previousPage && loading !== true">({{currentPage - 1}})</ng-container>
+    </button>
+    <button mat-button (click)="changePage('next')"
+            [disabled]="nextPage === false || loading === true" color="primary">
+      Next page <ng-container *ngIf="nextPage && loading !== true">({{currentPage + 1}})</ng-container>
+    </button>
+  </div>
+
+</div>
+<a mat-button color="primary" class="fl-margin-top" *ngIf="data"
+   [routerLink]="config.getPanelUrl('plugins/domains/register-domain')"
+   [queryParams]="{'client':data.clientId}">
+  Register new domain
+</a>

@@ -1,0 +1,21 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <p>Master count: {{object.master_count}}</p>
+  <p>Node count: {{object.node_count}}</p>
+  <p *ngIf="object.api_address">API Address: {{object.api_address}}</p>
+  <p *ngIf="object.master_addresses">
+    Master Addresses:
+    <span *ngFor="let address of masterAddresses; let last = last;">
+      <a [routerLink]="config.getPanelUrl('openstack/instances')"
+         [queryParams]="{search: address}" class="active-link">{{ address }}</a>
+      <ng-container *ngIf="!last">, </ng-container>
+    </span>
+  </p>
+  <p *ngIf="object.node_addresses">
+    Node Addresses:
+    <span *ngFor="let address of nodeAddresses; let last = last;">
+      <a [routerLink]="config.getPanelUrl('openstack/instances')"
+         [queryParams]="{search: address}" class="active-link">{{ address }}</a>
+      <ng-container *ngIf="!last">, </ng-container>
+    </span>
+  </p>
+</div>

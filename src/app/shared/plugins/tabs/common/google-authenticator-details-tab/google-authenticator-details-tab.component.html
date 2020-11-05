@@ -1,0 +1,49 @@
+<div class="fl-content-min-height">
+  <div class="fl-margin-bottom" *ngIf="status && status.enabled">
+    <span class="fl-tag fl-light-green-bg" *ngIf="status && status.enabled">ENABLED</span>
+    <span class="fl-tag fl-margin-left-small" *ngIf="status && status.default">DEFAULT</span>
+  </div>
+  <app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+  <div *ngIf="status && !status.enabled">
+    <img width="200" height="200" src="{{imageLocation}}">
+    <div>
+      <p>To enable google authenticator on your profile, scan the above QR into google authenticator
+        app or another compatible app on your mobile or just add the following code using the
+        "Enter a provided key" option in google authenticator app. If you use the last option,
+        in the "Account name" field add your email.</p>
+      <p *ngIf="secretKey">Secret key: {{secretKey}}</p>
+    </div>
+  </div>
+  <div *ngIf="status && status.enabled" class="fl-margin-bottom">
+    <p class="fl-detail">Google authenticator is enabled. You can disable it or regenerate the secret key. If you
+      regenerate the key, you will need to re-enable google authenticator by scanning again the new QR code or
+      manually entering the secret key.</p>
+  </div>
+  <div *ngIf="status && !status.enabled" class="fl-margin-bottom full-width">
+    <form appFormSubmit (ngSubmit)="enable()"
+          [formGroup]="gaForm" class="full-width">
+      <app-form-errors #formErrors [formGroup]="gaForm"></app-form-errors>
+      <mat-form-field class="half-width">
+        <input matInput placeholder="Code" type="text" formControlName="code" maxlength="6" required>
+        <mat-error>{{fieldErrors['code']}}</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div>
+    <button [routerLink]="config.getPrevUrl('sfa/options')" mat-button>
+      Cancel
+    </button>
+    <button (click)="disable()" mat-button color="primary" *ngIf="status && status.enabled">
+      Disable google authenticator
+    </button>
+    <button (click)="makeDefault()" mat-button color="primary" *ngIf="status && status.enabled && !status.default">
+      Set as default
+    </button>
+    <button (click)="enable()" mat-button color="primary" *ngIf="status && !status.enabled">
+      Enable google authenticator
+    </button>
+    <button (click)="regenerate()" mat-button color="primary">
+      Regenerate key
+    </button>
+  </div>
+</div>

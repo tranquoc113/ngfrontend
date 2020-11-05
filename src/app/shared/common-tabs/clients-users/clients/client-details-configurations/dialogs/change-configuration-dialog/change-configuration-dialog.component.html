@@ -1,0 +1,23 @@
+<h1 *ngIf="data && data.client" mat-dialog-title>Change client {{data.client.name}} configuration</h1>
+<div mat-dialog-content fxLayout="column">
+  <p *ngIf="data && data.configuration">Current configuration: {{data.configuration.name}}</p>
+  <div *ngIf="availableConfigurations && !availableConfigurations.length">
+    No other configurations available.
+  </div>
+  <div *ngIf="availableConfigurations && availableConfigurations.length" [formGroup]="changeConfigurationFrom">
+    <mat-form-field fxFlex="90">
+      <mat-select formControlName="selectedConfiguration" placeholder="New configuration">
+        <mat-option *ngFor="let configuration of availableConfigurations" [value]="configuration.id">
+          {{configuration.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button disabled="{{!(selectedConfiguration.value > 0)}}" (click)="changeConfiguration()"
+          [color]="'primary'">
+    Change configuration
+  </button>
+</div>

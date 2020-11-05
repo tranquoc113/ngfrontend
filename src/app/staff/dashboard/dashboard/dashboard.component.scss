@@ -1,0 +1,46 @@
+.dashboard-wrapper {
+  //height: 1400px;
+  overflow: visible;
+  margin-bottom: 100px;
+}
+
+.dashboard-wrapper gridster {
+  background: transparent;
+  overflow: visible;
+}
+
+gridster-item {
+  overflow: visible;
+  height: auto !important;
+}
+
+.gridster-item-wrapper {
+  padding: 70px 0;
+}
+
+.gridster-item-wrapper-padded {
+  padding: 70px 30px 20px 30px;
+}
+
+.remove-gridster-item-btn {
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+.reload-gridster-item-btn {
+  position: absolute;
+  top: 0;
+  right: 50px;
+}
+
+.gridster-item-title {
+  position: absolute;
+  top: 20px;
+  font-size: 20px;
+  left: 20px;
+}
+
+.all-widgets-placed {
+  padding: 15px;
+}

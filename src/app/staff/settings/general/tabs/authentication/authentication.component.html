@@ -1,0 +1,75 @@
+<div class="fl-padding-left fl-content fl-no-padding-bottom">
+  <h2 class="mat-headline">Authentication</h2>
+  <form appFormSubmit (ngSubmit)="saveSettings()"
+        [formGroup]="authSettingsForm" fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+    <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+      <mat-checkbox [color]="'primary'" formControlName="allow_auth_with_email_and_username">
+        Allow authentication using either username or email
+      </mat-checkbox>
+    </div>
+    <div fxLayout="column" class="fl-help-text">
+      <h3 fxHide.lt-md>Allow authentication using either username or email</h3>
+      <p class="fl-detail">End-users will be able to login using both username and email.</p>
+    </div>
+  </form>
+
+  <h2 class="mat-headline fl-margin-top">Second factor authentication</h2>
+  <form appFormSubmit (ngSubmit)="saveSettings()"
+        [formGroup]="sfaSettingsForm" fxLayout="column" fxLayout.xs="column" fxLayout.sm="column">
+    <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+      <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+        <mat-checkbox [color]="'primary'" formControlName="require_end_users_to_use_sfa">
+          Require end-users to use second factor authentication
+        </mat-checkbox>
+      </div>
+      <div fxLayout="column" class="fl-help-text">
+        <h3 fxHide.lt-md>Require end-users to use second factor authentication</h3>
+        <p class="fl-detail">End-users will not be able to login only after they configure a second factor
+          authentication method for their account.</p>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" class="fl-margin-top-small">
+      <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+        <mat-checkbox [color]="'primary'" formControlName="require_staff_users_to_use_sfa">
+          Require staff users to use second factor authentication
+        </mat-checkbox>
+      </div>
+      <div fxLayout="column" class="fl-help-text">
+        <h3 fxHide.lt-md>Require staff users to use second factor authentication</h3>
+        <p class="fl-detail">Staff users will not be able to login only after they configure a second factor
+          authentication method for their account.</p>
+      </div>
+    </div>
+  </form>
+
+  <table class="fl-table fl-margin-top" *ngIf="sfaTypes && sfaTypes.length">
+    <thead class="authentication-sfa-table-separator">
+    <th>Name</th>
+    <th>Enabled to staff</th>
+    <th>Enabled to end-user</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let sfa of sfaTypes" class="authentication-sfa-table-separator">
+      <td>{{sfa.display_name}}</td>
+      <td class="no-overflow-hidden">
+        <mat-checkbox [color]="'primary'" [(ngModel)]="sfa.enabled_to_staff"
+                      aria-label="Enabled to staff"
+                      [attr.fl-tooltip]="sfa.enabled_to_staff ? disableSfaTooltip: ''">
+        </mat-checkbox>
+      </td>
+      <td class="no-overflow-hidden">
+        <mat-checkbox [color]="'primary'" [(ngModel)]="sfa.enabled_to_enduser"
+                      aria-label="Enabled to end-user"
+                      [attr.fl-tooltip]="sfa.enabled_to_enduser ? disableSfaTooltip: ''">
+        </mat-checkbox>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div fxLayout="row" fxLayoutAlign="end right" class="fl-margin-top">
+    <button mat-button (click)="saveSettings()" color="primary">Save settings</button>
+  </div>
+</div>
+

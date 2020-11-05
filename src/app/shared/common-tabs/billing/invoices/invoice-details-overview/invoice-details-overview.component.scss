@@ -1,0 +1,61 @@
+.balance-container {
+  float: right;
+}
+
+.download-button {
+  float: right;
+}
+
+.resource-type {
+  font-weight: bold;
+  padding: 5px 0 5px 0;
+}
+
+.fl-table > tbody > tr > td {
+  height: 48px;
+  overflow: hidden;
+  opacity: 0.87;
+}
+
+.fl-table > thead > tr > th {
+  height: 48px;
+  color: #7d7d7d;
+  opacity: 0.54;
+}
+
+.fl-table span {
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.source-col {
+  width: 35%;
+}
+
+.inv-row:hover {
+  background: rgba(0, 0, 0, .1);
+}
+
+.inv-row {
+  padding: 5px 5px;
+}
+
+.fl-indent {
+  padding-left: 10px;
+  margin: unset;
+}
+
+.fl-double-indent {
+  padding-left: 20px;
+  margin: unset;
+}
+
+.final-amt {
+  margin-right: 5px;
+}
+
+@media screen and (max-width: 748px) {
+  .inv-table {
+    font-size: 13px !important;
+  }
+}

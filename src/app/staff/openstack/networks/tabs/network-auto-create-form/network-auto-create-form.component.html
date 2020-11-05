@@ -1,0 +1,23 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="createOptions" [formGroup]="networkForm"
+      fxLayout="column" fxLayoutGap="10px" class="fl-content fl-content-min-height">
+  <app-form-errors #formErrors [formGroup]="networkForm"></app-form-errors>
+  <mat-form-field>
+    <input matInput placeholder="Client" type="text" formControlName="client" required (click)="clearClient()"
+           [matAutocomplete]="autocompleteClient">
+    <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+      <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+        {{client.first_name}} {{client.last_name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['client']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select formControlName="region" placeholder="Region" required>
+      <mat-option *ngFor="let region of createOptions.regions" [value]="region.id">
+        {{region.id}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>

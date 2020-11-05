@@ -1,0 +1,95 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)" [formGroup]="configurationDomainsForm">
+  <app-form-errors #formErrors [formGroup]="configurationDomainsForm"></app-form-errors>
+
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Domain options
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100" fxLayoutGap="10px">
+          <mat-checkbox formControlName="allow_domain_registration" color="primary">
+            Allow domain registration
+          </mat-checkbox>
+          <mat-checkbox formControlName="allow_domain_transfer" color="primary">
+            Allow domain transfer
+          </mat-checkbox>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Allow domain registration</h3>
+            <p>
+              If this is checked new internet domain registration is allowed for the clients with this
+              configuration.
+            </p>
+            <h3>Allow domain transfer</h3>
+            <p>If this is checked transfer of internet domains is allowed for the clients with this configuration.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Default TLD
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100" fxLayoutGap="10px">
+          <mat-checkbox formControlName="enable_default_tld" color="primary">
+            Enable default TLD
+          </mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Default TLD" type="text" formControlName="default_tld" required>
+            <mat-error>{{fieldErrors['default_tld']}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Enable default TLD</h3>
+            <p>Default TLD will be used when client checks if a domain is available without specifying a TLD.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Default nameservers
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100" fxLayoutGap="10px">
+          <mat-checkbox formControlName="enable_default_nameservers" color="primary">
+            Enable default nameservers
+          </mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Default nameserver 1" type="text" formControlName="default_nameserver1"
+                   required>
+            <mat-error>{{fieldErrors['default_nameserver1']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Default nameserver 2" type="text" formControlName="default_nameserver2">
+            <mat-error>{{fieldErrors['default_nameserver2']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Default nameserver 3" type="text" formControlName="default_nameserver3">
+            <mat-error>{{fieldErrors['default_nameserver3']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Default nameserver 4" type="text" formControlName="default_nameserver4">
+            <mat-error>{{fieldErrors['default_nameserver4']}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Enable default nameservers</h3>
+            <p>Default nameservers will be used when client orders a domain without specifying nameservers.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</form>

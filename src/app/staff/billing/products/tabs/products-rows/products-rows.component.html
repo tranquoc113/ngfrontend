@@ -1,0 +1,65 @@
+<div *ngIf="object" class="product-row-details">
+  <div *ngIf="productRows.length" class="product-list" fxLayout="column">
+    <div class="product-row" fxLayoutAlign="start center"
+         fxLayout="row">
+      <div fxFlex="0 0 200px" fxFlex.lt-md="100" class="fl-ellipsis-text mat-header-cell">
+        Name
+      </div>
+      <div fxFlex="0 0 200px" fxHide.lt-md class="fl-ellipsis-text mat-header-cell">
+        Description
+      </div>
+      <div fxFlex="0 0 100px" fxHide.lt-md class="fl-ellipsis-text mat-header-cell">
+        Status
+      </div>
+      <div fxFlex="0 0 150px" fxHide.lt-md class="fl-ellipsis-text mat-header-cell">
+        Code
+      </div>
+      <div fxFlex="0 0 200px" fxHide.lt-md class="fl-ellipsis-text mat-header-cell">
+        Price model
+      </div>
+      <div fxLayout="row">
+        <div fxFlex="auto">
+        </div>
+      </div>
+    </div>
+    <ng-container *ngFor="let productRow of productRows">
+      <div class="product-row" fxLayoutAlign="start center"
+           fxLayout="row">
+        <div fxFlex="0 0 200px" fxFlex.lt-md="100" class="fl-ellipsis-text">
+          <a [routerLink]="[config.getPanelUrl('billing/products'), productRow.product.id]">
+            {{productRow.product.name}}
+          </a>
+        </div>
+        <div fxFlex="0 0 200px" fxHide.lt-md class="fl-ellipsis-text">
+          <a [routerLink]="[config.getPanelUrl('billing/products'), productRow.product.id]">
+            {{productRow.product.description || 'n/a'}}
+          </a>
+        </div>
+        <div fxFlex="0 0 100px" fxHide.lt-md class="fl-ellipsis-text">
+          <a [routerLink]="[config.getPanelUrl('billing/products'), productRow.product.id]"
+             class="text-capitalize">
+            {{productRow.product.status}}
+          </a>
+        </div>
+        <div fxFlex="0 0 150px" fxHide.lt-md class="fl-ellipsis-text">
+          <a [routerLink]="[config.getPanelUrl('billing/products'), productRow.product.id]">
+            {{productRow.product.code}}
+          </a>
+        </div>
+        <div fxFlex="0 0 200px" fxHide.lt-md class="fl-ellipsis-text">
+          <a [routerLink]="[config.getPanelUrl('billing/products'), productRow.product.id]">
+            {{productRow.product.price_model_display}}
+          </a>
+        </div>
+        <div fxLayout="row" fxFlex="100">
+          <div fxFlex="auto">
+          </div>
+          <div class="action-container-class" fxFlexAlign="end">
+            <app-object-actions [objectActions]="productRow.actions" maxVisibleActions="2">
+            </app-object-actions>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

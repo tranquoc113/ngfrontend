@@ -1,0 +1,19 @@
+.recordset-row {
+  border-top-style: ridge;
+  border-top-width: 1px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
+.recordsets-titles {
+  padding-left: 10px;
+}
+
+.ttl-input {
+  size: 90px;
+}
+
+.invalid-recordset .mat-input-element, ::ng-deep .invalid-recordset .mat-select-value-text {
+  color: red !important;
+}

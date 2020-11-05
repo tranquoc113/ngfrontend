@@ -1,0 +1,43 @@
+.flavor-select-option {
+  line-height: 6px !important;
+  height: 66px !important;
+}
+
+.flavor-select-option ::ng-deep .mat-option-text {
+  overflow: visible !important;
+}
+
+.flavor-mat-select ::ng-deep .mat-select-trigger {
+  padding: 10px 0;
+}
+
+.fl-bordered-box > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.flavor-mat-select-limit {
+  max-width: 70%;
+}
+
+.sel-flavor-details-wrapper {
+  width: 25%;
+  margin-left: 1%;
+}
+
+.flavor-details-sub-text {
+  color: gray;
+  font-weight: lighter;
+  font-size: smaller;
+}
+
+.fl-userdata-textarea {
+  white-space: nowrap;
+  font-family: monospace, 'Arial';
+  overflow-x: auto;
+  line-height: 20px !important;
+}
+
+.incompatible-flavor-txt {
+  line-height: 0;
+}

@@ -1,0 +1,4 @@
+<div *ngIf="type === LineType.Solid" class="status-line" [ngClass]="classes"></div>
+<mat-progress-bar *ngIf="type === LineType.Progress" mode="indeterminate"
+                  class="status-line" [ngClass]="classes">
+</mat-progress-bar>

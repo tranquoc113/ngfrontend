@@ -1,0 +1,3 @@
+<mat-icon *ngIf="icon" [ngClass]="icon.class"
+          [class.fl-red-color]="icon.color === IconColor.Red"
+          [class.fl-green-color]="icon.color === IconColor.Green">{{icon.name}}</mat-icon>

@@ -1,0 +1,19 @@
+<ng-container *ngIf="menuItem && authService.feature(menuItem.feature)">
+  <a mat-button class="menu-link" *ngIf="menuItem.angular_route !== null && menuItem.angularjs_path === null"
+     [routerLink]="[menuItem.route]"
+     [queryParams]="menuItem.queryParams"
+     [class.active-link]="isActive">
+    <mat-icon [ngClass]="menuItem.icon_class">{{menuItem.icon}}</mat-icon>{{menuItem.label}}
+  </a>
+  <a mat-button class="menu-link" *ngIf="menuItem.angularjs_path !== null && menuItem.angular_route === null"
+     href="{{getAngularJsPath(menuItem.angularjs_path)}}"
+     [class.active-link]="isActive">
+    <mat-icon [ngClass]="menuItem.icon_class">{{menuItem.icon}}</mat-icon>{{menuItem.label}}
+  </a>
+  <a mat-button class="menu-link" *ngIf="!menuItem.angularjs_path &&
+  !menuItem.angular_route && menuItem.href"
+     href="{{menuItem.href}}"
+     target="{{menuItem.open_in_new_tab ? '_blank' : '_self'}}">
+    <mat-icon [ngClass]="menuItem.icon_class">{{menuItem.icon}}</mat-icon>{{menuItem.label}}
+  </a>
+</ng-container>

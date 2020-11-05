@@ -1,0 +1,22 @@
+<div fxLayout="column" *ngIf="object" class="fl-content fl-content-min-height">
+  <p class="fl-detail">ID: {{object.id}}</p>
+  <p class="fl-detail">
+    Client:
+    <a *ngIf="object.client; else noClient" class="active-link"
+       [routerLink]="config.getPanelUrl('clients-users/clients/' + object.client.id)">
+      {{object.client.name}}
+    </a>
+    <ng-template #noClient>n/a</ng-template>
+  </p>
+  <p class="fl-detail">Size: {{object.size}} GB</p>
+  <p class="fl-detail">Type: {{object.type || 'n/a'}}</p>
+  <p class="fl-detail">Created at: {{object.created_at | date}}</p>
+  <p class="fl-detail">Bootable: {{object.bootable}}</p>
+  <p *ngIf="this.object.related_instance_uuid" class="fl-detail">
+    This volume is attached to
+    <a class="active-link"
+       routerLink="{{config.getPanelUrl('openstack/instances/') + this.object.related_instance_uuid}}">
+      {{this.object.related_instance_uuid}}
+    </a>
+  </p>
+</div>

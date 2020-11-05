@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Attach a volume to instance {{data.instanceName}}</h1>
+<div mat-dialog-content>
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <p *ngIf="loading === false && volumesToAttach && volumesToAttach.length === 0">No volumes to attach.</p>
+  <form appFormSubmit (ngSubmit)="attachVolume()" [formGroup]="attachVolumeForm" *ngIf="volumesToAttach.length">
+    <app-form-errors #formErrors [formGroup]="attachVolumeForm"></app-form-errors>
+    <div fxLayout="row">
+      <mat-form-field fxFlex="50">
+        <mat-select formControlName="volume_id" placeholder="Volume">
+          <mat-option *ngFor="let volume of volumesToAttach" [value]="volume.id">
+            {{volume.display_name || volume.id}}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{'This field is required'}}</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="attachVolume()"
+          [disabled]="loading === false && volumesToAttach && volumesToAttach.length === 0"
+          [color]="'primary'">
+    Attach
+  </button>
+</div>

@@ -1,0 +1,39 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="gatewayForm" fxLayout="column" fxFlex="auto" fxLayoutGap="10px">
+  <app-form-errors #formErrors [formGroup]="gatewayForm"></app-form-errors>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+    <mat-checkbox formControlName="enabled" color="primary">
+      Enabled
+    </mat-checkbox>
+    <mat-checkbox *ngIf="capabilities.can_process_payments" formControlName="visible_to_user" color="primary">
+      Visible to user
+    </mat-checkbox>
+    <mat-checkbox *ngIf="capabilities.supports_recurring_payments" formControlName="recurring_payments_enabled"
+                  color="primary">
+      Enable recurring payments
+    </mat-checkbox>
+  </div>
+  <mat-form-field>
+    <input matInput placeholder="Display name" type="text" formControlName="display_name" required>
+    <mat-error>{{fieldErrors['display_name']}}</mat-error>
+  </mat-form-field>
+
+  <ng-container *ngIf="!capabilities.returns_fee_information; else hasFeeInfo">
+    <p>
+      This gateway does not return fee information, please enter fees:
+    </p>
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput placeholder="Fixed fee" type="number" formControlName="fixed_fee">
+        <mat-error>{{fieldErrors['fixed_fee']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Percent fee" type="number" formControlName="percent_fee">
+        <mat-error>{{fieldErrors['percent_fee']}}</mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+  <ng-template #hasFeeInfo>
+    <p>This gateway returns fee information, fees will automatically be added to transactions.</p>
+  </ng-template>
+</form>

@@ -1,0 +1,27 @@
+<div *ngIf="object" class="fl-content fl-content-min-height" fxLayout="column" fxLayoutGap="10px">
+  <form appFormSubmit (ngSubmit)="saveRegistrars()" [formGroup]="registrarFrom">
+    <app-form-errors #formErrors [formGroup]="registrarFrom"></app-form-errors>
+    <div fxLayout="column">
+      <mat-form-field>
+        <input matInput placeholder="Registrar" type="text" formControlName="default_registrar" required
+               [matAutocomplete]="autocompleteRegistrar" (click)="clearRegistrar()">
+        <mat-autocomplete #autocompleteRegistrar="matAutocomplete" [displayWith]="registrarDisplay">
+          <mat-option *ngFor="let connector of filteredRegistrars$ | async" [value]="connector">
+            {{connector.name}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error>{{fieldErrors['default_registrar']}}</mat-error>
+      </mat-form-field>
+      <div fxLayout="row">
+        <mat-checkbox formControlName="requires_epp_for_transfer" fl-tooltip-direction="right"
+                      color="primary"
+                      fl-tooltip="Check this if an EPP code is required for domain transfer">
+          EPP code required for transfer
+        </mat-checkbox>
+      </div>
+    </div>
+  </form>
+  <div fxLayout="row">
+    <button mat-button color="primary" (click)="saveRegistrars()" mat-raised-button>Save registrars</button>
+  </div>
+</div>

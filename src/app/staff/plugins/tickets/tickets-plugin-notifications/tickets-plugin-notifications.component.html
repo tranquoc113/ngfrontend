@@ -1,0 +1,15 @@
+<ng-container *ngIf="data">
+  <a fxHide.lt-lg class="notifications-content" [attr.fl-tooltip]="data.plugin.display_name" fl-tooltip-direction="down"
+     [routerLink]="config.getPanelUrl('plugins/tickets')" [queryParams]="ticketsQP">
+    <app-icon [icon]="{name: 'tickets', class: 'fl-icons'}" class="notification-icon"></app-icon>
+    <div *ngIf="data.notification_count > 0" class="notification-circle">
+      {{data.notification_count}}
+    </div>
+  </a>
+  <a fxHide.gt-sm mat-menu-item [routerLink]="config.getPanelUrl('plugins/tickets')" [queryParams]="ticketsQP">
+    Tickets
+    <span *ngIf="data.notification_count > 0" class="notification-circle-btn">
+      {{data.notification_count}}
+    </span>
+  </a>
+</ng-container>

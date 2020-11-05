@@ -1,0 +1,14 @@
+<mat-radio-group aria-labelledby="radio-group-filtering-value"
+  [(ngModel)]="filteringValue">
+  <mat-radio-button [color]="'primary'" class="boolean-filter-choice-radios" [value]="true">
+    True
+  </mat-radio-button>
+  <mat-radio-button [color]="'primary'" class="boolean-filter-choice-radios" [value]="false">
+    False
+  </mat-radio-button>
+</mat-radio-group>
+
+<div><!-- move button on new line--></div>
+<button (click)="applyFiltering()" mat-flat-button>
+  Apply
+</button>

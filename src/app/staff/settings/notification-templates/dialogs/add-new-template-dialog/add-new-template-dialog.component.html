@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Create a new {{data.templateName}} template </h1>
+<div mat-dialog-content class="dialog-content" *ngIf="data.availableLanguages">
+  <form appFormSubmit (ngSubmit)="create()"
+        [formGroup]="addTemplateForm" fxLayout="column" fxLayoutGap="10px">
+    <mat-form-field>
+      <mat-select formControlName="language" placeholder="Language">
+        <mat-option *ngFor="let language of data.availableLanguages"
+                    [value]="language.language_code">
+          {{language.language_display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!addTemplateForm.valid" (click)="create()"
+          [color]="'primary'">
+    Create
+  </button>
+</div>

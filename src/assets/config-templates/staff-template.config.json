@@ -1,0 +1,34 @@
+{
+  "urls": {
+    "backendApiUrl": "//localhost:8000/staffapi/",
+    "homeName": "staff",
+    "angularJsPanelUrl": "//localhost:9000/staff/",
+    "resellerUrl": "/reseller",
+    "enduserUrl": "/"
+  },
+  "settings": {
+    "defaultLanguage": "en",
+    "imagesPath": "assets/img/staff/",
+    "logoDark": null,
+    "logoLight": null,
+    "defaultTheme": "spring",
+    "availableThemes": [
+      "spring",
+      "navy",
+      "dusk"
+    ],
+    "instanceForm": {
+      "hideNetworksIfOnlyOneAvailable": true,
+      "preselectPublicNetworks": true,
+      "showUserData": true,
+      "flavorsAsCards": false,
+      "showRootPasswordField": true,
+      "rootPasswordFieldMandatory": false,
+      "localComputeStorageEnabled": true,
+      "hideVolumeSelectionForFlavorsWithDisk": false,
+      "defaultVolumeType": null
+    },
+    "logoutRedirect": null,
+    "usernameInputLabel": null
+  }
+}

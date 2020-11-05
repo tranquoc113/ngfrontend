@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  width: 100%;
+}
+
+.product-row-details {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.product-list {
+  display: flex;
+  width: 100%;
+}
+
+.product-row {
+  position: relative;
+  display: flex;
+  min-height: 48px;
+  width: 100%;
+  padding-left: 38px;
+  border-top: 1px solid #eee;
+  //border-bottom: 1px solid #eee;
+}
+
+.product-row:last-child {
+  border-bottom: 1px solid #eee;
+}
+
+::ng-deep .action-container-class .actions-container {
+  opacity: 0;
+  transition: 0.2s;
+  -webkit-transition: 0.2s;
+}
+
+::ng-deep .product-row:hover .actions-container {
+  opacity: 1;
+}

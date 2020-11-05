@@ -1,0 +1,164 @@
+<div class="fl-content fl-content-min-height">
+  <form appFormSubmit (ngSubmit)="registerDomain()"
+        [formGroup]="newDomainForm" fxLayout="column" fxLayoutAlign="center stretch">
+    <app-form-errors #formErrors [formGroup]="newDomainForm"></app-form-errors>
+    <mat-form-field>
+      <input matInput placeholder="Client" type="text" formControlName="client" required
+             [matAutocomplete]="autocompleteClient" (click)="clearClient()">
+      <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+        <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+          {{client.first_name}} {{client.last_name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['client']}}</mat-error>
+    </mat-form-field>
+    <div *ngIf="newDomainForm.controls.client.value && newDomainForm.controls.client.value.id"
+
+         fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+      <mat-form-field>
+        <input matInput placeholder="Domain name" type="text" formControlName="name" required>
+        <mat-error>{{fieldErrors['name']}}</mat-error>
+      </mat-form-field>
+      <button mat-button color="primary" (click)="checkDomainName()" [disabled]="checkingDomain">
+        Check
+      </button>
+    </div>
+    <div *ngIf="domainAvailability" fxLayout="column">
+      <ng-container *ngIf="domainAvailability.available; else domainNotAvailable">
+        <p class="fl-green-color">
+          Domain is available for registration.
+        </p>
+        <div fxLayout="row" fxLayoutGap="5px">
+          <p>Select registration period:</p>
+          <mat-form-field>
+            <mat-select (selectionChange)="updateOptionPrices(null)" formControlName="years"
+                        placeholder="Select period">
+              <ng-container *ngFor="let yearPrice of domainAvailability.prices.prices_per_years; let index=index">
+                <mat-option *ngIf="yearPrice"
+                            [value]="index">
+                  {{ domainUtils.getYearsText(index) }} - {{ yearPrice }} {{ domainAvailability.prices.currency.code }}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <p>Select additional options</p>
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+          <mat-checkbox formControlName="dns_management"
+                        color="primary">
+            Dns management
+            <span *ngIf="dnsManagementAvailable">&nbsp;({{ dnsManagementPrice }})</span>
+          </mat-checkbox>
+          <mat-checkbox formControlName="email_forwarding"
+                        color="primary">
+            Email forwarding
+            <span *ngIf="emailForwardingAvailable">&nbsp;({{ emailForwardingPrice }})</span>
+          </mat-checkbox>
+          <mat-checkbox formControlName="id_protection"
+                        color="primary">
+            ID protection
+            <span *ngIf="idProtectionAvailable">&nbsp;({{ idProtectionPrice }})</span>
+          </mat-checkbox>
+        </div>
+        <p>Select nameservers</p>
+        <mat-checkbox formControlName="use_default_nameservers"
+                      color="primary"
+                      (change)="setDefaultNameservers()">
+          Use default nameservers
+        </mat-checkbox>
+        <br/>
+        <div fxLayout="row">
+          <div fxLayout="column" fxFlex="50" fxFlex.xs="100">
+            <mat-form-field>
+              <input matInput placeholder="First nameserver" type="text" formControlName="nameserver1" required>
+              <mat-error>{{fieldErrors['nameserver1']}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Second nameserver" type="text" formControlName="nameserver2">
+              <mat-error>{{fieldErrors['nameserver2'] }}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Third nameserver" type="text" formControlName="nameserver3">
+              <mat-error>{{fieldErrors['nameserver3'] }}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Fourth nameserver" type="text" formControlName="nameserver4">
+              <mat-error>{{fieldErrors['nameserver4'] }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <p>Register domain on</p>
+        <mat-radio-group formControlName="domain_contact_type" fxLayout="row" fxLayoutGap="5px">
+          <mat-radio-button value="client" color="primary"
+                            fl-tooltip="Clients are used for invoicing, accounting and as domain registration details">
+            Use client as a contact
+          </mat-radio-button>
+          <mat-radio-button value="contact" color="primary"
+                            fl-tooltip="Contacts are only used for domain registration details">
+            Select a domain contact
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="domain_contact_type.value === 'client'" class="fl-margin-top">
+          <p>Data from client profile will be used when registering the domain:</p>
+          <pre class="fl-detail">{{ domainAvailability.client_details }}</pre>
+        </div>
+        <div *ngIf="domain_contact_type.value === 'contact'">
+          <p>
+            Please select a domain contact
+          </p>
+          <div layout="row" fxLayoutGap="10px">
+            <mat-form-field>
+              <input matInput placeholder="Contact" type="text" formControlName="contact" required
+                     [matAutocomplete]="autocompleteContact" (click)="clearContact()">
+              <mat-autocomplete #autocompleteContact="matAutocomplete" [displayWith]="contactDisplay">
+                <mat-option *ngFor="let contact of filteredContacts$ | async" [value]="contact">
+                  {{contact.first_name}} {{contact.last_name}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error>{{fieldErrors['client']}}</mat-error>
+            </mat-form-field>
+            <button *ngIf="newDomainForm.controls.contact.value" mat-button color="primary"
+                    fl-tooltip="Edit domain contact"
+                    (click)="editDomainContact()">
+              Edit contact
+            </button>
+            <button mat-button color="primary"
+                    fl-tooltip="Add a new domain contact"
+                    (click)="createDomainContact()">
+              Add contact
+            </button>
+          </div>
+          <p>Data from domain contact will be used when registering the domain:</p>
+          <pre class="fl-detail">{{ newDomainForm.controls.contact.value.details }}</pre>
+        </div>
+        <div *ngIf="customFieldsStatus && customFieldsStatus.missing_fields">
+          <p class="fl-red-color">
+            You need to fill the following custom fields in order to register the domain:
+          </p>
+          <p class="fl-red-color">
+            <ng-container *ngFor="let label of customFieldsStatus.missing_fields_labels; let last=last">
+              <span>{{ label }}</span>
+              <span *ngIf="!last">,&nbsp;</span>
+            </ng-container>
+          </p>
+          <a *ngIf="domain_contact_type.value === 'client'" class="active-link" (click)="editClient()">
+            Click here to edit client
+          </a>
+          <a *ngIf="domain_contact_type.value === 'contact'" class="active-link" (click)="editDomainContact()">
+            Click here to edit contact
+          </a>
+        </div>
+        <div fxLayout="row" class="fl-margin-top">
+          <a mat-button mat-raised-button color="primary" (click)="registerDomain()">
+            Register domain
+          </a>
+        </div>
+      </ng-container>
+      <ng-template #domainNotAvailable>
+        <p class="fl-red-color">{{domainAvailability.error}}</p>
+      </ng-template>
+    </div>
+  </form>
+</div>

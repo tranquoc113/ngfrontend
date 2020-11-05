@@ -1,0 +1,66 @@
+<h1 mat-dialog-title>License about to expire</h1>
+<div mat-dialog-content>
+  <div class="fl-license-warn-text">
+    <div *ngIf="data.licenseDaysLeft > 0">
+      <span *ngIf="data.licenseDaysLeft > 1">
+        Your license expires in {{data.licenseDaysLeft}} days.
+      </span>
+      <span *ngIf="data.licenseDaysLeft === 1">
+        Your license expires in 1 day.
+      </span>
+      Please renew your Fleio license.
+      <div *ngIf="data.coreDaysLeft">
+        <br>
+        <br>
+      </div>
+    </div>
+    <div *ngIf="data.licenseDaysLeft < -1">
+      <span>
+        Your license expired {{-data.licenseDaysLeft}} days ago.
+      </span>
+      Please renew your Fleio license.
+      <div *ngIf="data.coreDaysLeft">
+        <br>
+        <br>
+      </div>
+    </div>
+    <div *ngIf="data.licenseDaysLeft === -1">
+      Your license expired yesterday. Please renew your Fleio license.
+      <div *ngIf="data.coreDaysLeft">
+        <br>
+        <br>
+      </div>
+    </div>
+    <div *ngIf="data.licenseDaysLeft === 0">
+      Your license expires today. Please renew your Fleio license.
+      <div *ngIf="data.coreDaysLeft">
+        <br>
+        <br>
+      </div>
+    </div>
+    <div *ngIf="data.coreDaysLeft">
+      <span>You are currently using a total of {{data.coresInUse}} cores on your compute nodes. But your license
+        includes {{data.maxCores}} cores.</span>
+      <br>
+      <br>
+      <span *ngIf="data.coreDaysLeft > 1">
+        Please upgrade your license otherwise Fleio will stop working in {{data.coreDaysLeft}} days.
+      </span>
+      <span *ngIf="data.coreDaysLeft === 1">
+        Please upgrade your license otherwise Fleio will stop working in 1 day.
+      </span>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="fl-margin-top">
+  <button mat-button (click)="close()">
+    Cancel
+  </button>
+  <button mat-button (click)="permanentlyHide()" *ngIf="permanentlyHideWasSet === false">
+    Permanently hide
+  </button>
+  <button mat-button (click)="goToLicense()"
+          [color]="'primary'">
+    Go to license page
+  </button>
+</div>

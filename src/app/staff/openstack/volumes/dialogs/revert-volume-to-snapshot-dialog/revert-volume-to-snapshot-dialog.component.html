@@ -1,0 +1,18 @@
+<ng-container *ngIf="data.volume">
+  <h1 mat-dialog-title>Revert volume {{data.volume.name}} to snapshot</h1>
+  <div class="fl-dialog" mat-dialog-content>
+    <p>Last snapshot(Openstack allows revert only to last snapshot):</p>
+    <p *ngIf="snapshot">{{snapshot.name + ' - ' + snapshot.id}}</p>
+    <p *ngIf="!snapshot">
+      <span *ngIf="loading">Loading snapshot ...</span>
+      <span *ngIf="!loading">No snapshot found ...</span>
+    </p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="close()">Cancel</button>
+    <button mat-button [disabled]="!snapshot" (click)="revertToSnapshot()"
+            [color]="'primary'">
+      Revert volume
+    </button>
+  </div>
+</ng-container>

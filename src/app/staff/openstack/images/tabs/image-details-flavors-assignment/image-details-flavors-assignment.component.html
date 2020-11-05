@@ -1,0 +1,136 @@
+<div *ngIf="object" [formGroup]="assignForm" class="fl-content fl-content-min-height"
+     fxLayout="column" fxLayoutGap="10px">
+  <ng-container *ngIf="flavors && flavors.objects.length > 0; else noFlavors">
+    <table mat-table [dataSource]="flavors.objects" class="full-width">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef fxHide.lt-md>ID</th>
+        <td mat-cell *matCellDef="let element" fxHide.lt-md>
+          <a [routerLink]="[config.getPanelUrl('openstack/flavors'), element.id]">
+            {{element.id}}
+          </a></td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">
+          <a [routerLink]="[config.getPanelUrl('openstack/flavors'), element.id]">
+            {{element.name}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="region">
+        <th mat-header-cell *matHeaderCellDef>Region</th>
+        <td mat-cell *matCellDef="let element">
+          <a [routerLink]="[config.getPanelUrl('openstack/flavors'), element.id]">
+            {{element.region}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element" class="actions-cell">
+          <button mat-icon-button (click)="removeFlavor(element.id)"
+                  [attr.fl-tooltip]="'Remove assignment'">
+            <mat-icon>unlink</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="flavorColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: flavorColumns;"></tr>
+    </table>
+    <div *ngIf="!!flavors.next || !!flavors.previous" class="fl-margin-top">
+      <button mat-button (click)="changeFlavorPage('previous')"
+              [disabled]="!!flavors.previous === false" color="primary">
+        Previous page
+        <ng-container *ngIf="!!flavors.previous">({{currentFlavorPage - 1}})</ng-container>
+      </button>
+      <button mat-button (click)="changeFlavorPage('next')"
+              [disabled]="!!flavors.next === false" color="primary">
+        Next page
+        <ng-container *ngIf="!!flavors.next">({{currentFlavorPage + 1}})</ng-container>
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #noFlavors>
+    <p class="fl-detail">
+    No flavors currently assigned to this group.
+    </p>
+  </ng-template>
+
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign="start center">
+    <mat-form-field>
+      <input matInput placeholder="Flavor" type="text" formControlName="flavor"
+             [matAutocomplete]="autocompleteFlavor" (click)="clearFlavorInput()">
+      <mat-autocomplete #autocompleteFlavor="matAutocomplete" [displayWith]="flavorDisplay">
+        <mat-option *ngFor="let flavor of filteredFlavors$ | async" [value]="flavor">
+          {{flavor.name}} - {{flavor.region}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <button mat-button mat-raised-button color="primary" (click)="assignFlavor()">
+      Add flavor to image
+    </button>
+  </div>
+
+  <ng-container *ngIf="flavorGroups && flavorGroups.objects.length > 0; else noFlavorGroups">
+    <table mat-table [dataSource]="flavorGroups.objects" class="full-width">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef fxHide.lt-md>ID</th>
+        <td mat-cell *matCellDef="let element" fxHide.lt-md>
+          <a [routerLink]="[config.getPanelUrl('openstack/flavor-groups'), element.id]">
+            {{element.id}}
+          </a></td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">
+          <a [routerLink]="[config.getPanelUrl('openstack/flavor-groups'), element.id]">
+            {{element.name}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element" class="actions-cell">
+          <button mat-icon-button (click)="removeFlavorGroup(element.id)"
+                  [attr.fl-tooltip]="'Remove assignment'">
+            <mat-icon>unlink</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="flavorGroupColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: flavorGroupColumns;"></tr>
+    </table>
+    <div *ngIf="!!flavorGroups.next || !!flavorGroups.previous" class="fl-margin-top">
+      <button mat-button (click)="changeFlavorGroupPage('previous')"
+              [disabled]="!!flavorGroups.previous === false" color="primary">
+        Previous page
+        <ng-container *ngIf="!!flavorGroups.previous">({{currentFlavorGroupPage - 1}})</ng-container>
+      </button>
+      <button mat-button (click)="changeFlavorGroupPage('next')"
+              [disabled]="!!flavorGroups.next === false" color="primary">
+        Next page
+        <ng-container *ngIf="!!flavorGroups.next">({{currentFlavorGroupPage + 1}})</ng-container>
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #noFlavorGroups>
+    <p class="fl-detail">
+    No flavor groups currently assigned to this group.
+    </p>
+  </ng-template>
+
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign="start center">
+    <mat-form-field>
+      <input matInput placeholder="Flavor group" type="text" formControlName="flavorGroup"
+             [matAutocomplete]="autocompleteFlavorGroup" (click)="clearFlavorGroupInput()">
+      <mat-autocomplete #autocompleteFlavorGroup="matAutocomplete" [displayWith]="flavorGroupDisplay">
+        <mat-option *ngFor="let flavorGroup of filteredFlavorGroups$ | async" [value]="flavorGroup">
+          {{flavorGroup.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <button mat-button mat-raised-button color="primary" (click)="assignFlavorGroup()">
+      Add flavor group to image
+    </button>
+  </div>
+</div>

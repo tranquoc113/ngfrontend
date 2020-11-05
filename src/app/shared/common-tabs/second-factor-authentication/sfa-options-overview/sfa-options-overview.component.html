@@ -1,0 +1,17 @@
+<div fxLayout="column">
+  <app-fl-backdrop [verticalAlignMiddle]="true" *ngIf="loading"></app-fl-backdrop>
+  <h2 *ngIf="sfaOptions && !sfaOptions.length" class="fl-detail">
+    There are no available second factor authentication methods.
+  </h2>
+  <div *ngFor="let option of sfaOptions; let i = index"
+       class="full-width sfa-option sfa-option-{{option.name}}"
+       [class.fl-margin-top-small]="i > 0">
+    <a [routerLink]="option.route">
+      <span>{{option.display_name}}</span>
+      <br>
+      <span class="fl-tag fl-light-green-bg" *ngIf="option.related_method.enabled">enabled</span>
+      <span class="fl-tag" *ngIf="!option.related_method.enabled">disabled</span>
+      <span class="fl-tag" *ngIf="option.related_method.default">default</span>
+    </a>
+  </div>
+</div>

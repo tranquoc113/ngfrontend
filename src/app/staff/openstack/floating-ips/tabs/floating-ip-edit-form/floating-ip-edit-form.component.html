@@ -1,0 +1,35 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="floatingIpForm" fxLayout="column" fxLayoutGap="10px">
+  <app-form-errors #formErrors [formGroup]="floatingIpForm"></app-form-errors>
+  <mat-form-field>
+    <input matInput placeholder="Client" type="text" formControlName="client" required
+           [matAutocomplete]="autocompleteClient" (click)="clearClient()">
+    <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+      <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+        {{client.first_name}} {{client.last_name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['client']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field *ngIf="createOptions">
+    <mat-select formControlName="region" placeholder="Region selection" required>
+      <mat-option *ngFor="let region of createOptions.regions" [value]="region.id">
+        {{region.id}}<span *ngIf="region.description"> - {{region.description}}</span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field *ngIf="hasNetworks; else noNetworks">
+    <mat-select formControlName="floating_network" placeholder="Network selection" required>
+      <mat-option *ngFor="let network of filteredNetworks$ | async" [value]="network.id">
+        {{network.name}}<span *ngIf="network.description"> - {{network.description}}</span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-template #noNetworks>
+     No networks available. Select a client first.
+  </ng-template>
+  <mat-form-field>
+    <input matInput placeholder="Description" type="text" formControlName="description">
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+</form>

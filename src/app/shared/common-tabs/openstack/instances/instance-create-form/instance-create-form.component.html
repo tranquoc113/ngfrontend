@@ -1,0 +1,193 @@
+<app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+<form appFormSubmit [formGroup]="instanceForm" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="instanceForm"></app-form-errors>
+  <div fxLayout="row">
+    <div fxLayout="column" fxFlex="100">
+      <mat-form-field fxFlex="100">
+        <input matInput placeholder="Client" aria-label="Client" [matAutocomplete]="auto"
+               (click)="clickedClientInput()"
+               (ngModelChange)="resetCreateOptions()"
+               formControlName="client">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClientFn">
+          <mat-option *ngFor="let client of filteredClients" [value]="client">
+            <app-gravatar [email]="client.email" [customStyle]="{
+              width: '24px',
+              borderRadius: '100%',
+              marginLeft: '5px',
+              marginRight: '15px',
+              verticalAlign: 'middle'
+            }"></app-gravatar>
+            <span>{{client.name}}</span>
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error>{{fieldErrors['client']}}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div [hidden]="!(clientControl.value && clientControl.value.id)">
+    <div fxLayout="row">
+      <div fxLayout="column" fxFlex="45">
+        <mat-form-field>
+          <input matInput placeholder="Name" type="text" autocomplete="off" formControlName="name" required>
+          <mat-error>{{fieldErrors['name']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxFlex="50" fxFlexOffset="5">
+        <mat-form-field>
+          <mat-select formControlName="region" placeholder="Region" (ngModelChange)="resetCreateOptions()">
+            <mat-option *ngFor="let region of createOptions.region" [value]="region.id">{{region.id}}</mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['region']}}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div *ngIf="flavorsAsCards" class="fl-margin-bottom-small">
+      <span *ngIf="selectedBootSource && selectedBootSource.object && createOptions &&
+      !createOptions.flavor.length" class="fl-red-color">
+        No compatible flavors found for selected boot source!
+      </span>
+      <app-flavors-as-cards #flavorsAsCards *ngIf="flavorsAsCardsReload"
+                            (choseFlavor)="onFlavorChosen($event)"
+                            [flavors]="createOptions.flavor">
+      </app-flavors-as-cards>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxLayout="column" fxFlex="45" fxFlex.lt-md="100">
+        <div class="fl-margin-top-small fl-margin-bottom-small fl-bordered-box-help-txt">
+          <span>Select boot source</span>
+        </div>
+        <app-boot-source-select [images]="createOptions.bootSources.image"
+                                [communityImages]="createOptions.bootSources.community_image"
+                                [ownedImages]="createOptions.bootSources.owned_image"
+                                [sharedImages]="createOptions.bootSources.shared_image"
+                                [volumes]="createOptions.bootSources.volume"
+                                [volumeSnapshots]="createOptions.bootSources.volume_snapshot"
+                                [requestedImages]="createOptions.bootSources.requested_image"
+                                [volumeTypes]="createOptions.bootSources.volume_types"
+                                [requestedBootSource]="createOptions.bootSources.requested_boot_source"
+                                [selectedFlavor]="getSelectedFlavor()"
+                                [selectedRegionName]="instanceForm.controls.region.value"
+                                (selectedBootSourceInter)="onBootSourceChange($event)"
+                                #bootSourceSelectComponent>
+
+        </app-boot-source-select>
+      </div>
+      <div *ngIf="!flavorsAsCards" fxLayout="column" fxFlex="50" fxFlexOffset="5" fxFlex.lt-md="100"
+           fxFlexOffset.lt-md="0">
+        <div class="fl-margin-top-small fl-margin-bottom-small fl-bordered-box-help-txt">
+          <span>Select configuration</span>
+        </div>
+        <div class="fl-bordered-box">
+            <span *ngIf="selectedBootSource && selectedBootSource.object && createOptions &&
+            !createOptions.flavor.length"
+                  class="fl-red-color">
+              No compatible flavors found for selected boot source!
+            </span>
+            <mat-select formControlName="flavor" placeholder="Select a configuration" class="flavor-mat-select"
+                        [class.flavor-mat-select-limit]="!!this.selectedFlavor">
+              <mat-option *ngFor="let flavor of createOptions.flavor" [value]="flavor.id" class="flavor-select-option"
+                          [disabled]="(selectedBootSource && selectedBootSource.object && bootSourceIsImage() &&
+                          ((selectedBootSource.object.min_disk > flavor.root_gb && flavor.root_gb > 0) ||
+                          selectedBootSource.object.min_ram > flavor.memory_mb)) || flavor.out_of_stock">
+                <span class="fl-bold">{{flavor.name}} </span>
+                <br>
+                <span class="mat-caption">{{ flavor.memory_gb}} GB RAM {{ flavor.vcpus}} vCPUs</span>
+                <br>
+                <span *ngIf="(selectedBootSource && selectedBootSource.object && bootSourceIsImage() &&
+                            ((selectedBootSource.object.min_disk > flavor.root_gb && flavor.root_gb > 0) ||
+                            selectedBootSource.object.min_ram > flavor.memory_mb)) && !flavor.out_of_stock"
+                      class="mat-error mat-caption incompatible-flavor-txt">
+                  Incompatible with selected boot source
+                </span>
+                <span *ngIf="flavor.out_of_stock" class="mat-error mat-caption incompatible-flavor-txt">
+                  Flavor is out of stock
+                </span>
+              </mat-option>
+            </mat-select>
+            <div *ngIf="selectedFlavor" class="fl-ellipsis-text sel-flavor-details-wrapper">
+              <span class="fl-bold">{{selectedFlavor.name}}</span><br>
+              <span class="flavor-details-sub-text">{{selectedFlavor.memory_gb}} GB memory</span><br>
+              <span class="flavor-details-sub-text">{{selectedFlavor.vcpus}} virtual CPUs</span>
+            </div>
+            <mat-error *ngIf="instanceForm.controls.flavor.touched || clickedSave">
+              {{ fieldErrors['flavor'] }}
+            </mat-error>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row" *ngIf="config && config.current && config.current.settings.instanceForm.showUserData">
+      <div fxLayout="column" fxFlex="100">
+        <mat-checkbox [color]="'primary'" (change)="switchUserData()">
+          Cloud-init user data
+        </mat-checkbox>
+      </div>
+    </div>
+    <div fxLayout="row" *ngIf="showUserData">
+      <div fxLayout="column" fxFlex="100">
+        <mat-form-field fxFlex="100" class="fl-margin-top-medium">
+          <mat-label>Cloud-init user data</mat-label>
+          <textarea class="fl-userdata-textarea" matInput rows="3" formControlName="user_data"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayout.lt-md="column" class="fl-margin-top-medium">
+      <div fxLayout="column" fxFlex="30">
+        <mat-form-field>
+          <mat-select #nicsSelect formControlName="nics" placeholder="Network selection" multiple>
+            <ng-container *ngIf="createOptions.nics.length > 1">
+              <mat-option *ngFor="let network of createOptions.nics" [value]="network.id">{{network.name}}</mat-option>
+            </ng-container>
+            <ng-container *ngIf="createOptions.nics.length < 2">
+              <mat-option *ngFor="let network of createOptions.nics" [value]="network.id" (click)="closeNicsSelect()">
+                {{network.name}}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>{{fieldErrors['nics']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxFlex="30" fxFlexOffset="3" fxFlexOffset.lt-md="0">
+        <mat-form-field>
+          <mat-select formControlName="ssh_keys" placeholder="SSH keys" multiple>
+            <ng-container *ngIf="createOptions.ssh_key.length">
+              <mat-option *ngFor="let sshKey of createOptions.ssh_key" [value]="sshKey.id" (click)="closeNicsSelect()">
+                {{sshKey.name}}
+              </mat-option>
+            </ng-container>
+            <ng-container *ngIf="createOptions.ssh_key.length === 0">
+              <mat-option disabled>
+                No key to choose from
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>{{fieldErrors['ssh_keys']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxFlex="33" fxFlexOffset="3" fxFlexOffset.lt-md="0"
+           *ngIf="!bootSourceIsWindows() && config && config.current && config.current.settings &&
+           config.current.settings.instanceForm && config.current.settings.instanceForm.showRootPasswordField">
+        <!-- TODO: if boot source is windows, show message that pass will be set on first boot -->
+        <div fxLayout="row">
+          <mat-form-field>
+            <input matInput placeholder="Root password" [type]="showPasswordText ? 'text' : 'password'"
+                   formControlName="root_password" maxlength="1024"
+            [required]="config.current.settings.instanceForm.rootPasswordFieldMandatory">
+            <mat-error>{{fieldErrors['root_password']}}</mat-error>
+          </mat-form-field>
+          <div>
+            <button (mousedown)="showPasswordText = true;"
+                    (mouseup)="showPasswordText = false;"
+                    class="fl-margin-top-small"
+                    mat-icon-button
+                    fl-tooltip="Hold button to reveal password">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

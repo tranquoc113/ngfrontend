@@ -1,0 +1,36 @@
+<div fxLayout="column" class="fl-content-min-height">
+  <app-fl-backdrop *ngIf="loadingCurrencies"></app-fl-backdrop>
+  <div fxLayout="row" class="fl-padding-left fl-content">
+    <div fxFlex="70" fxFlex.lt-md="100">
+      <p class="fl-detail">
+        Here you can manage fleio currencies. All currencies are relative to the default one, thus the cost of one unit
+        of default currency is given in units of regular currency ( indirect quotation ). So, when you update exchange
+        rates the regular currencies will show prices that are equivalent to one unit of default currency.
+      </p>
+      <p class="fl-detail">
+        For example if the USD (direct) quotation now changes to 1 USD = 0.87 EUR, the indirect quote would be
+        1 EUR = 1.14 USD (i.e. 1/0.87).
+      </p>
+    </div>
+  </div>
+  <div *ngIf="currencies" fxLayout="column" fxFlex="70" fxFlex.xs="100" class="fl-padding-left fl-content">
+    <div *ngFor="let currency of currencies.objects" fxLayout="row" class="currency-row">
+      <div fxFlex="33">
+        {{currency.code}}
+      </div>
+      <div fxFlex="auto">
+        <span *ngIf="currency.is_default" class="fl-tag">default</span>
+        <span *ngIf="!currency.is_default">{{currency.rate}}</span>
+      </div>
+      <div class="action-container-class">
+        <app-object-actions [objectActions]="this.currencyActions[currency.code]" maxVisibleActions="2">
+        </app-object-actions>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="end right" class="fl-margin-top">
+    <button mat-button (click)="createCurrency()" color="primary">Create currency</button>
+    <button mat-button (click)="updateExchangeRates()" color="primary">Update exchange rates</button>
+    <button mat-button (click)="updateRelativePrices()" color="primary">Update relative prices</button>
+  </div>
+</div>

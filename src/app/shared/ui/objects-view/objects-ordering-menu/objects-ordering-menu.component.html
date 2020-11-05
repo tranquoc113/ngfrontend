@@ -1,0 +1,18 @@
+<span *ngIf="hasOrderOptions()">
+  <div matRipple [matRippleDisabled]="true" [matMenuTriggerFor]="menu" class="ordering-menu-button">
+    <span>{{activeOrdering.display}}</span>
+    <mat-icon>
+      {{OrderingHelper.isDescending(activeOrdering) ? 'expand_more' : 'expand_less'}}
+    </mat-icon>
+  </div>
+  <mat-menu #menu="matMenu" xPosition="before" yPosition="below">
+    <button (click)="changeActiveOrdering(orderOption)"
+            *ngFor="let orderOption of orderOptions" mat-menu-item
+            class="ordering-menu-items">
+      <span>{{orderOption.display}}</span>
+      <mat-icon *ngIf="activeOrdering.field === orderOption.field">
+        {{OrderingHelper.isDescending(activeOrdering) ? 'expand_more' : 'expand_less'}}
+      </mat-icon>
+    </button>
+  </mat-menu>
+</span>

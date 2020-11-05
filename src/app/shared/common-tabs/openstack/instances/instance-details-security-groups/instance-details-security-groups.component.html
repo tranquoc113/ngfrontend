@@ -1,0 +1,40 @@
+<div class="fl-content fl-content-min-height">
+  <table class="full-width fl-table">
+    <tbody *ngFor="let secGroup of this.securityGroups">
+      <tr class="fl-background-eee">
+        <td fxFlex="100" fxFlex.lt-md="90">
+          <span class="fl-block sec-group fl-ellipsis-text">
+            Group: {{secGroup.name }}
+            <span title="{{ secGroup.description }}" class="fl-sub-text">
+              - {{ secGroup.description }}
+            </span>
+          </span>
+        </td>
+        <td class="fl-flex-right-align no-overflow-hidden">
+          <button [attr.fl-tooltip]="'Dissociate security group'"
+                  [disabled]="!permissions['instances.dissociate_security_group']"
+                  fl-tooltip-direction="left"
+                  mat-icon-button (click)="dissociateGroup(secGroup)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+      <tr *ngFor="let rule of secGroup.security_group_rules">
+        <td class="rule-td">
+          <span class="fl-ellipsis-text">
+            {{ rule.display }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div fxLayoutAlign="end right">
+  <button [color]="'primary'"
+          [disabled]="!permissions['instances.associate_security_group']"
+          (click)="openAssociateSecurityGroupDialog()"
+          mat-button>
+    Associate
+  </button>
+</div>
+

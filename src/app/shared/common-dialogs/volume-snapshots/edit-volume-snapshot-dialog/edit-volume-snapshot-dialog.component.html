@@ -1,0 +1,49 @@
+<h1 *ngIf="data.snapshot" mat-dialog-title>Edit volume snapshot {{data.snapshot.name}}</h1>
+<h1 *ngIf="!data.snapshot && data.volume" mat-dialog-title>
+  Create snapshot for volume {{data.volume.name || data.volume.id}}
+</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="createOrUpdate()" [formGroup]="snapshotForm" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="snapshotForm"></app-form-errors>
+    <ng-container *ngIf="!data.snapshot">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <mat-icon class="material-icons fl-icon-yellow" fxHide.xs>warning</mat-icon>
+        <p class="fl-red-color">
+          Note that Openstack allows you to revert only to the latest snapshot
+        </p>
+      </div>
+      <mat-checkbox formControlName="for_client" color="primary">
+        Create resource in client's project. (client may get billed for this)
+      </mat-checkbox>
+    </ng-container>
+    <mat-form-field *ngIf="showVolumeSelect">
+      <input matInput placeholder="Volume" type="text" formControlName="volume" required
+             [matAutocomplete]="autocompleteVolume" (click)="clearVolume()">
+      <mat-autocomplete #autocompleteVolume="matAutocomplete" [displayWith]="volumeDisplay">
+        <mat-option *ngFor="let volume of filteredVolumes$ | async" [value]="volume">
+          {{volume.name ? volume.name + ' - ' + volume.id.toString() : volume.id.toString()}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Snapshot name" type="text" formControlName="name" required>
+      <mat-error>{{backendErrors['name'] || 'Field is required' }}</mat-error>
+    </mat-form-field>
+    <ng-container *ngIf="!data.snapshot">
+      <mat-checkbox formControlName="force" color="primary">
+        Force (indicates whether to create snapshot, even if the volume is attached)
+      </mat-checkbox>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Snapshot description" type="text" formControlName="description">
+        <mat-error>{{backendErrors['description']}}</mat-error>
+      </mat-form-field>
+    </ng-container>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!snapshotForm.dirty || saving" (click)="createOrUpdate()"
+          [color]="'primary'">
+    {{ data.snapshot ? 'Update snapshot' : 'Create snapshot' }}
+  </button>
+</div>

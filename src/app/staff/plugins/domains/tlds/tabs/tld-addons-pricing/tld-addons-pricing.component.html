@@ -1,0 +1,54 @@
+<div *ngIf="object" class="fl-content fl-content-min-height" fxLayout="column" fxLayoutGap="10px">
+  <mat-radio-group aria-labelledby="Group type" fxLayout="row" fxLayoutGap="5px" [(ngModel)]="groupBy">
+    <mat-radio-button color="primary" value="currency">
+      Group by currency
+    </mat-radio-button>
+    <mat-radio-button color="primary" value="price_type">
+      Group by price type
+    </mat-radio-button>
+  </mat-radio-group>
+  <p class="fl-detail">
+    Fill in the selling prices. Leave price empty if you want to disable price for a number of years.
+  </p>
+  <div *ngIf="groupBy === 'currency'">
+    <div *ngFor="let currency of currencies">
+      <h2>
+        {{currency}}
+        <span *ngIf="currency === addonsPrices.default_currency.code">(default)</span>
+        &nbsp;prices
+      </h2>
+      <div fxLayout="column">
+        <div *ngFor="let priceType of priceTypes">
+          <p>{{addonsPrices.price_types[priceType]}}</p>
+          <app-price-cycles
+            [priceCycles]="addonsPrices.price_cycles_list[addonsPrices.price_cycles_by_currency[currency][priceType]]"
+            [defaultPriceCycles]="addonsPrices.price_cycles_list[defaultPriceCycles[priceType]]"
+            [defaultCurrencyCode]="addonsPrices.default_currency.code">
+          </app-price-cycles>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="groupBy === 'price_type'">
+    <div *ngFor="let priceType of priceTypes">
+      <h2>
+        {{addonsPrices.price_types[priceType]}} prices
+      </h2>
+      <div fxLayout="column">
+        <div *ngFor="let currency of currencies">
+          <p>{{currency}}</p>
+          <app-price-cycles
+            [priceCycles]="addonsPrices.price_cycles_list[addonsPrices.price_cycles_by_type[priceType][currency]]"
+            [defaultPriceCycles]="addonsPrices.price_cycles_list[defaultPriceCycles[priceType]]"
+            [defaultCurrencyCode]="addonsPrices.default_currency.code">
+          </app-price-cycles>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row">
+    <button mat-button color="primary" mat-raised-button (click)="savePrices()">
+      Save prices
+    </button>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div *ngIf="object" fxLayout="column" fxLayout.xs="column" class="fl-content fl-content-min-height">
+  <p class="fl-detail">Permissions:&nbsp;{{ object.permissions ? 'custom' : 'default' }}</p>
+  <p class="fl-detail">Description:&nbsp;{{ object.description || 'n/a' }}</p>
+  <p class="fl-detail">Number of users in this group:&nbsp;{{ object.users_count }}</p>
+  <table *ngIf="users" class="full-width" mat-table [dataSource]="users">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td class="position-relative" mat-cell *matCellDef="let user">
+        <a [routerLink]="[config.getPanelUrl('clients-users/users'), user.id]">
+          {{user.id}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef>Username</th>
+      <td mat-cell *matCellDef="let user">
+        <a [routerLink]="[config.getPanelUrl('clients-users/users'), user.id]">
+          {{user.username}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="full_name">
+      <th mat-header-cell *matHeaderCellDef>Full name</th>
+      <td mat-cell *matCellDef="let user">
+        <a [routerLink]="[config.getPanelUrl('clients-users/users'), user.id]">
+          {{user.full_name }}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="(actions)">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let user">
+        <app-object-actions [objectActions]="userActions[user.id]" [maxVisibleActions]="2">
+        </app-object-actions>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div *ngIf="previousPage || nextPage" class="fl-margin-top">
+    <button mat-button (click)="changePage('previous')"
+            [disabled]="previousPage === false || loading === true" color="primary">
+      Previous page
+      <ng-container *ngIf="previousPage && loading !== true">({{currentPage - 1}})</ng-container>
+    </button>
+    <button mat-button (click)="changePage('next')"
+            [disabled]="nextPage === false || loading === true" color="primary">
+      Next page
+      <ng-container *ngIf="nextPage && loading !== true">({{currentPage + 1}})</ng-container>
+    </button>
+  </div>
+  <form [formGroup]="userForm" fxLayout="row" class="fl-margin-top" (ngSubmit)="addUserToGroup()">
+    <mat-form-field fxFlex="30" fxFlex.sm="60" fxFlex.xs="100">
+      <input matInput placeholder="User" aria-label="User" [matAutocomplete]="auto"
+             (click)="clearUserInput()"
+             formControlName="user">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUser">
+        <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
+          <app-gravatar [email]="user.email" [customStyle]="{
+            width: '24px',
+            borderRadius: '100%',
+            marginLeft: '5px',
+            marginRight: '15px',
+            verticalAlign: 'middle'
+          }"></app-gravatar>
+          <span>{{user.username}}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+  <div fxLayout="row">
+    <button [disabled]="!userForm.controls.user.value['id']" (click)="addUserToGroup()"
+            mat-button mat-raised-button color="primary">
+      Add user to group
+    </button>
+  </div>
+</div>

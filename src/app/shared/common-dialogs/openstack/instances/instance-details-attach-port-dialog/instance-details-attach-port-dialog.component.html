@@ -1,0 +1,29 @@
+<h1 *ngIf="data && data.instance" mat-dialog-title>
+  Attach port to instance {{data.instance.name || data.instance.id}}
+</h1>
+<div mat-dialog-content class="fl-dialog overflow-hidden">
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <form appFormSubmit (ngSubmit)="attachPort()" [formGroup]="attachPortForm" fxFlex="100">
+    <app-form-errors #formErrors [formGroup]="attachPortForm"></app-form-errors>
+    <div fxLayout="row">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Port" type="text" formControlName="port" required
+               [matAutocomplete]="autocompleteContact" (click)="clearPort()">
+        <mat-autocomplete #autocompleteContact="matAutocomplete" [displayWith]="displayPortFn">
+          <mat-option *ngFor="let port of filteredPorts$ | async" [value]="port">
+            {{port.name || port.id}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error>{{backendErrors['port'] || 'This field is required'}}</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="attachPort()"
+          [color]="'primary'">
+    Attach port
+  </button>
+</div>

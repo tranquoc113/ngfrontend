@@ -1,0 +1,17 @@
+<form appFormSubmit [formGroup]="userGroupForm" (ngSubmit)="objectController.actionCallback(primaryAction)"
+      fxLayout="column">
+  <app-form-errors #formErrors [formGroup]="userGroupForm"></app-form-errors>
+  <mat-form-field>
+    <input matInput placeholder="Group name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Group description" type="text" formControlName="description">
+    <mat-error>{{fieldErrors['description'] }}</mat-error>
+  </mat-form-field>
+
+  <mat-checkbox formControlName="is_default" [color]="'primary'">
+    Is default
+  </mat-checkbox>
+</form>

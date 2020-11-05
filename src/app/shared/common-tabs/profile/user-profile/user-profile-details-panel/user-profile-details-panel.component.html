@@ -1,0 +1,38 @@
+<div fxLayout="row" *ngIf="object">
+  <div fxLayout="column">
+    <app-gravatar [email]="object.user.email" [customStyle]="{
+      width: '50px',
+      marginRight: '15px',
+      verticalAlign: 'middle'
+    }"></app-gravatar>
+  </div>
+  <div fxLayout="column" class="fl-detail user-details-overview">
+    <div>{{object.user.first_name}} {{object.user.last_name}}</div>
+    <div>{{object.user.username}}</div>
+    <div>{{object.user.email}}</div>
+    <div>Language: {{object.user.language}}</div>
+    <div>Theme:
+      <span class="active-link">
+        {{themingService.getActiveThemeName()}}
+      </span>
+    </div>
+  </div>
+</div>
+<div class="profile-hr-wrapper"><hr></div>
+<div class="fl-float-right">
+  <app-plugin-ui *ngIf="authService.feature('plugins.tickets') && panelLayout.panel === 'staff'"
+                 pluginName="tickets" [panelName]="panelLayout.panel" componentName="TicketsSignaturesButton"
+                 [componentData]="{}">
+  </app-plugin-ui>
+  <a mat-flat-button [routerLink]="config.getPanelUrl('billing/manage-recurring-payment-options')"
+     *ngIf="authService.feature('billing.recurring_payments')">
+    Recurring payment options
+  </a>
+  <a mat-flat-button
+     *ngIf="authService.feature('clients&users.second_factor_auth') &&
+     authService.feature('ui.clients&users.second_factor_auth')"
+     [routerLink]="config.getPanelUrl('sfa/options')">
+    Secure your account
+  </a>
+  <button mat-flat-button [routerLink]="config.getPanelUrl('user/profile/edit')">Edit user profile</button>
+</div>

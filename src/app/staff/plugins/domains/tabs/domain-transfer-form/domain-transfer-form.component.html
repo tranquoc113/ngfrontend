@@ -1,0 +1,62 @@
+<div class="fl-content fl-content-min-height">
+  <form [formGroup]="newDomainForm" fxLayout="column" fxLayoutAlign="center stretch">
+    <app-form-errors #formErrors [formGroup]="newDomainForm"></app-form-errors>
+    <mat-form-field>
+      <input matInput placeholder="Client" type="text" formControlName="client" required
+             [matAutocomplete]="autocompleteClient" (click)="clearClient()">
+      <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+        <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+          {{client.first_name}} {{client.last_name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['client']}}</mat-error>
+    </mat-form-field>
+
+    <div *ngIf="newDomainForm.controls.client.value && newDomainForm.controls.client.value.id"
+         fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+      <mat-form-field>
+        <input matInput placeholder="Domain name" type="text" formControlName="name" required>
+        <mat-error>{{fieldErrors['name']}}</mat-error>
+      </mat-form-field>
+      <button mat-button color="primary" (click)="checkDomainName()" [disabled]="checkingDomain">
+        Check
+      </button>
+    </div>
+    <div *ngIf="domainAvailability" fxLayout="column">
+      <ng-container *ngIf="domainAvailability.available; else domainNotAvailable">
+        <p class="fl-green-color">
+          Domain is available for transfer.
+        </p>
+        <div *ngIf="domainAvailability.tld.requires_epp_for_transfer"
+             fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+          <mat-form-field>
+            <input matInput placeholder="EPP code" type="text" formControlName="epp" required>
+            <mat-error>{{fieldErrors['epp']}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="5px">
+          <p>Select registration period:</p>
+          <mat-form-field>
+            <mat-select formControlName="years"
+                        placeholder="Select period">
+              <ng-container *ngFor="let yearPrice of domainAvailability.prices.prices_per_years; let index=index">
+                <mat-option *ngIf="yearPrice"
+                            [value]="index">
+                  {{ domainUtils.getYearsText(index) }} - {{ yearPrice }} {{ domainAvailability.prices.currency.code }}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" class="fl-margin-top">
+          <button mat-button mat-raised-button color="primary" (click)="transferDomain()">
+            Transfer domain
+          </button>
+        </div>
+      </ng-container>
+      <ng-template #domainNotAvailable>
+        <p class="fl-red-color">{{domainAvailability.error}}</p>
+      </ng-template>
+    </div>
+  </form>
+</div>

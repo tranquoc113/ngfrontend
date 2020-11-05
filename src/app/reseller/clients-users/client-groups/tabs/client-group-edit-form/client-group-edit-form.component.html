@@ -1,0 +1,11 @@
+<form [formGroup]="clientGroupForm">
+  <app-form-errors #formErrors [formGroup]="clientGroupForm"></app-form-errors>
+  <mat-form-field class="half-width">
+    <input matInput placeholder="Group name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Group description" type="text" formControlName="description">
+  </mat-form-field>
+  <mat-checkbox [color]="'primary'" class="half-width" formControlName="is_default">Is default</mat-checkbox>
+</form>

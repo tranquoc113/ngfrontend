@@ -1,0 +1,39 @@
+<div *ngIf="objectsListController; else noController" class="sub-header"
+     fxLayout="row" fxLayoutAlign="end center">
+  <app-objects-list-filtering-display
+    [hidden]="filteringDisplayComponent.showAppliedFilters === false"
+    #filteringDisplayComponent
+    class="filtering-display-container">
+  </app-objects-list-filtering-display>
+
+  <div *ngIf="!config">
+    No subheader config present in route config, define subheader config for this route !!!
+  </div>
+  <div *ngIf="objectsListController.objectList && config" class="count-text">
+    Showing {{objectsListController.objectList.objects.length}} {{config.objectNamePlural}}
+    of {{this.objectsListController.objectList.totalCount}}
+  </div>
+
+  <button mat-icon-button fl-tooltip="Show applied filters" fl-tooltip-direction="down"
+          class="show-applied-filters-btn"
+          [fxHide.gt-md]="true"
+          *ngIf="filteringDisplayComponent.showAppliedFilters === false && activatedRoute.snapshot.queryParams.filtering"
+          (click)="filteringDisplayComponent.showAppliedFilters = !filteringDisplayComponent.showAppliedFilters">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+
+  <app-objects-list-filtering></app-objects-list-filtering>
+
+  <div fxLayout="row">
+    <app-objects-ordering-menu></app-objects-ordering-menu>
+
+    <button *ngIf="!listOnly" mat-icon-button (click)="toggleDisplay()"
+            [attr.fl-tooltip]="this.cardsDisplay ? 'List view' : 'Card view'"
+            fl-tooltip-direction="down">
+      <mat-icon class="toggle-display-icon">{{ cardsDisplay ? 'view_list' : 'view_module'}}</mat-icon>
+    </button>
+  </div>
+</div>
+<ng-template #noController>
+  <span>An error occurred, please see logs for details.</span>
+</ng-template>

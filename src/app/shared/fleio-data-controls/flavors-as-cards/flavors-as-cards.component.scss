@@ -1,0 +1,85 @@
+/* flavor cards */
+.flavor-card {
+  min-width: 190px;
+  max-width: 190px;
+  width: 100%;
+  margin: 3px 5px;
+  padding: 15px 10px;
+  border: 1px solid #ebebeb;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.cards-wrap {
+  flex-wrap: wrap;
+}
+.flavor-card.flavor-card-incompatible {
+  color: #ebebeb !important;
+}
+.flavor-card md-divider {
+  margin-top: 2px;
+  margin-bottom: 5px;
+}
+.flavor-card .flavor-title {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0;
+}
+.flavor-card .flavor-subtitle {
+  font-size: 16px;
+}
+.flavor-card .flavor-card-info-row {
+  padding: 2px 0;
+}
+.fl-selected {
+  border-color: rgb(55, 149, 60);
+  color: rgb(55, 149, 60);
+}
+.flavor-card.fl-selected {
+  border-width: 3px;
+  min-width: 190px;
+  padding: 13px 8px;
+}
+.fl-flavor-selected-checkmark {
+  position: absolute;
+  top: -5px;
+  left: -4px;
+  z-index: 1;
+  background: #fff;
+  visibility: hidden;
+  border-radius: 100%;
+}
+.fl-selected-checkmark .fl-flavor-selected-checkmark {
+  visibility: visible;
+}
+.fl-content-flavors-boxes {
+  padding: 15px 0 10px;
+}
+.fl-flavor-card-container {
+  position: relative;
+  display: flex;
+}
+.fl-flavor-card-container-disabled {
+  opacity: 0.5;
+}
+.flavor-card.fl-selected.fl-selected-warning {
+  color: #ccc;
+  border-color: #ccc;
+}
+.flavor-card.fl-selected.fl-selected-warning mat-divider {
+  background-color: #ccc;
+}
+.fl-flavor-selected-checkmark-warning {
+  color: #ccc !important;
+}
+mat-divider {
+  position: relative !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+::ng-deep .tab-description-icon mat-icon {
+  font-size: 20px;
+  margin-top: 3px;
+  margin-left: 3px;
+}

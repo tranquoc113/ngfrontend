@@ -1,0 +1,32 @@
+<div class="fl-subheader-md fl-margin-top fl-margin-bottom">Openstack module configuration</div>
+
+<form [formGroup]="productSettingsForm">
+  <mat-checkbox formControlName="run_get_me_a_network_on_auto_setup" color="primary" (change)="changedRun()">
+    Run get me a network on auto setup
+  </mat-checkbox>
+  <mat-form-field class="fl-margin-top-medium">
+    <mat-select formControlName="network_auto_allocated_topology_regions" placeholder="Run in regions"
+                multiple required>
+      <mat-option *ngFor="let region of regions" [value]="region.id">
+        {{region.id}}
+      </mat-option>
+    </mat-select>
+    <mat-error>This field is required</mat-error>
+  </mat-form-field>
+</form>
+<div class="fl-margin-top-medium">
+  <p class="fl-detail"><span class="fl-bold">Run get me a network on auto setup</span><br>This will use the OpenStack
+      network auto allocated topology feature. You can find more information here:
+    <a class="active-link" href="http://docs.openstack.org/newton/networking-guide/config-auto-allocation.html">
+      http://docs.openstack.org/newton/networking-guide/config-auto-allocation.html
+    </a>. You can also setup resources needed for the feature for each region on the
+    <a *ngIf="config && config.current && config.current.urls" class="active-link"
+       [routerLink]="config.getPanelUrl('openstack/networks/autoCreateConfigure')">
+      configure get me a network
+    </a> page.
+  </p>
+  <p class="fl-detail"><span class="fl-bold">Run in regions</span><br>Select the regions for network auto
+      allocated topology feature. In case you don't find the region you want here, make sure you run sync.
+      Also make sure you set up auto allocated topology feature for each region as stated above.
+  </p>
+</div>

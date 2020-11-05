@@ -1,0 +1,219 @@
+<app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="createClusterTemplateForm" fxLayout="column" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="createClusterTemplateForm"></app-form-errors>
+  <div class="fl-subheader-md fl-margin-bottom-small">
+    Info
+  </div>
+  <div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-md="column">
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Cluster template name" type="text" autocomplete="off"
+             formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="coe" placeholder="COE" required>
+        <mat-option *ngFor="let item of createOptions.coe | keyvalue"
+                    [value]="item.key">
+          {{item.value}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['coe']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="server_type" placeholder="Server type" required>
+        <mat-option value="vm">
+          Virtual machine
+        </mat-option>
+        <mat-option value="baremetal">
+          Baremetal
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['server_type']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutGap="30px">
+    <mat-checkbox formControlName="public" [color]="'primary'">
+      Public
+    </mat-checkbox>
+    <mat-checkbox formControlName="registry_enabled" [color]="'primary'">
+      Enable registry
+    </mat-checkbox>
+    <mat-checkbox formControlName="tls_disabled" [color]="'primary'">
+      Disable TLS
+    </mat-checkbox>
+  </div>
+  <div class="fl-subheader-md fl-margin-top fl-margin-bottom-small">
+    Node spec
+  </div>
+  <mat-form-field fxFlex="100">
+    <mat-select formControlName="region" placeholder="Region" (selectionChange)="changedRegion()" required>
+      <mat-option *ngFor="let region of createOptions.regions"
+                  [value]="region.id">
+        {{region.id}}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['region']}}</mat-error>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="image_id" placeholder="Image" required>
+        <mat-option *ngFor="let image of createOptions[createClusterTemplateForm.controls.coe.value + '_images']"
+                    [value]="image.id">
+          {{image.name || image.id}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['image_id']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="keypair_id" placeholder="Keypair">
+        <mat-option value="null">None</mat-option>
+        <mat-option *ngFor="let keypair of createOptions.keypairs"
+                    [value]="keypair.name">
+          {{keypair.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['keypair_id']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="flavor_id" placeholder="Node flavor" required>
+        <mat-option *ngFor="let flavor of createOptions.flavors"
+                    [value]="flavor.id">
+          {{flavor.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['flavor_id']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="master_flavor_id" placeholder="Master node flavor" required>
+        <mat-option *ngFor="let flavor of createOptions.flavors"
+                    [value]="flavor.id">
+          {{flavor.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['master_flavor_id']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-md="column">
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="volume_driver" placeholder="Volume driver" required>
+        <ng-container *ngIf="createClusterTemplateForm.controls.coe.value === 'kubernetes'">
+          <mat-option value="cinder">
+            Cinder
+          </mat-option>
+        </ng-container>
+        <ng-container *ngIf="createClusterTemplateForm.controls.coe.value !== 'kubernetes'">
+          <mat-option value="rexray">
+            Rexray
+          </mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>{{fieldErrors['volume_driver']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="docker_storage_driver"
+                  (selectionChange)="changedDockerStorageDriver()"
+                  placeholder="Docker storage driver" required>
+        <mat-option *ngFor="let item of createOptions.docker_storage_driver_opts | keyvalue"
+                    [value]="item.key">
+          {{item.value}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['docker_storage_driver']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Docker volume size (GB)" type="number"
+             formControlName="docker_volume_size" step="1" [min]="dockerVolumeSizeMin" required>
+      <mat-error>{{fieldErrors['docker_volume_size']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-form-field fxFlex="100">
+    <input matInput placeholder="Insecure registry" type="text"
+           formControlName="insecure_registry">
+    <mat-error>{{fieldErrors['insecure_registry']}}</mat-error>
+  </mat-form-field>
+  <div class="fl-subheader-md fl-margin-top fl-margin-bottom-small">
+    Network
+  </div>
+  <div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-md="column">
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="network_driver" placeholder="Network driver" required>
+        <mat-option *ngFor="let option of createOptions.network_driver_opts[createClusterTemplateForm.controls.coe.value]"
+                    [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['network_driver']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="external_network_id" placeholder="External network" required>
+        <mat-option *ngFor="let network of createOptions.external_networks"
+                    [value]="network.id">
+          {{network.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['external_network_id']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="fixed_network" placeholder="Fixed network">
+        <mat-option [value]="null">None</mat-option>
+        <mat-option *ngFor="let network of createOptions.private_networks"
+                    [value]="network.id">
+          {{network.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['fixed_network']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-form-field fxFlex="100">
+    <input matInput placeholder="Fixed subnet" type="text" formControlName="fixed_subnet"
+           (click)="clickedSubnetInput()"
+           [matAutocomplete]="autocompleteClient">
+    <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="displaySubnetFn">
+      <mat-option *ngFor="let subnet of filteredSubnets | async" [value]="subnet">
+        {{subnet.name || subnet.id}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['fixed_subnet']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field fxFlex="100">
+    <input matInput placeholder="HTTPS proxy" type="text"
+           formControlName="http_proxy">
+    <mat-error>{{fieldErrors['http_proxy']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field fxFlex="100">
+    <input matInput placeholder="HTTP proxy" type="text"
+           formControlName="https_proxy">
+    <mat-error>{{fieldErrors['https_proxy']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field fxFlex="100">
+    <input matInput placeholder="No proxy" type="text"
+           formControlName="no_proxy">
+    <mat-error>{{fieldErrors['no_proxy']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field fxFlex="100">
+    <input matInput placeholder="DNS" type="text"
+           formControlName="dns_nameserver">
+    <mat-error>{{fieldErrors['dns_nameserver']}}</mat-error>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutGap="30px">
+    <mat-checkbox formControlName="master_lb_enabled" [color]="'primary'">
+      Master LB
+    </mat-checkbox>
+    <mat-checkbox formControlName="floating_ip_enabled" [color]="'primary'">
+      Floating IP
+    </mat-checkbox>
+    <mat-checkbox formControlName="hidden" [color]="'primary'">
+      Hidden
+    </mat-checkbox>
+  </div>
+  <div class="fl-subheader-md fl-margin-top fl-margin-bottom-small">
+    Labels
+  </div>
+  <mat-form-field>
+    <mat-label>Labels</mat-label>
+    <textarea rows="5" placeholder="KEY1=VALUE1, KEY2=VALUE2" matInput formControlName="labels"></textarea>
+  </mat-form-field>
+</form>

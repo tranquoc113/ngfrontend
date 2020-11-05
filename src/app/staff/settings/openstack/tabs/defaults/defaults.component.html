@@ -1,0 +1,132 @@
+<div class="min-height-content fl-content">
+  <app-fl-backdrop *ngIf="defaultsLoading"></app-fl-backdrop>
+  <app-form-errors #formErrors [formGroup]="defaultsForm"></app-form-errors>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <form appFormSubmit (ngSubmit)="save()" *ngIf="defaults" [formGroup]="defaultsForm" fxLayout="column" fxFlex="50"
+         fxFlex.xs="100">
+      <mat-form-field>
+        <input matInput type="number" formControlName="timeout" min="1" step="1" required
+               placeholder="API timeout">
+        <mat-error>{{fieldErrors['timeout']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select formControlName="default_role" placeholder="Default role name">
+          <mat-option *ngFor="let role of defaults.available_role_options" [value]="role.name">
+            {{ role.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select formControlName="default_region" placeholder="Default region name">
+          <mat-option *ngFor="let region of defaults.available_region_options" [value]="region.id">
+            {{ region.id }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="text" formControlName="project_domain_id" required
+               placeholder="Projects default domain">
+        <mat-error>{{fieldErrors['project_domain_id']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="text" formControlName="default_project_name" required
+               placeholder="New projects name template">
+        <mat-error>{{fieldErrors['default_project_name']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="text" formControlName="default_project_description" required
+               placeholder="New projects description template">
+        <mat-error>{{fieldErrors['default_project_description']}}</mat-error>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="force_config_drive_for_instance_creation" [color]="'primary'">
+        Force config drive for instance creation
+      </mat-checkbox>
+
+      <mat-checkbox formControlName="auto_allocated_topology" [color]="'primary'">
+        Auto allocated topology
+      </mat-checkbox>
+
+      <mat-checkbox formControlName="hide_projects_and_api_users" [color]="'primary'">
+        Hide projects and API users
+      </mat-checkbox>
+
+      <mat-form-field>
+        <input matInput type="text" formControlName="hide_project_ids"
+               placeholder="Project ids">
+        <mat-error>{{fieldErrors['hide_project_ids']}}</mat-error>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="prefix_api_users_with_username" [color]="'primary'">
+        Prefix API users with username
+      </mat-checkbox>
+
+      <div fxLayout="row" fxLayout.xs="column">
+        <a mat-button class="fl-margin-top" [color]="'primary'" (click)="save()">
+          Save
+        </a>
+      </div>
+    </form>
+    <div fxLayout="column" fxShow.xs="false"  fxLayoutGap="10px">
+      <p class="mat-caption">
+        <strong>API timeout</strong><br>
+        How many seconds to wait for OpenStack API to reply.<br>
+      </p>
+      <p class="mat-caption">
+        <strong>Default role name</strong><br>
+        The default role Fleio will use for each Project created.<br>
+        Fleio tries to set this automatically when the credentials are saved.<br>
+        An unprivileged role should be used (defaults to '_member_' if it exists).<br>
+        When a normal Fleio user asks Fleio to execute a command, for <br>
+        example an instance reboot, Fleio will authenticate using this role.<br>
+      </p>
+      <p class="mat-caption">
+        <strong>Default region name</strong><br>
+        The default region to use for various actions if no region is specified in a<br>
+        multi region cloud.<br>
+      </p>
+      <p class="mat-caption">
+        <strong>Projects default domain</strong><br>
+        The OpenStack domain where all projects will be automatically created.<br>
+        <strong>default</strong> is usually present in all OpenStack installations, <br>
+        Do note that this is the domain ID, not it's name
+      </p>
+      <p class="mat-caption">
+        <strong>New project name and description templates</strong><br>
+        Fleio automatically creates OpenStack Projects for clients and gives them names and descriptions. <br>
+        You can customize the default name and description using a template with access to
+        <strong>client</strong>
+        <br> attributes. <br>
+        It's <strong>IMPORTANT</strong> to keep in mind that the project name needs to be unique/different
+        from
+        <br> all the other projects already present in OpenStack. You can make sure of that by using the
+        "client.id"
+        <br> template attribute or any attribute you know it will be unique. <br>
+        The <strong>client</strong> object has many attributes, some of them include: id, first_name,
+        last_name,
+        <br>company, country, phone, email, date_created and <strong>id</strong> is always unique.
+      </p>
+      <p class="mat-caption">
+        <strong>Force config drive for instance creation</strong><br>
+        When an instance gets created from fleio, config_drive param is always sent as True to nova.
+      </p>
+      <p class="mat-caption">
+        <strong>Hide projects and API users</strong><br>
+        Checking this will hide all projects specified by IDs.<br>
+        The administrator project ID specified in credentials tabs will be<br>
+        automatically included in this list.<br>
+        API users for these projects will be also hidden
+      </p>
+      <p class="mat-caption">
+        <strong>Prefix API users with username</strong><br>
+        Checking this will prefix OpenStack API users with currently logged in Fleio user name<br>
+        This will only apply for enduser, API users created by staff will not be prefixed
+      </p>
+    </div>
+  </div>
+</div>

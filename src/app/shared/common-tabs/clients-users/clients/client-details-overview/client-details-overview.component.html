@@ -1,0 +1,62 @@
+<div fxLayout="row" fxLayout.xs="column" class="fl-content">
+  <div fxLayout="column" fxFlex="50">
+    <p class="fl-detail" *ngIf="object.company">Company:&nbsp;{{ object.company }}</p>
+    <p class="fl-detail">Email:&nbsp;{{ object.email }}</p>
+    <p class="fl-detail">Country:&nbsp;{{ object.country_name }}</p>
+    <p class="fl-detail">City:&nbsp;{{ object.city }}
+      <span *ngIf="object.state">, {{ object.state }}</span>
+    </p>
+    <p class="fl-detail">Address:&nbsp;{{ object.address1 }}</p>
+    <p class="fl-detail" *ngIf="object.address2">{{ object.address2 }}</p>
+    <p class="fl-detail">Zip code:&nbsp;{{ object.zip_code }}</p>
+    <p class="fl-detail">Phone:&nbsp;{{ object.phone }}</p>
+    <p class="fl-detail">ID:&nbsp;{{ object.id }}</p>
+    <p class="fl-detail">Created on:&nbsp;{{ object.date_created | date:'mediumDate' }} </p>
+    <p class="fl-detail">
+      Client group: {{ object.group_name }}
+    </p>
+    <p class="fl-detail">
+      Client is on a billing agreement:
+        <span *ngIf="object.has_billing_agreement">yes</span>
+        <span *ngIf="!object.has_billing_agreement">no</span>
+    </p>
+  </div>
+  <div fxLayout="column" fxFlex="50" *ngIf="authService.feature('ui.clients&users.client-credit')">
+    <div fxHide.gt-xs class="fl-margin-top"></div>
+    <div class="fl-subheader" translate>Client credit</div>
+    <p class="fl-detail">
+      Up to date credit: {{ object.uptodate_credit }} {{object.currency }}
+    </p>
+    <div class="fl-detail fl-margin-top-medium">
+      <button mat-button (click)="updateUsage()">
+        <mat-icon>cached</mat-icon>
+        Update usage
+      </button>
+      <button mat-button *ngIf="authService.feature('clients&users.clients.reset_usage')"
+              (click)="resetUsage($event)">
+        <mat-icon>refresh</mat-icon>
+        Reset usage
+      </button>
+    </div>
+
+    <p class="fl-detail fl-margin-top-medium">
+      Current credit:
+    </p>
+    <div class="fl-detail" *ngIf="!object.credits">0</div>
+    <div class="fl-detail" *ngIf="object.credits">
+      <div class="fl-margin-left" *ngFor="let credit of object.credits">
+        <p class="fl-detail">
+          {{ credit.amount }} {{ credit.currency }}
+          <button mat-icon-button [attr.fl-tooltip]="'Edit credit'" fl-tooltip-direction="down"
+                  (click)="changeCredit(credit)">
+           <mat-icon>edit</mat-icon>
+          </button>
+        </p>
+      </div>
+    </div>
+    <p *ngIf="object.outofcredit_datetime" class="fl-detail fl-red-color">
+      Client is out of credit since
+      {{object.outofcredit_datetime | date:'mediumDate' }}
+    </p>
+  </div>
+</div>

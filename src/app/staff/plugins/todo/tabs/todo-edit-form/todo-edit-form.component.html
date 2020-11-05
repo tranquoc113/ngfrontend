@@ -1,0 +1,40 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="createOptions" [formGroup]="todoForm">
+  <app-form-errors #formErrors [formGroup]="todoForm"></app-form-errors>
+  <div fxLayout="column">
+    <mat-form-field>
+      <input matInput placeholder="Title" type="text" formControlName="title" required>
+      <mat-error>{{fieldErrors['title']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="status" placeholder="Status">
+        <mat-option *ngFor="let status of createOptions.statuses | keyvalue" [value]="status.key">
+          {{ status.value }}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['status']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Assigned to" aria-label="Assigned to" [matAutocomplete]="auto"
+             formControlName="assigned_to" (click)="clickedUserInput()">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserFn">
+        <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
+          <app-gravatar [email]="user.email" [customStyle]="{
+            width: '24px',
+            borderRadius: '100%',
+            marginLeft: '5px',
+            marginRight: '15px',
+            verticalAlign: 'middle'
+          }"></app-gravatar>
+          <span>{{user.full_name}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['assigned_to']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput rows="10" placeholder="Description" type="text" formControlName="description">
+      </textarea>
+      <mat-error>{{fieldErrors['description']}}</mat-error>
+    </mat-form-field>
+  </div>
+</form>

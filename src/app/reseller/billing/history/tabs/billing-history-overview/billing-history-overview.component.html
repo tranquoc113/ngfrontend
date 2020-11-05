@@ -1,0 +1,20 @@
+<div fxLayout="column" *ngFor="let serviceUsage of usage | keyvalue">
+  <div class="full-width" fxFlex="100">
+    <mat-expansion-panel class="full-width">
+      <mat-expansion-panel-header *ngIf="!!serviceUsage.value.income && !!serviceUsage.value.cost">
+        <mat-panel-title class="half-width">
+          {{serviceUsage.value.income.client_display}} - Service '{{serviceUsage.value.income.service_display}}'
+        </mat-panel-title>
+        <mat-panel-description>
+          {{serviceUsage.value.income.price}}&nbsp;{{serviceUsage.value.income.client_currency.code}}
+          <ng-container *ngIf="serviceUsage.value.cost">
+            ({{serviceUsage.value.cost.price}}&nbsp;{{serviceUsage.value.cost.client_currency.code}})
+          </ng-container>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-fleio-service-dynamic-usage [dynamicUsage]="serviceUsage.value.income"
+                                       [dynamicUsageCost]="serviceUsage.value.cost">
+      </app-fleio-service-dynamic-usage>
+    </mat-expansion-panel>
+  </div>
+</div>

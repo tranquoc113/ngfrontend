@@ -1,0 +1,52 @@
+<div class="fl-content fl-content-min-height">
+  <div *ngIf="reseller && reseller.services && !reseller.services.length">
+    <div class="fl-subheader-md fl-gray-color">No Reseller service exists for this client</div>
+    <button class="fl-margin-top" mat-button color="primary" (click)="createResellerService()">
+      Create service
+    </button>
+  </div>
+  <div *ngIf="reseller && reseller.services.length">
+    <div class="detail-block"
+         *ngFor="let resellerService of reseller.services">
+      <p class="fl-detail">
+        Service status:
+        {{resellerService.status_display}}
+      </p>
+      <p class="fl-detail">
+        Product name:
+        {{resellerService.product.name}}
+      </p>
+      <p class="fl-detail">
+        Product cycle:
+        {{resellerService.cycle.display_name}}
+      </p>
+      <p class="fl-detail">
+        <span translate>
+          Pricing plan: {{reseller.resources[resellerService.id].plan.name || 'n/a'}}
+        </span>
+      </p>
+      <p class="fl-detail">
+        Service:
+        <a class="active-link" [routerLink]="config.getPanelUrl('billing/services/') + resellerService.id">
+          {{resellerService.id}}
+        </a>
+      </p>
+      <p class="fl-detail" *ngIf="reseller.resources[resellerService.id].enduser_panel_url">
+        Enduser panel url:
+        <a class="md-primary" href="{{reseller.resources[resellerService.id].enduser_panel_url}}">
+          {{reseller.resources[resellerService.id].enduser_panel_url}}
+        </a>
+      </p>
+      <div class="fl-margin-top">
+        <button mat-button color="primary" *ngIf="resellerService.status !== 'terminated'"
+            (click)="changePricingPlan(resellerService)">
+          Change pricing plan
+        </button>
+        <button mat-button color="primary" *ngIf="resellerService.status !== 'terminated'" class="fl-margin-left-small"
+            (click)="changeResellerPanelUrl(resellerService, reseller.resources[resellerService.id].enduser_panel_url)">
+          Change enduser panel url
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

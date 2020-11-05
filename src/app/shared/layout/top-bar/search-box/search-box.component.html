@@ -1,0 +1,17 @@
+<div class="search-container" fxHide.lt-md>
+  <input *ngIf="searchConfig" placeholder="{{searchConfig.placeholder || 'Search ...' }}" [formControl]="searchText">
+  <button (click)="clearSearch()" *ngIf="searchText.value" class="close-search-button" mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div fxHide.gt-sm class="mobile-search-btn-container">
+  <mat-icon (click)="switchShowMobileInput()" class="fl-icons show-search-input-mobile-icon">search</mat-icon>
+</div>
+<div class="search-container-mobile" fxHide.gt-sm>
+  <input *ngIf="showMobileInput && searchConfig" #mobileSearchInput type="text"
+         placeholder="{{searchConfig.placeholder || 'Search ...' }}" [formControl]="searchText">
+  <mat-icon *ngIf="showMobileInput" (click)="switchShowMobileInput()"
+            class="search-container-mobile-close">
+    close
+  </mat-icon>
+</div>

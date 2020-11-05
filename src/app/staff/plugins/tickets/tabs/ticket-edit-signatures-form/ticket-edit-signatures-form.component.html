@@ -1,0 +1,40 @@
+<div *ngIf="signatures.length === 0">
+  <h2>No signatures</h2>
+  <p class="fl-detail">
+    Add the default signature. This will be used for the departments that don't have a custom signature.
+  </p>
+  <p class="fl-detail">
+    Custom signatures can be added only after you add the default signature.
+  </p>
+</div>
+<div *ngIf="signatures.length > 0" [formGroup]="signaturesForm">
+  <app-form-errors #formErrors [formGroup]="signaturesForm"></app-form-errors>
+  <div *ngFor="let signature of signaturesObjects.controls; let i = index;" class="fl-margin-bottom"
+       formArrayName="objects">
+    <div [formGroup]="signaturesObjects.controls[i]">
+      <div *ngIf="!signature.value.department">
+          <h3>Global signature</h3>
+          <p class="fl-detail fl-margin-bottom-small">
+            This signature will be used if the signature for a specific department is not set.
+          </p>
+          <div class="fl-tinymce-placeholder">
+            <editor [init]="tinyMCEOptions" formControlName="content"></editor>
+            <mat-error>{{fieldErrors['content']}}</mat-error>
+          </div>
+      </div>
+        <div *ngIf="signature.value.department">
+          <h3>Signature for {{signature.value.department_display}} department</h3>
+          <p class="fl-detail fl-margin-bottom-small">
+            This signature will be used for the {{signature.value.department_display}} department.
+          </p>
+          <div class="fl-tinymce-placeholder">
+            <editor [init]="tinyMCEOptions" formControlName="content"></editor>
+            <mat-error>{{fieldErrors['content']}}</mat-error>
+          </div>
+      </div>
+      <button mat-button class="fl-margin-top"
+              (click)="deleteSignature(signature.value.id)">Delete signature</button>
+    </div>
+    <hr class="fl-margin-top fl-medium-opacity full-width">
+  </div>
+</div>

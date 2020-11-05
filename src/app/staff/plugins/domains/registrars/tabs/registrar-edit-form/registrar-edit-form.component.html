@@ -1,0 +1,19 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)" [formGroup]="registrarFrom">
+  <app-form-errors #formErrors [formGroup]="registrarFrom"></app-form-errors>
+  <div fxLayout="column">
+    <mat-form-field>
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Registrar connector" type="text" formControlName="connector" required
+             [matAutocomplete]="autocompleteConnector" (click)="clearConnector()">
+      <mat-autocomplete #autocompleteConnector="matAutocomplete" [displayWith]="connectorDisplay">
+        <mat-option *ngFor="let connector of filteredConnectors$ | async" [value]="connector">
+          {{connector.name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['connector']}}</mat-error>
+    </mat-form-field>
+  </div>
+</form>

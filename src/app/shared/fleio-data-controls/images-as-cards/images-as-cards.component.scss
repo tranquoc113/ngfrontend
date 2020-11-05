@@ -1,0 +1,63 @@
+/* image cards */
+.image-card {
+  min-width: 190px;
+  max-width: 190px;
+  width: 100%;
+  margin: 3px 5px;
+  padding: 15px 10px;
+  border: 1px solid #ebebeb;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.images-wrap {
+  flex-wrap: wrap;
+}
+.image-card md-divider {
+  margin-top: 2px;
+  margin-bottom: 5px;
+}
+.image-card .image-title {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0;
+}
+.image-card .image-subtitle {
+  font-size: 16px;
+}
+.image-card .image-card-info-row {
+  padding: 2px 0;
+}
+.fl-selected {
+  border-color: rgb(55, 149, 60);
+  color: rgb(55, 149, 60);
+}
+.image-card.fl-selected {
+  border-width: 3px;
+  min-width: 190px;
+  padding: 13px 8px;
+}
+.fl-image-selected-checkmark {
+  position: absolute;
+  top: -5px;
+  left: -4px;
+  z-index: 1;
+  background: #fff;
+  visibility: hidden;
+  border-radius: 100%;
+}
+.fl-selected-checkmark .fl-image-selected-checkmark {
+  visibility: visible;
+}
+.fl-content-images-boxes {
+  padding: 15px 3px 10px;
+}
+.fl-image-card-container {
+  position: relative;
+  display: flex;
+}
+mat-divider {
+  position: relative !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

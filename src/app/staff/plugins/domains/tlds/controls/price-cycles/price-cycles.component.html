@@ -1,0 +1,16 @@
+<div *ngIf="priceCycles" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="space-evenly center" class="price-cycles">
+  <mat-checkbox color="primary" [disabled]="priceCycles.currency.is_default"
+                [(ngModel)]="priceCycles.relative_prices" (ngModelChange)="relativePricesChanged()"
+                [attr.fl-tooltip]="useRelativePricesTooltip">
+    Use relative prices
+  </mat-checkbox>
+  <mat-form-field *ngFor="let price of priceCycles.prices_per_years; let index = index;trackBy: priceTrackBy"
+                  class="year-price-input">
+    <input matInput [disabled]="priceCycles.relative_prices"
+           type="number" [(ngModel)]="priceCycles.prices_per_years[index]"
+           placeholder="{{index + 1}} years">
+  </mat-form-field>
+  <button mat-button color="primary" [disabled]="priceCycles.relative_prices" (click)="autoFillPrices()">
+    Autofill
+  </button>
+</div>

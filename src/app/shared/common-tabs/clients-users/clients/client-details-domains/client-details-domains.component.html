@@ -1,0 +1,8 @@
+<div class="fl-content fl-content-min-height">
+  <app-plugin-ui *ngIf="object && object.id" pluginName="domains" [panelName]="panelLayout.panel"
+                 componentName="ClientDetailsDomainListComponent"
+                 [componentData]="{
+                    clientId: object.id
+                 }">
+  </app-plugin-ui>
+</div>

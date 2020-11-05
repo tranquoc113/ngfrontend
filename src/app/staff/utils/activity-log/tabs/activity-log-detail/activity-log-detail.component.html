@@ -1,0 +1,38 @@
+<div *ngIf="object" class="activity-log-details">
+  <div *ngIf="object.tasks_count > 0 && tasksDetails" class="task-list" fxLayout="column">
+    <ng-container *ngFor="let taskDetails of tasksDetails">
+      <div class="task-row" fxLayoutAlign="start center" fxLayoutAlign.xs="start start"
+           fxLayout="row" fxLayout.xs="column" ngClass.xs="task-row-xs"
+           (click)="toggleTaskLog(taskDetails)">
+        <app-status-line [direction]="statusLineDirection"
+                         [type]="taskDetails.status.type | lineType" [color]="taskDetails.status.value | lineColor">
+        </app-status-line>
+        <div [ngStyle]="{ 'padding-left': (taskDetails.task.depth * 10 + 10).toString() + 'px' }"
+             [ngStyle.xs]="{ 'padding-left': '0' }"
+             fxFlex="30" fxFlex.xs="100" class="fl-ellipsis-text">
+          Task {{taskDetails.task.id}}
+        </div>
+        <div fxFlex="30" fxFlex.xs="100" class="fl-ellipsis-text">
+          {{taskDetails.task.created_at | date: 'medium'}}
+        </div>
+        <div fxLayout="row" fxFlex="grow" [ngStyle.xs]="{'width': '100%'}">
+          <div fxFlex="auto" class="fl-ellipsis-text task-name">
+            {{taskDetails.task.name}}
+          </div>
+          <div class="action-container-class" fxFlexAlign="end">
+            <app-object-actions [objectActions]="taskDetails.actions" maxVisibleActions="1">
+            </app-object-actions>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="taskDetails.taskLogVisible">
+        <div *ngIf="!taskDetails.taskLogLoaded">
+          Loading task log ...
+        </div>
+        <div *ngIf="taskDetails.taskLogLoaded" class="task-log-container">
+          <pre class="task-log">{{ taskDetails.taskLog }}</pre>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

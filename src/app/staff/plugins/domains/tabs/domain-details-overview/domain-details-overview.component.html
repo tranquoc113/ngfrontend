@@ -1,0 +1,97 @@
+<div *ngIf="object" class="fl-content fl-content-min-height">
+  <div fxLayout="row" fxLayout.xs="row" fxLayoutAlign="space-between start">
+    <div fxLayout="column" fxFlex="50">
+      <p class="fl-detail">Name: {{ object.name }}</p>
+      <p class="fl-detail">
+        TLD :&nbsp;
+        <a class="active-link"
+           routerLink="{{config.getPanelUrl('plugins/domains/tlds/' + object.tld.id)}}">
+          {{object.tld.name}}
+        </a>
+      </p>
+      <p class="fl-detail">Status: {{ object.status_display }}</p>
+      <p class="fl-detail">
+        Dns management enabled:&nbsp;
+        <span *ngIf="object.dns_management">Yes</span>
+        <span *ngIf="!object.dns_management">No</span>
+      </p>
+      <p class="fl-detail">
+        Email forwarding enabled:&nbsp;
+        <span *ngIf="object.email_forwarding">Yes</span>
+        <span *ngIf="!object.email_forwarding">No</span>
+      </p>
+      <p class="fl-detail">
+        ID protection enabled:&nbsp;
+        <span *ngIf="object.id_protection">Yes</span>
+        <span *ngIf="!object.id_protection">No</span>
+      </p>
+      <p ng-if="object.client_id">
+        <a class="active-link" (click)="editClient()">Click here to edit client</a>
+      </p>
+      <p *ngIf="object.contact; else noContact">
+        <a class="active-link" (click)="editContact()">Click here to edit domain contact</a>
+      </p>
+      <ng-template #noContact>
+        <p class="fl-detail">Domain has no contact associated</p>
+      </ng-template>
+    </div>
+    <div fxLayout="column" fxFlex="50">
+      <p class="fl-detail">Registration period: {{ object.registration_period }} years</p>
+      <p class="fl-detail">Price: {{ object.price_display}}</p>
+      <p class="fl-detail">
+        Registration date:&nbsp;
+        <span class="fl-indent">{{ object.registration_date || 'n/a' }}</span>
+      </p>
+      <p class="fl-detail">
+        Expiry date:&nbsp;
+        <span class="fl-indent">{{ object.expiry_date || 'n/a' }}</span>
+      </p>
+      <p class="fl-detail">
+        Registrar lock active:&nbsp;:
+        <span class="fl-indent" *ngIf="object.registrar_locked">Yes</span>
+        <span class="fl-indent" *ngIf="!object.registrar_locked">No</span>
+      </p>
+      <p class="fl-detail">Last registrar:&nbsp;{{ object.last_registrar_name }}</p>
+    </div>
+  </div>
+  <h3>
+    Select a registrar:
+  </h3>
+  <form fxLayout="row" [formGroup]="registrarFrom">
+    <mat-form-field>
+      <input matInput placeholder="Registrar" type="text" formControlName="registrar" required
+             [matAutocomplete]="autocompleteRegistrar" (click)="clearRegistrar()">
+      <mat-autocomplete #autocompleteRegistrar="matAutocomplete" [displayWith]="registrarDisplay">
+        <mat-option *ngFor="let connector of filteredRegistrars$ | async" [value]="connector">
+          {{connector.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <button mat-button color="primary" (click)="saveRegistrar()">
+      Save
+    </button>
+  </form>
+  <div *ngIf="domainInfo && domainInfo.actions">
+    <h3> Available actions:</h3>
+    <div *ngIf="domainInfo.actions.length > 0; else noActions" fxLayout="row" fxLayoutAlign="start">
+      <div *ngFor="let action of domainInfo.actions">
+        <button mat-button color="primary" (click)="executeAction(action.name, action.display_name)"
+                [disabled]="actionIsRunning">
+          {{ action.display_name }}
+        </button>
+      </div>
+    </div>
+    <ng-template #noActions>
+      <p class="fl-detail">No actions available.</p>
+    </ng-template>
+
+    <div *ngIf="actionStatusMessage">
+      <div *ngIf="actionSucceeded">
+        <p class="fl-green-color">{{ actionStatusMessage }}</p>
+      </div>
+      <div *ngIf="!actionSucceeded">
+        <p class="fl-red-color">{{ actionStatusMessage }}</p>
+      </div>
+    </div>
+  </div>
+</div>

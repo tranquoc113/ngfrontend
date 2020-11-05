@@ -1,0 +1,130 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="departmentForm" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="departmentForm"></app-form-errors>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <mat-form-field fxFlex="50">
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="50">
+      <input matInput placeholder="Email" type="text" formControlName="email" required>
+      <mat-error>{{fieldErrors['email']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="fl-margin-top">
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Full year (e.g. 2019)'"
+       (click)="addTicketIdShortKey('%Y')">
+      %Y
+    </a>
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Year (e.g. 19)'"
+       (click)="addTicketIdShortKey('%y')">
+      %y
+    </a>
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Month'"
+       (click)="addTicketIdShortKey('%M')">
+      %M
+    </a>
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Day'"
+       (click)="addTicketIdShortKey('%D')">
+      %D
+    </a>
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Hour'"
+       (click)="addTicketIdShortKey('%h')">
+      %h
+    </a>
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Minute'"
+       (click)="addTicketIdShortKey('%m')">
+      %m
+    </a>
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Random uppercase letter'"
+       (click)="addTicketIdShortKey('%L')">
+      %L
+    </a>
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Random lowercase letter'"
+       (click)="addTicketIdShortKey('%l')">
+      %l
+    </a>
+    <a mat-button class="tickets-id-short-keys"
+       [attr.fl-tooltip]="'Random number (between 0 and 9)'"
+       (click)="addTicketIdShortKey('%n')">
+      %n
+    </a>
+  </div>
+  <div class="fl-margin-top-medium">
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Ticket id format" type="text" formControlName="ticket_id_format" required>
+      <mat-error>{{fieldErrors['ticket_id_format']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <p class="fl-subheader-md">Notifications to staff users</p>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notification_on_ticket_open_to_staff">
+        Send notifications on ticket open to staff users
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notification_on_ticket_open_to_staff']}}</mat-error>
+    </div>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notification_on_staff_user_reply_to_staff">
+        Send notifications when staff user replies to a ticket to staff users
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notification_on_staff_user_reply_to_staff']}}</mat-error>
+    </div>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notification_on_user_reply_to_staff">
+        Send notifications when end user replies to a ticket to staff users
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notification_on_user_reply_to_staff']}}</mat-error>
+    </div>
+  </div>
+  <div>
+    <p class="fl-subheader-md">Notifications to end users ( ticket owner )</p>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notification_to_user_on_ticket_opened">
+        Send notifications to end users when a ticket is opened
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notification_to_user_on_ticket_opened']}}</mat-error>
+    </div>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notification_to_user_on_ticket_closed">
+        Send notifications to end users when a ticket is closed
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notification_to_user_on_ticket_closed']}}</mat-error>
+    </div>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notification_on_staff_user_reply_to_user">
+        Send notifications to end users when a staff user replies to ticket
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notification_on_staff_user_reply_to_user']}}</mat-error>
+    </div>
+  </div>
+  <div>
+    <p class="fl-subheader-md">Notifications to ticket cc recipients</p>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notify_cc_recipients_on_ticket_open">
+        Send notifications to cc recipients when ticket is opened
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notify_cc_recipients_on_ticket_open']}}</mat-error>
+    </div>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notify_cc_recipients_on_ticket_close">
+        Send notifications to cc recipients when ticket is closed
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notify_cc_recipients_on_ticket_close']}}</mat-error>
+    </div>
+    <div>
+      <mat-checkbox [color]="'primary'" formControlName="notify_cc_recipients_on_ticket_reply">
+        Send notifications to cc recipients when a reply is added to a ticket
+      </mat-checkbox>
+      <mat-error>{{fieldErrors['notify_cc_recipients_on_ticket_reply']}}</mat-error>
+    </div>
+  </div>
+</form>

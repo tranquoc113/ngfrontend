@@ -1,0 +1,37 @@
+<div class="fl-content">
+  <app-fl-backdrop *ngIf="loadingGraphs === true"></app-fl-backdrop>
+  <div fxLayout="row" fxLayout.lt-md="column">
+    <div fxLayout="column">
+      <mat-form-field>
+        <mat-select [(ngModel)]="metricType" placeholder="Select metrics type" (selectionChange)="reloadMetrics()">
+          <mat-option value="cpu">
+            CPU metrics
+          </mat-option>
+          <mat-option value="net">
+            Network metrics
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" class="fl-margin-top" fxFlexOffset="2" fxFlexOffset.lt-md="0">
+      <mat-radio-group
+        aria-labelledby="Graph periods"
+        [(ngModel)]="graphPeriod">
+        <mat-radio-button [color]="'primary'"
+                          *ngFor="let period of graphPeriods" [value]="period.value" fxFlexOffset="5"
+                          (change)="changedPeriod($event)">
+          {{period.label}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+  <div fxLayout="row">
+    <canvas #packetsGraph [attr.height]="canvasHeights.packets"></canvas>
+  </div>
+  <div fxLayout="row">
+    <canvas #bytesGraph [attr.height]="canvasHeights.bytes"></canvas>
+  </div>
+  <div fxLayout="row">
+    <canvas #cpuGraph [attr.height]="canvasHeights.cpu"></canvas>
+  </div>
+</div>

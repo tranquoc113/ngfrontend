@@ -1,0 +1,44 @@
+<div *ngIf="object" class="fl-content fl-content-min-height" fxLayout="column" fxLayoutGap="10px">
+  <table class="fl-table">
+    <thead>
+    <th>Connector</th>
+    <th>Register</th>
+    <th>Transfer</th>
+    <th>Renew</th>
+    <th>Updated at</th>
+    <th></th>
+    </thead>
+    <tbody *ngFor="let registrarConnector of registrarConnectors">
+    <tr *ngFor="let registrarPrice of registrarConnector.prices">
+      <td>{{registrarConnector.name }}</td>
+      <td class="price-cell" ng-if="registrarPrice.promo_price">
+        Promo {{registrarPrice.promo_price }} {{registrarPrice.currency }}
+      </td>
+      <td class="price-cell" ng-if="!registrarPrice.promo_price">
+        {{registrarPrice.register_price }} {{registrarPrice.currency }}
+      </td>
+      <td class="price-cell">{{registrarPrice.transfer_price }} {{registrarPrice.currency }}</td>
+      <td class="price-cell">{{registrarPrice.renew_price }} {{registrarPrice.currency }}</td>
+      <td class="price-cell">{{registrarPrice.updated_at | date: 'medium' }}</td>
+      <td>
+        <button mat-button color="primary" (click)="updateRegistrarPrices(registrarConnector.name)">
+          Update all prices
+        </button>
+      </td>
+    </tr>
+    <tr ng-if="!registrarConnector.prices.length">
+      <td>{{registrarConnector.name }}</td>
+      <td class="price-cell">n/a</td>
+      <td class="price-cell">n/a</td>
+      <td class="price-cell">n/a</td>
+      <td class="price-cell">n/a</td>
+      <td class="fl-flex-right-align">
+        <button mat-button color="primary" (click)="updateRegistrarPrices(registrarConnector.name)">
+          Update all prices
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

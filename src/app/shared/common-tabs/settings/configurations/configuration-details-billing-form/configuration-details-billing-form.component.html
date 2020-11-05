@@ -1,0 +1,626 @@
+<form appFormSubmit [formGroup]="configurationBillingForm" *ngIf="billingConfiguration"
+      (ngSubmit)="objectController.actionCallback(primaryAction)">
+  <app-form-errors #formErrors [formGroup]="configurationBillingForm"></app-form-errors>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Billing
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-form-field>
+            <input matInput placeholder="Required credit for new services" type="number"
+                   formControlName="credit_required" required>
+            <mat-error>{{fieldErrors['credit_required']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Credit limit" type="number"
+                   formControlName="credit_limit" required>
+            <mat-error>{{fieldErrors['credit_limit']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Minimum up to date credit to be left after paying an invoice" type="number"
+                   formControlName="minim_uptodate_credit_for_invoice_payment" required>
+            <mat-error>{{fieldErrors['minim_uptodate_credit_for_invoice_payment']}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Required credit for new services</h3>
+            <p>Once a client has reached this limit, he will no longer be able to create or upgrade resources.</p>
+            <p>Already created cloud resources will not be suspended based on this threshold.</p>
+            <p>Positive and negative values are allowed.</p>
+            <h3>Credit limit</h3>
+            <p>Based on credit limit you can configure suspension and termination rules.</p>
+            <p>Positive and negative values are allowed.</p>
+            <h3>Minimum up to date credit to be left after paying an invoice</h3>
+            <p>
+              Based on this setting a user is not allowed to pay an invoice from his up to date credit (default
+              currency)
+              <br> if the remaining up to date credit after invoice payment is lower than this value.
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Limits for clients with agreements
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-form-field>
+            <input matInput placeholder="Required credit when on agreement" type="number"
+                   formControlName="credit_required_with_agreement" required>
+            <mat-error>{{fieldErrors['credit_required_with_agreement']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Credit limit when on agreement" type="number"
+                   formControlName="credit_limit_with_agreement" required>
+            <mat-error>{{fieldErrors['credit_limit_with_agreement']}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Required credit for new services when on agreement</h3>
+            <p>Once a client with a credit card on file with us has reached this limit, he will no longer be
+              able to create or upgrade resources.</p>
+            <p>Already created cloud resources will not be suspended based on this threshold.</p>
+            <p>Positive and negative values are allowed.</p>
+            <h3>Credit limit when on agreement</h3>
+            <p>Based on credit limit you can configure suspension and termination rules for clients that have a billing
+              agreement.</p>
+            <p>Positive and negative values are allowed.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Billing cycles
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-checkbox class="fl-ellipsis-text"
+                        formControlName="billing_cycle_as_calendar_month" color="primary">
+            Billing cycle as calendar month
+          </mat-checkbox>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3 fxHide.xs fxHide.sm>Billing cycle as calendar month</h3>
+            <p>Consider a calendar month as billing cycle.</p>
+            <p>
+              Not checking this option will use the default: each client has his own anniversary date based on
+              the date he signed up.
+            </p>
+            <p>Cycle multiplier will be ignored if this option is active.</p>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-checkbox class="fl-ellipsis-text"
+                        formControlName="auto_settle_invoiced_periods_external_billing" color="primary">
+            Mark invoiced periods as paid when using external billing
+          </mat-checkbox>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3 fxHide.xs fxHide.sm>Mark invoiced periods as paid when using external billing</h3>
+            <p>Invoiced periods will be marked as paid when appropriate and client credit will be updated.
+              This setting works when fleio is using an external billing system.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          General
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-form-field>
+            <textarea matInput rows="3" maxlength="255"
+                      placeholder="Company info" type="text" formControlName="company_info" required>
+            </textarea>
+            <mat-error>{{fieldErrors['company_info']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Notifications sender name" type="text" formControlName="sender_name">
+            <mat-error>{{fieldErrors['sender_name']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Notifications sender email" type="text" formControlName="sender_email">
+            <mat-error>{{fieldErrors['sender_email']}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Company info</h3>
+            <p>Company information like name and other billing details.</p>
+            <p>This information is shown on invoices.</p>
+            <h3>Notifications sender name</h3>
+            <p>The name to send the notifications from.</p>
+            <p>Leaving this blank will use just the <strong>Notifications sender email</strong>.</p>
+            <h3>Notifications sender email</h3>
+            <p>The e-mail address the notifications are sent from.</p>
+            <p>Leaving this blank will use the Fleio DEFAULT_FROM_EMAIL setting.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          MaxMind fraud check
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-checkbox formControlName="fraud_check" color="primary">
+            Enable MaxMind fraud check
+          </mat-checkbox>
+          <mat-checkbox formControlName="enable_maxmind_insights" color="primary">
+            Enable insights results
+          </mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Manual review score" type="number"
+                   formControlName="maxmind_manual_review_score">
+            <mat-error>{{fieldErrors['maxmind_manual_review_score']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Fraud score" type="number"
+                   formControlName="maxmind_fraud_score">
+            <mat-error>{{fieldErrors['maxmind_fraud_score']}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>MaxMind fraud check</h3>
+            <p>Enable or disable MaxMind fraud checking on new orders.</p>
+            <p>To completely enable this module, make sure you have the MAXMIND_CLIENTID and MAXMIND_LICENSE
+              options set in settings.py</p>
+            <p>The score for manual review can be set or when an order is automatically marked as fraud.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Client signup automation
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-checkbox formControlName="auto_create_order" color="primary">
+            Auto create new order on signup
+          </mat-checkbox>
+          <mat-form-field>
+            <mat-select formControlName="auto_order_service" placeholder="Auto order service">
+              <mat-option *ngFor="let product of billingConfiguration.products"
+                          [value]="product.id">
+                {{product.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{fieldErrors['auto_order_service']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select formControlName="auto_order_service_cycle" placeholder="Auto order service cycle">
+              <ng-container *ngIf="autoOrderProduct">
+                <mat-option *ngFor="let cycle of autoOrderProduct.cycles"
+                            [value]="cycle.id">
+                  {{cycle.display_name}}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+            <mat-error>{{fieldErrors['auto_order_service_cycle']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput rows="3" maxlength="255"
+                      placeholder="Auto order parameters as JSON"
+                      type="text" formControlName="auto_order_service_params">
+            </textarea>
+            <mat-error>{{fieldErrors['auto_order_service_params']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Client initial credit (default currency)" type="number"
+                   formControlName="client_initial_credit">
+            <mat-error>{{fieldErrors['client_initial_credit']}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Client signup automation</h3>
+            <p>Define what happens after a client is created from staff or signs up.</p>
+            <p>Fraud checking will be performed on signup if the option is enabled.</p>
+            <p>When a new Client signs up, an order will be automatically created for him.</p>
+            <p>Additional parameters can be set as JSON to be sent to the service module on creation.</p>
+            <p>
+              Use "Client initial credit (default currency)" if you wish to have newly created clients
+              have a starting credit of the amount you define (if client has another currency than default one,
+              the amount is converted).
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Invoicing
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-checkbox formControlName="generate_invoices" color="primary">
+            Generate invoices
+          </mat-checkbox>
+          <mat-checkbox formControlName="do_not_invoice_services_with_zero_price" color="primary">
+            Do not invoice services with zero price
+          </mat-checkbox>
+          <mat-checkbox formControlName="send_notifications_for_unpaid_invoices" color="primary">
+            Notify on unpaid invoices
+          </mat-checkbox>
+          <mat-checkbox formControlName="create_todo_on_invoice_payment" color="primary">
+            Create TODO on invoice payment
+          </mat-checkbox>
+          <mat-checkbox formControlName="auto_settle_usage" color="primary">
+            Enable automatic settlements
+          </mat-checkbox>
+          <mat-checkbox formControlName="auto_pay_invoice_only_when_enough_credit" color="primary">
+            Auto pay invoice only when enough credit
+          </mat-checkbox>
+          <div class="fl-radio-group">
+            <mat-label>Invoicing options</mat-label>
+            <mat-radio-group formControlName="invoicing_option">
+              <mat-radio-button class="full-width" [ngClass.gt-sm]="'fl-ellipsis-text'"
+                                value="fiscal_on_paid" color="primary">
+                Issue proforma invoices and make them fiscal when paid
+              </mat-radio-button>
+              <mat-radio-button class="full-width" [ngClass.gt-sm]="'fl-ellipsis-text'"
+                                value="always_fiscal" color="primary">
+                Always issue fiscal invoices with sequential numbers
+              </mat-radio-button>
+              <mat-radio-button class="full-width" [ngClass.gt-sm]="'fl-ellipsis-text'"
+                                value="only_proforma" color="primary">
+                Use only proforma invoices with random numbers
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div class="fl-radio-group">
+            <mat-label>Invoice items detail level</mat-label>
+            <mat-radio-group formControlName="detailed_invoices">
+              <mat-radio-button class="full-width" value="generate_detailed_invoices" color="primary">
+                Generate detailed invoices
+              </mat-radio-button>
+              <mat-radio-button class="full-width" value="generate_simple_invoices" color="primary">
+                Generate simple invoices
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field>
+            <input matInput placeholder="Next fiscal invoice number" type="number"
+                   formControlName="next_paid_invoice_number" required>
+            <mat-error>{{fieldErrors['next_paid_invoice_number']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Next fiscal invoice number format" type="text"
+                   formControlName="next_paid_invoice_number_format" required>
+            <mat-error>{{fieldErrors['next_paid_invoice_number_format']}}</mat-error>
+          </mat-form-field>
+          <mat-checkbox formControlName="limit_billable_seconds_per_month" color="primary">
+            Limit billable seconds per month
+          </mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Billable seconds per month" type="number"
+                   formControlName="billable_seconds_per_month" required>
+            <mat-error>{{fieldErrors['billable_seconds_per_month']}}</mat-error>
+          </mat-form-field>
+          <mat-checkbox formControlName="issue_invoice_before_next_due_date" color="primary">
+            Issue invoice before service due date
+          </mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Next invoice date offset" type="number"
+                   formControlName="next_invoice_date_offset" required>
+            <mat-error>{{fieldErrors['next_invoice_date_offset']}}</mat-error>
+          </mat-form-field>
+          <mat-checkbox formControlName="auto_eu_tax_exemption" color="primary">
+            Auto set EU tax exemption on client add
+          </mat-checkbox>
+          <mat-form-field>
+            <mat-select formControlName="provider_home_country" placeholder="Your home country">
+              <mat-option [value]="''"></mat-option>
+              <mat-option *ngFor="let countryOpt of billingConfiguration.countries"
+                          [value]="countryOpt[0]">
+                {{countryOpt[1]}}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{fieldErrors['provider_home_country']}}</mat-error>
+          </mat-form-field>
+          <mat-checkbox class="fl-ellipsis-text" formControlName="add_tax_for_credit_invoices" color="primary">
+            Add tax for invoices generated for credit addition
+          </mat-checkbox>
+        </div>
+        <div class="invoicing-separator" fxHide.gt-sm></div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Generate invoice</h3>
+            <p>An invoice will be generated for used services</p>
+            <h3>Do not invoice services with zero price</h3>
+            <p>When checked, invoices will not be issued for services that have a price of zero.</p>
+            <h3>Notify on unpaid invoices</h3>
+            <p>
+              If an invoice is generated and it not automatically settled an notification containing invoice
+              details will be sent to the customer.
+            </p>
+            <h3>Create TODO on invoice payment</h3>
+            <p>
+              If an user manually pays an invoice a TODO will be created to make staff users aware of the payment.
+            </p>
+            <h3>Enable automatic settlements</h3>
+            <p>
+              Existing usage will be automatically settled using client credit. If an invoice exists it will
+              be paid using client credit.
+            </p>
+            <h3>Auto pay invoice only when enough credit</h3>
+            <p>
+              If automatic settlements are enabled the invoices will be paid only if after paying the invoice
+              the uptodate credit will be greater or equal than minimum up to date credit to be left after paying an
+              invoice setting.
+            </p>
+            <h3>Invoicing options</h3>
+            <ul style="padding-left: 20px;">
+              <li>
+                Issue proforma invoices and make them fiscal when paid. The fiscal invoice date will be set
+                to the date when the invoice becomes paid.
+              </li>
+              <li>
+                Always issue fiscal invoices with sequential numbers - choose when you want all issued
+                invoices to have consecutive numbers and it does not bother you that all invoices will be issued as
+                fiscal,
+                even if not paid. The fiscal invoice date will be the same as the invoice issue date.
+              </li>
+              <li>
+                Use only proforma invoices with random numbers - you can choose this when your fiscal rules
+                do not require invoices with sequential numbers.
+              </li>
+            </ul>
+            <h3 translate>Invoice items detail level</h3>
+            <ul style="padding-left: 20px;">
+              <li>Generate detailed invoices - the invoices will contain detailed data about resource usage.</li>
+              <li>Generate simple invoices - the invoices will contain only summary data.</li>
+            </ul>
+            <p>Enable sequential numbering for paid invoices.</p>
+            <h3>Next fiscal invoice number</h3>
+            <p>The next number that will be allocated for a paid invoice.</p>
+            <p>This option only takes effect if sequential invoice numbering is enabled.</p>
+            <h3>Next fiscal invoice number format</h3>
+            <p>Customize the next invoice number by using
+              <span ngNonBindable>{{ number }}, {{ year }}, {{ month }}, {{ day }}.</span>
+            </p>
+            <h3>Limit billable seconds per month</h3>
+            <p>
+              Specifies the number of seconds per month that should be billed for clients.
+              The remaining seconds after this limit is reached will not be billed.
+            </p>
+            <h3>Issue invoice before next due date</h3>
+            <p>Allows issuing invoices a specified number of days before service due date.</p>
+            <h3>Auto set EU tax exemption on client add</h3>
+            <p>
+              When this option is enabled an European Union Client will be automatically marked as "Tax exempt",
+              if he fills in a valid VAT ID at sign-up or when client is added by staff.
+            </p>
+            <h3>Your home country</h3>
+            <p>
+              Clients from this country are never marked as "Tax exempt" on sign-up. Useful for VAT purposes: clients
+              from your home country should always be charged VAT.
+            </p>
+            <h3>Add tax for invoices generated for credit addition</h3>
+            <p>
+              Will add tax for invoices that are generated when a client adds credit. If the configuration is active,
+              paying an invoice generated for a service using client credit will remove tax on that invoice.
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Credit notifications
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-checkbox formControlName="credit_notifications_enabled" color="primary">
+            Enable credit notifications
+          </mat-checkbox>
+          <mat-checkbox class="fl-ellipsis-text"
+                        formControlName="credit_notifications_when_agreement_enabled" color="primary">
+            Send notifications to customers having billing agreements
+          </mat-checkbox>
+          <div fxLayout="row">
+            <mat-form-field fxFlex="33">
+              <input matInput placeholder="Hours remaining" type="number"
+                     formControlName="first_credit_remaining_hours" required>
+              <mat-error>{{fieldErrors['first_credit_remaining_hours']}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="66">
+              <mat-select formControlName="first_credit_notification_template" placeholder="Notification template">
+                <mat-option [value]="''">do not send</mat-option>
+                <mat-option *ngFor="let notification of billingConfiguration.notification_templates"
+                            [value]="notification[0]">
+                  {{notification[0]}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row">
+            <mat-form-field fxFlex="33">
+              <input matInput placeholder="Hours remaining" type="number"
+                     formControlName="second_credit_remaining_hours" required>
+              <mat-error>{{fieldErrors['second_credit_remaining_hours']}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="66">
+              <mat-select formControlName="second_credit_notification_template" placeholder="Notification template">
+                <mat-option [value]="''">do not send</mat-option>
+                <mat-option *ngFor="let notification of billingConfiguration.notification_templates"
+                            [value]="notification[0]">
+                  {{notification[0]}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row">
+            <mat-form-field fxFlex="33">
+              <input matInput placeholder="Hours remaining" type="number"
+                     formControlName="third_credit_remaining_hours" required>
+              <mat-error>{{fieldErrors['third_credit_remaining_hours']}}</mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex="66">
+              <mat-select formControlName="third_credit_notification_template" placeholder="Notification template">
+                <mat-option [value]="''">do not send</mat-option>
+                <mat-option *ngFor="let notification of billingConfiguration.notification_templates"
+                            [value]="notification[0]">
+                  {{notification[0]}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Enable credit notification</h3>
+            <p>Send notifications when a client's remaining hours with his current credit is reached</p>
+            <h3>Send notifications to customers having billing agreements</h3>
+            <p>Send notifications when a client has a billing agreement enabled</p>
+            <h3>Hours remaining &amp; notification template</h3>
+            <p>How many hours until the client reaches the credit limit with his current usage.
+              Select a notification template to send. Selecting the blank notification will disable it.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Suspension
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-checkbox formControlName="auto_suspend" color="primary">
+            Enable automatic suspension
+          </mat-checkbox>
+          <mat-checkbox formControlName="auto_suspend_delay_hours_enabled" color="primary">
+            Enable delay by hours
+          </mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Delay(hours)" type="number"
+                   formControlName="auto_suspend_delay_hours" required>
+            <mat-error>{{fieldErrors['auto_suspend_delay_hours']}}</mat-error>
+          </mat-form-field>
+          <mat-checkbox formControlName="auto_suspend_delay_credit_enabled" color="primary">
+            Enable delay until credit is used
+          </mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Delay(credit)" type="number"
+                   formControlName="auto_suspend_delay_credit" required>
+            <mat-error>{{fieldErrors['auto_suspend_delay_credit']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select formControlName="auto_suspend_notification_template" placeholder="Notification template">
+              <mat-option [value]="''"></mat-option>
+              <mat-option *ngFor="let notification of billingConfiguration.notification_templates"
+                          [value]="notification[0]">
+                {{notification[0]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Enable automatic suspension</h3>
+            <p>Automatically suspend a client when he reaches the credit limit.</p>
+            <p>The actual suspension can be postponed by a few hours when <strong>Delay by hours</strong>
+              is checked or until client is under the credit limit by a specified amount when
+              <strong>Delay until credit is used</strong> is checked.</p>
+            <p>Selecting a <strong>Notification template</strong> will send a notification to the
+              client on suspension.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="full-width">
+          Termination
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+          <mat-checkbox formControlName="suspend_instead_of_terminate" color="primary">
+            Suspend the client instead of termination
+          </mat-checkbox>
+          <p *ngIf="!configurationBillingForm.controls.suspend_instead_of_terminate.value" class="fl-important-text">
+            Un-checking suspend instead of terminate allows clients and service termination and may cause accidental
+            data loss. However, you can remove permissions for service/client deletion on authorization page and this
+            will prevent accidental data loss.
+          </p>
+          <mat-checkbox formControlName="auto_terminate" color="primary">
+            Enable automatic termination
+          </mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Delay(hours)" type="number"
+                   formControlName="auto_terminate_delay_hours" required>
+            <mat-error>{{fieldErrors['auto_terminate_delay_hours']}}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select formControlName="auto_terminate_notification_template" placeholder="Notification template">
+              <mat-option [value]="''"></mat-option>
+              <mat-option *ngFor="let notification of billingConfiguration.notification_templates"
+                          [value]="notification[0]">
+                {{notification[0]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="66" fxFlex.xs="100" fxFlex.sm="100">
+          <div class="fl-help-text">
+            <h3>Suspend the client instead of termination</h3>
+            <p>
+              This overrides the default termination action and suspends the client and his resources instead.
+            </p>
+            <h3>Enable automatic termination</h3>
+            <p>Automatically terminates a service after certain time (defined in delay field) passed
+              since service suspension.</p>
+            <p>A <strong>Delay</strong> for service termination can be set (in hours) to postpone the actual
+              termination after service was suspended.</p>
+            <p>The client can be notified about the termination if a <strong>Notification template</strong> is
+              selected.</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</form>

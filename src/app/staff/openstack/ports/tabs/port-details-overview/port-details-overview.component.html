@@ -1,0 +1,84 @@
+<div *ngIf="object" fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+  <div layout="column" fxFlex="50" fxFlex.xs="100" fxFlex.sm="100">
+    <p class="fl-detail">ID: {{ object.id }}</p>
+    <p class="fl-detail">Created at: {{ object.created_at | date:'medium' }}</p>
+    <p class="fl-detail">Admin state:
+      <span *ngIf="object.admin_state_up">UP</span>
+      <span *ngIf="!object.admin_state_up">DOWN</span>
+    </p>
+    <p class="fl-detail">MAC address: {{ object.mac_address }}</p>
+    <p class="fl-detail" *ngIf="object.device_id">
+      Device id: {{ object.device_id }}
+    </p>
+    <p class="fl-detail" *ngIf="object.device_owner">
+      Device owner: {{ object.device_owner }}
+    </p>
+    <p class="fl-detail">
+      Port security enabled: {{ object.port_security_enabled }}
+    </p>
+    <p *ngIf="object.network" class="fl-detail">
+      Network:&nbsp;
+      <a class="active-link"
+         [routerLink]="config.getPanelUrl('openstack/networks/' + object.network)">
+        {{object.network}}
+      </a>
+    </p>
+    <p *ngIf="securityGroups.length" class="fl-detail">
+      Security groups:&nbsp;
+      <ng-container *ngFor="let groupId of securityGroups">
+        <a class="active-link"
+           [routerLink]="config.getPanelUrl('openstack/security-groups/' + groupId)">
+          {{groupId}}
+        </a>
+      </ng-container>
+    </p>
+    <p *ngIf="object.project" class="fl-detail">
+      Project:&nbsp;
+      <a class="active-link"
+         [routerLink]="config.getPanelUrl('openstack/projects')" [queryParams]="{search:object.project}">
+        {{object.project}}
+      </a>
+    </p>
+    <p *ngIf="object.client" class="fl-detail">
+      Client:&nbsp;
+      <a class="active-link"
+         [routerLink]="config.getPanelUrl('clients-users/clients/' + object.client.id)">
+        {{object.client.name}}
+      </a>
+    </p>
+    <p class="fl-detail" *ngIf="object.description">
+      Description: {{ object.description }}
+    </p>
+    <p class="fl-subheader fl-margin-bottom-small"
+       *ngIf="object.fixed_ips.length">
+      Fixed IPs
+    </p>
+    <p class="fl-detail">
+      <span *ngFor="let fixed_ip of object.fixed_ips">{{ fixed_ip.ip_address }}
+        <span *ngIf="fixed_ip.subnet_id"> (subnet: {{ fixed_ip.subnet_id }})</span><br>
+      </span>
+    </p>
+  </div>
+
+  <div layout="column" fxFlex="50" fxFlex.xs="100" fxFlex.sm="100">
+    <div>
+      <p class="fl-detail">
+        Extra:
+      </p>
+      <table class="v-middle table fl-detail fl-grid">
+        <tbody>
+        <tr *ngFor="let extra of extraDisplay | keyvalue">
+          <td class="fl-initial-vertical-align">
+            <div>
+              {{ extra.key }}
+            </div>
+          </td>
+          <td>
+            <div class="wrap-text-content">{{ extra.value }}</div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

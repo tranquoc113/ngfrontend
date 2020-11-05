@@ -1,0 +1,8 @@
+<div class="fl-content fl-content-min-height">
+  <app-plugin-ui *ngIf="object && object.id" pluginName="tickets" [panelName]="panelLayout.panel"
+                 componentName="ClientDetailsTicketsListComponent"
+                 [componentData]="{
+                    clientId: object.id
+                 }">
+  </app-plugin-ui>
+</div>

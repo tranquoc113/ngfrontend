@@ -1,0 +1,16 @@
+<h1 *ngIf="data" mat-dialog-title>Remove ticket linking</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form [formGroup]="removeTicketLinkingForm" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="removeTicketLinkingForm" [maxWidth]="'300px'"></app-form-errors>
+    <mat-checkbox class="fl-margin-top" formControlName="delete_symmetrical" color="primary">
+      Remove reverse link if it exists
+    </mat-checkbox>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="removeLinking()"
+          [color]="'primary'">
+    Remove link
+  </button>
+</div>

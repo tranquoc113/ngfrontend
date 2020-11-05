@@ -1,0 +1,21 @@
+.confirm-login-card {
+  max-width: 348px;
+  margin-top: 60px;
+  position: relative;
+}
+
+.card-title {
+  font-weight: 300;
+}
+
+.powered-by-link {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+@media screen and (max-width: 980px){
+  .login-card {
+    margin-top: 0 !important;
+  }
+}

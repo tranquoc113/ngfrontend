@@ -1,0 +1,101 @@
+<div *ngIf="object" fxLayout="column" class="fl-content fl-content-min-height">
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+    <div fxLayout="column" fxFlex="50" fxFlex.xs="none">
+      <p *ngIf="showOrder" class="fl-detail">
+        Order:&nbsp;
+        <a *ngIf="object.order; else noOrder" class="active-link"
+           [routerLink]="config.getPanelUrl('billing/orders/' + object.order)">
+          {{object.order}}
+        </a>
+        <ng-template #noOrder>n/a</ng-template>
+      </p>
+      <p class="fl-detail">
+        Product:&nbsp;
+        <a *ngIf="object.product; else noProduct" class="active-link"
+           [routerLink]="config.getPanelUrl('billing/products/' + object.product.id)">
+          {{object.product.name}}
+        </a>
+        <ng-template #noProduct>n/a</ng-template>
+      </p>
+      <p class="fl-detail">
+        <a class="active-link"
+           routerLink="{{config.getPanelUrl('billing/invoices')}}"
+           [queryParams]="{filtering: 'items__service:' + object.id}">
+          Related invoices
+        </a>
+      </p>
+      <p class="fl-detail">Billing cycle: {{object.cycle.display_name}}</p>
+      <p class="fl-detail">Created at: {{object.created_at | date:'medium'}}</p>
+      <p class="fl-detail">
+        Current cycle end:
+        <span *ngIf="object.current_service_cycle_end; else noCurrentCycleEndDate">
+      {{object.current_service_cycle_end | date:'medium'}}
+    </span>
+        <ng-template #noCurrentCycleEndDate>n/a</ng-template>
+      </p>
+      <p class="fl-detail">
+        Next invoice date:
+        <span *ngIf="object.next_invoice_date; else noNextInvoiceDate">
+      {{object.next_invoice_date | date:'medium'}}
+    </span>
+        <ng-template #noNextInvoiceDate>n/a</ng-template>
+      </p>
+      <p class="fl-detail" *ngIf="object.paid_until">
+        Paid until: {{object.paid_until | date:'medium'}}
+      </p>
+      <p *ngIf="object.auto_terminate_date" class="fl-detail">
+        Auto terminate date: {{object.auto_terminate_date | date:'medium'}}
+      </p>
+      <p class="fl-detail" *ngIf="['payment canceled', 'refunded'].indexOf(object.last_service_cycle_state) >= 0">
+        Billing is disabled because last cycle state is {{ object.last_service_cycle_state }}
+      </p>
+      <p class="fl-detail">
+        Client:
+        <a class="active-link"
+           routerLink="{{config.getPanelUrl('clients-users/clients/' + object.client.id)}}">
+          {{object.client.name}}
+        </a>
+      </p>
+      <p class="fl-detail">Last update: {{object.updated_at | date:'medium'}}</p>
+    </div>
+    <div *ngIf="object.hosting_account" fxLayout="column">
+      <p class="fl-detail">
+        Account: {{object.hosting_account.account_id}}
+      </p>
+      <p class="fl-detail">
+        Username: {{object.hosting_account.username}}
+      </p>
+      <p class="fl-detail">
+        Package: {{object.hosting_account.package_name}}
+      </p>
+
+      <mat-form-field>
+        <mat-select placeholder="Selected server" [(ngModel)]="object.hosting_account.server">
+          <mat-option *ngFor="let server of object.hosting_account.available_servers" [value]="server.id">
+            {{server.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-button color="primary" (click)="updateServer()"
+              [disabled]="object.hosting_account.server === initialServerId">
+        Update server
+      </button>
+    </div>
+  </div>
+  <div>
+    <p class="fl-detail">Notes:</p>
+    <pre class="fl-detail">{{object.notes}}</pre>
+  </div>
+  <div *ngIf="showUpgradeButtons" fxLayout="row" fxLayout.xs="column"
+       fxLayoutGap="10px" fxLayoutAlign="center center" class="fl-margin-top">
+    <button mat-button mat-raised-button color="primary"
+            [routerLink]="[config.getPanelUrl('billing/services'), object.id, 'change-options']">
+      Upgrade/downgrade options
+    </button>
+    <button mat-button mat-raised-button color="primary"
+            [routerLink]="[config.getPanelUrl('billing/services'), object.id, 'change-product']">
+      Upgrade/downgrade product
+    </button>
+  </div>
+</div>

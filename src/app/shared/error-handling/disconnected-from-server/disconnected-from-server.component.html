@@ -1,0 +1,7 @@
+<div class="{{'app-theme-' + themingService.getActiveThemeName()}}">
+  <div fxLayout="column" fxLayoutAlign="center center" class="fl-cannot-connect-container">
+    <span class="fl-subheader fl-margin-bottom" translate>Cannot connect to server</span>
+    <mat-progress-spinner mode="indeterminate" [diameter]="70" color="primary"></mat-progress-spinner>
+    <span class="fl-subheader-md fl-margin-top" translate>Will try to reconnect shortly</span>
+  </div>
+</div>

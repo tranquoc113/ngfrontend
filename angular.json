@@ -1,0 +1,322 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "ngfrontend": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ngfrontend",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "hammerjs", "chart.js"
+            ],
+            "aot": true,
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" }
+            ],
+            "styles": [
+              "src/styles.scss",
+              "node_modules/flag-icon-css/css/flag-icon.min.css"
+            ],
+            "scripts": [
+              "node_modules/tinymce/tinymce.min.js"
+            ]
+          },
+          "configurations": {
+            "production-staff": {
+              "main": "src/staff-main.ts",
+              "tsConfig": "staff-tsconfig.app.json",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment-staff.prod.ts"
+                }
+              ],
+              "assets": [
+                "src/favicon.ico",
+                "src/assets/fonts",
+                "src/assets/img",
+                "src/assets/config-templates/staff-template.config.json",
+                "src/assets/config-base/staff.config.json",
+                { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" }
+              ],
+              "scripts": [
+                "node_modules/tinymce/tinymce.min.js"
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "baseHref": "/newstaff/",
+              "outputPath": "dist/ngfrontend/staff",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            },
+            "production-reseller": {
+              "main": "src/reseller-main.ts",
+              "tsConfig": "reseller-tsconfig.app.json",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment-reseller.prod.ts"
+                }
+              ],
+              "assets": [
+                "src/favicon.ico",
+                "src/assets/fonts",
+                "src/assets/img",
+                "src/assets/config-templates/reseller-template.config.json",
+                "src/assets/config-base/reseller.config.json",
+                { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" }
+              ],
+              "scripts": [
+                "node_modules/tinymce/tinymce.min.js"
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "baseHref": "/reseller/",
+              "outputPath": "dist/ngfrontend/reseller",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            },
+            "production-staff-test": {
+              "main": "src/staff-main.ts",
+              "tsConfig": "staff-tsconfig.app.json",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment-staff.prod.ts"
+                }
+              ],
+              "assets": [
+                "src/favicon.ico",
+                "src/assets/fonts",
+                "src/assets/img",
+                "src/assets/config/staff.config.json",
+                "src/assets/config-templates/staff-template.config.json",
+                "src/assets/config-base/staff.config.json",
+                { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" }
+              ],
+              "scripts": [
+                "node_modules/tinymce/tinymce.min.js"
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "baseHref": "/",
+              "outputPath": "dist/ngfrontend/staff",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            },
+            "production-reseller-test": {
+              "main": "src/reseller-main.ts",
+              "tsConfig": "reseller-tsconfig.app.json",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment-reseller.prod.ts"
+                }
+              ],
+              "assets": [
+                "src/favicon.ico",
+                "src/assets/fonts",
+                "src/assets/img",
+                "src/assets/config/reseller.config.json",
+                "src/assets/config-templates/reseller-template.config.json",
+                "src/assets/config-base/reseller.config.json",
+                { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" }
+              ],
+              "scripts": [
+                "node_modules/tinymce/tinymce.min.js"
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "baseHref": "/",
+              "outputPath": "dist/ngfrontend/reseller",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ngfrontend:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ngfrontend:build:production"
+            },
+            "production-staff": {
+              "browserTarget": "ngfrontend:build:production-staff"
+            },
+            "production-reseller": {
+              "browserTarget": "ngfrontend:build:production-reseller"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ngfrontend:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "fileReplacements": [
+              {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment-unit.ts"
+              }
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "port": 5151,
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "ngfrontend:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ngfrontend:serve:production"
+            },
+            "local": {
+              "port": 5151,
+              "protractorConfig": "e2e/protractor-local.conf.js"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "ngfrontend"
+}

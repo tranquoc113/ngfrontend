@@ -1,0 +1,14 @@
+<div fxLayout="row" *ngIf="object && object.total_revenue_per_location.length">
+  <table mat-table [dataSource]="object.total_revenue_per_location" class="full-width">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Location</th>
+      <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    </ng-container>
+    <ng-container matColumnDef="revenue">
+      <th mat-header-cell *matHeaderCellDef>Revenue</th>
+      <td mat-cell *matCellDef="let element">{{element.revenue}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

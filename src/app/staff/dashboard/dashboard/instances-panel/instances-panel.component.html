@@ -1,0 +1,17 @@
+<mat-tab-group [(selectedIndex)]="selectedTab">
+  <mat-tab label="State">
+    <div align="center">
+      <canvas #instancesStateGraph height="260">
+      </canvas>
+      <div #legendState class="chart-legend-wrap"></div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Region">
+    <div align="center">
+      <canvas #instancesRegionGraph height="260">
+      </canvas>
+      <div #legendRegion class="chart-legend-wrap"></div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+

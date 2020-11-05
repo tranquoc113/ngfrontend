@@ -1,0 +1,46 @@
+<div class="fl-content fl-content-min-height">
+  <div *ngIf="journalEntries && !journalEntries.length" class="fl-subheader-md fl-gray-color">No journal entries</div>
+  <app-fl-backdrop *ngIf="!journalEntries"></app-fl-backdrop>
+  <div *ngIf="journalEntries" fxLayout="column">
+    <table class="full-width" mat-table [dataSource]="journalEntries">
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Entry date</th>
+        <td mat-cell *matCellDef="let journalEntry">
+          <a [routerLink]="[config.getPanelUrl('billing/journal'), journalEntry.id]">
+            {{journalEntry.date_added | date}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="destination">
+        <th mat-header-cell *matHeaderCellDef>Destination</th>
+        <td mat-cell *matCellDef="let journalEntry">
+          <a [routerLink]="[config.getPanelUrl('billing/journal'), journalEntry.id]">
+            {{journalEntry.destination_info.name}}
+            <span *ngIf="journalEntry.destination_info.invoice">
+              <a [routerLink]="[config.getPanelUrl('billing/invoices'), journalEntry.destination_info.invoice]">
+                Invoice {{journalEntry.destination_info.invoice}}
+              </a>
+            </span>
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="source">
+        <th mat-header-cell *matHeaderCellDef>Source</th>
+        <td mat-cell *matCellDef="let journalEntry">
+          <a [routerLink]="[config.getPanelUrl('billing/journal'), journalEntry.id]">
+            {{journalEntry.source_info.name}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Amount</th>
+        <td mat-cell *matCellDef="let journalEntry">
+          <a [routerLink]="[config.getPanelUrl('billing/journal'), journalEntry.id]">
+            {{journalEntry.destination_amount}} {{journalEntry.destination_currency}}
+          </a>
+        </td>
+      </ng-container>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

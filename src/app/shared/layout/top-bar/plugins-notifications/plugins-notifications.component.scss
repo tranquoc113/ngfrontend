@@ -1,0 +1,36 @@
+.notifications-content {
+  font-size: 20px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.plugin-ui-notifications-wrapper {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.plugins-notifications-dropdown {
+  overflow: visible;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.notification-circle {
+  background-color: #536dfe;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  font-size: 10px;
+  color: #fff;
+  line-height: 20px;
+  text-align: center;
+  position: absolute;
+  z-index: 999;
+  top: -5px;
+  right: -5px;
+}

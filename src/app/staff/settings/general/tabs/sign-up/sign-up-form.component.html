@@ -1,0 +1,94 @@
+<div fxLayout="column" class="fl-content-min-height">
+  <app-fl-backdrop *ngIf="loadingSettings === true"></app-fl-backdrop>
+  <form appFormSubmit (ngSubmit)="saveSettings()"
+        fxLayout="column" *ngIf="signupSettings" [formGroup]="signupSettingsForm"
+        class="fl-margin-bottom fl-padding-left fl-content">
+    <app-form-errors #formErrors [formGroup]="signupSettingsForm"></app-form-errors>
+    <div fxLayout="row" fxLayout.lt-md="column" class="fl-margin-top">
+      <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+        <mat-checkbox formControlName="require_confirmation" color="primary">
+          Require new users to confirm the email address
+        </mat-checkbox>
+      </div>
+      <div fxLayout="column" class="fl-help-text">
+        <h3 fxHide.lt-md>Require new users to confirm the email address</h3>
+        <p class="fl-detail">End-users will not be allowed to proceed using the application features unless
+          they validate their email. They will be redirected to the email confirmation page until they activate their
+          account either by adding the code received in the notification email in the input field on the page or by
+          clicking the link received in the email.</p>
+      </div>
+    </div>
+
+    <div *ngIf="signupSettingsForm.controls.require_confirmation.value" class="fade fl-margin-top"
+         fxLayout="row" fxLayout.lt-md="column">
+      <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+        <mat-form-field fxFlex="auto">
+          <mat-select formControlName="email_confirmation_template" placeholder="Email confirmation template" required>
+            <mat-option *ngFor="let template of notificationTemplates"
+                        [value]="template.name">
+              {{template.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" class="fl-help-text">
+        <h3>Email confirmation template</h3>
+        <p class="fl-detail">
+          Select the email message notification template that is sent to new users after they sign up.
+        </p>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column" class="fl-margin-top">
+      <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+        <mat-checkbox formControlName="allow_free_email_addresses" color="primary">
+          Allow new user sign-up with free email address
+        </mat-checkbox>
+      </div>
+      <div fxLayout="column" class="fl-help-text">
+        <h3 fxHide.lt-md>Allow new user sign-up with free email address</h3>
+        <p class="fl-detail">
+          End-users trying to sign with email addresses from free email services, like gmail.com and outlook.com,
+          are not allowed to sign up. List of free email services are taken from open source library
+          https://github.com/fleio/isfreemail. Submit pull requests on Github, if want to add more free mail
+          service domains.
+        </p>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column" class="fl-margin-top">
+      <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+        <mat-form-field>
+          <input matInput placeholder="Do not allow sign-up for email on these domains" type="text"
+                 formControlName="forbidden_domains_for_email_signup">
+          <mat-error>{{fieldErrors['forbidden_domains_for_email_signup']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" class="fl-help-text">
+        <h3>Do not allow sign-up for email on these domains</h3>
+        <p class="fl-detail">End-users signing up with email addresses from these domains are always DENIED to
+          sign up. Use comma separated list of domains. E.g. gmail.com, hotmail.com</p>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column" class="fl-margin-top">
+      <div fxLayout="column" fxFlex="33" fxFlex.xs="100" fxFlex.sm="100">
+        <mat-form-field>
+          <input matInput placeholder="But allow sign-up for email on these domains" type="text"
+                 formControlName="domains_for_email_signup_whitelist">
+          <mat-error>{{fieldErrors['domains_for_email_signup_whitelist']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" class="fl-help-text">
+        <h3>But allow sign-up for email on these domains</h3>
+        <p class="fl-detail">End-users signing up with email addresses from these domains are always ALLOWED to
+          sign up. Use comma separated list of domains. E.g. gmail.com, hotmail.com. This will override the blacklisted
+          domain names.</p>
+      </div>
+    </div>
+  </form>
+
+  <div fxLayout="row" fxLayoutAlign="end right">
+    <button mat-button (click)="saveSettings()" color="primary">Save settings</button>
+  </div>
+</div>

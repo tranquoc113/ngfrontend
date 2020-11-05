@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Create OpenStack service</h1>
+<div mat-dialog-content fxLayout="column">
+  <form appFormSubmit [formGroup]="createOpenstackServiceForm" fxLayout="column"
+        (ngSubmit)="createOpenstackService()">
+    <mat-form-field>
+      <mat-select formControlName="product_id" placeholder="Product">
+        <mat-option *ngFor="let product of availableProducts" [value]="product.id">
+          {{product.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="product_cycle_id" placeholder="Product cycle">
+        <mat-option
+          *ngFor="let productCycle of selectedProductCycles"
+          [value]="productCycle.id">
+          {{productCycle.display_name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-checkbox formControlName="create_new_project" color="primary">
+      Create new project
+    </mat-checkbox>
+    <mat-form-field>
+      <input matInput placeholder="Project" type="text" formControlName="project_id" required
+             [matAutocomplete]="autocompleteProject">
+      <mat-autocomplete #autocompleteProject="matAutocomplete" [displayWith]="projectDisplay">
+        <mat-option *ngFor="let project of filteredProjects$ | async" [value]="project">
+          {{project.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!createOpenstackServiceForm.valid" (click)="createOpenstackService()"
+          [color]="'primary'">
+    Create Openstack service
+  </button>
+</div>

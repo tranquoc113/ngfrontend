@@ -1,0 +1,6 @@
+<a *ngIf="hasOperationsInProgress" [routerLink]="configService.getPanelUrl('utils/operations')"
+   [attr.fl-tooltip]="operationsTooltip" fl-tooltip-direction="down"
+   [queryParams]="orderingService.getQueryParams('utils/operations')"
+   class="circle-wrapper">
+  <mat-progress-spinner [color]="'warn'" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+</a>

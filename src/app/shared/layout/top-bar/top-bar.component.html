@@ -1,0 +1,24 @@
+<div class="topbar-items-container">
+  <div fxHide.lt-lg>
+    <app-logo [darkContext]="true" [linkOptions]="logoLinkOptions" [customStyle]="{
+      width: '96px',
+      marginRight: '16px'
+    }"></app-logo>
+  </div>
+  <div class="breadcrumbs-container">
+    <app-breadcrumbs></app-breadcrumbs>
+  </div>
+
+  <div class="search-container">
+    <app-search-box *ngIf="searchConfig.show" [searchConfig]="searchConfig"  #searchBox></app-search-box>
+  </div>
+
+  <div class="buttons-container">
+    <app-operations-in-progress class="fl-margin-right-small align-operations-progress" *ngIf="panel === 'staff'">
+    </app-operations-in-progress>
+    <app-license-warning *ngIf="panel === 'staff'" class="license-warn-space"></app-license-warning>
+    <app-plugins-notifications [panel]="panel" class="fl-margin-right-small"></app-plugins-notifications>
+    <app-hello-user-button [panel]="panel"></app-hello-user-button>
+    <app-stop-impersonating-button *ngIf="auth.isImpersonating()"></app-stop-impersonating-button>
+  </div>
+</div>

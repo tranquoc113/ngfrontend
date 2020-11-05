@@ -1,0 +1,101 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="createOptions" [formGroup]="serverForm">
+  <app-form-errors #formErrors [formGroup]="serverForm"></app-form-errors>
+  <div fxLayout="column">
+    <mat-form-field>
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="group" placeholder="Group" required>
+        <mat-option *ngFor="let group of createOptions.groups" [value]="group.id">
+          {{ group.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['group']}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="status" placeholder="Status" required>
+        <mat-option *ngFor="let status of createOptions.statusList" [value]="status[0]">
+          {{ status[1] }}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['status']}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="plugin" placeholder="Server type" required>
+        <mat-option *ngFor="let plugin of createOptions.plugins" [value]="plugin.id">
+          {{ plugin.display_name }}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['plugin'] }}</mat-error>
+    </mat-form-field>
+
+    <ng-container *ngIf="selectedPlugin && selectedPlugin.has_server_settings" formGroupName="hosting_server_settings">
+      <p>Server configuration</p>
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <mat-form-field *ngIf="selectedPlugin.server_settings.hostname" fxFlex="40">
+          <input matInput placeholder="Hostname" type="text" formControlName="hostname"
+                 [required]="selectedPlugin.server_settings.hostname.required">
+          <mat-error>{{fieldErrors['hosting_server_settings.hostname']}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="selectedPlugin.server_settings.port" fxFlex="20">
+          <input matInput placeholder="Port" type="number" formControlName="port"
+                 min="0" max="65535" [required]="selectedPlugin.server_settings.hostname.required">
+          <mat-error>{{fieldErrors['hosting_server_settings.port']}}</mat-error>
+        </mat-form-field>
+
+        <ng-container *ngIf="selectedPlugin.server_settings.secure">
+          <mat-checkbox [color]="'primary'" fxFlex="20" formControlName="secure">
+            Secure connection
+          </mat-checkbox>
+        </ng-container>
+      </div>
+
+      <mat-form-field *ngIf="selectedPlugin.server_settings.hostname">
+        <input matInput placeholder="Username" type="text" formControlName="username"
+               [required]="selectedPlugin.server_settings.username.required">
+        <mat-error>{{fieldErrors['hosting_server_settings.username']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="selectedPlugin.server_settings.password">
+        <input matInput placeholder="Password" type="text" formControlName="password"
+               [required]="selectedPlugin.server_settings.username.required">
+        <mat-error>{{fieldErrors['hosting_server_settings.password']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="selectedPlugin.server_settings.hostname">
+        <input matInput placeholder="Access token" type="text" formControlName="api_token"
+               [required]="selectedPlugin.server_settings.api_token.required">
+        <mat-error>{{fieldErrors['hosting_server_settings.api_token']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="selectedPlugin.server_settings.port">
+        <input matInput placeholder="Max number of accounts" type="number" formControlName="max_accounts"
+               min="0" max="65535" [required]="selectedPlugin.server_settings.max_accounts.required">
+        <mat-error>{{fieldErrors['hosting_server_settings.max_accounts']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="selectedPlugin.server_settings.status_url">
+        <input matInput placeholder="Status URL" type="text" formControlName="status_url"
+               [required]="selectedPlugin.server_settings.status_url.required">
+        <mat-error>{{fieldErrors['hosting_server_settings.status_url']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="selectedPlugin.server_settings.hostname">
+        <input matInput placeholder="Location" type="text" formControlName="location"
+               [required]="selectedPlugin.server_settings.location.required">
+        <mat-error>{{fieldErrors['hosting_server_settings.location']}}</mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <app-plugin-ui *ngIf="selectedPlugin && selectedPlugin.has_settings_component"
+      [pluginName]="selectedPlugin.label" panelName="staff" componentName="ServerSettings"
+                   [componentData]="object.settings">
+    </app-plugin-ui>
+  </div>
+</form>

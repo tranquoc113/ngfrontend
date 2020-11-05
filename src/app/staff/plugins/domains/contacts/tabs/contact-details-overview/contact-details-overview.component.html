@@ -1,0 +1,23 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <div fxLayout="column">
+    <p class="fl-detail">Created on:&nbsp;{{ object.created_at | date:'mediumDate' }} </p>
+    <br>
+    <p class="fl-detail">Country:&nbsp;{{ object.country }}</p>
+    <p class="fl-detail">City:&nbsp;{{ object.city }}
+      <span ng-if="client.state">, {{ object.state }}</span>
+    </p>
+    <p class="fl-detail">
+      Address:&nbsp;{{ object.address1 }}
+      <span *ngIf="object.address2">, {{ object.address2 }}</span>
+    </p>
+    <p class="fl-detail">Zip code:&nbsp;{{ object.zip_code }}</p>
+    <br>
+    <p class="fl-detail">Company:&nbsp;{{ object.company || 'n/a' }}</p>
+    <p class="fl-detail">Vat ID:&nbsp;{{ object.vat_id || 'n/a' }}</p>
+    <br>
+    <p class="fl-detail">Email:&nbsp;{{ object.email }}</p>
+    <p class="fl-detail">Phone:&nbsp;{{ object.phone }}</p>
+    <p class="fl-detail">Fax:&nbsp;{{ object.fax || 'n/a' }}</p>
+    <br>
+  </div>
+</div>

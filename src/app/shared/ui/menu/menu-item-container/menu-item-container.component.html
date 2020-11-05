@@ -1,0 +1,11 @@
+<ng-container *ngIf="showContainer">
+  <button mat-button class="menu-item-container" (click)="toggle()">
+    {{menuItemContainer.category}}
+    <mat-icon [@openCloseDropdown]="getExpanded() ? 'open' : 'closed'">keyboard_arrow_right</mat-icon>
+  </button>
+  <div [@openCloseItems]="getExpanded() ? 'open' : 'closed'" class="overflow-hidden">
+    <ng-container *ngFor="let item of menuItemContainer.items">
+      <app-menu-item [menuItem]="item" [isAlone]="false" *ngIf="item"></app-menu-item>
+    </ng-container>
+  </div>
+</ng-container>

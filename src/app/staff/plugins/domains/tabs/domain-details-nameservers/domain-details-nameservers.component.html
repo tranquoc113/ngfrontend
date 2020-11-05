@@ -1,0 +1,28 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <form [formGroup]="domainForm">
+    <app-form-errors #formErrors [formGroup]="domainForm"></app-form-errors>
+    <div fxLayout="column" fxLayoutGap="5px">
+      <mat-form-field>
+        <input matInput placeholder="First nameserver" type="text" formControlName="nameserver1" required>
+        <mat-error>{{fieldErrors['nameserver1']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Second nameserver" type="text" formControlName="nameserver2">
+        <mat-error>{{fieldErrors['nameserver2'] }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Third nameserver" type="text" formControlName="nameserver3">
+        <mat-error>{{fieldErrors['nameserver3'] }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Fourth nameserver" type="text" formControlName="nameserver4">
+        <mat-error>{{fieldErrors['nameserver4'] }}</mat-error>
+      </mat-form-field>
+      <div fxLayout="row">
+        <button mat-button mat-raised-button color="primary" (click)="saveNameservers()">
+          Save nameservers
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

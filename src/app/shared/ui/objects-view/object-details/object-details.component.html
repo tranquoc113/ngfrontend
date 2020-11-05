@@ -1,0 +1,75 @@
+<div *ngIf="!objectNotFound" class="card-container">
+  <mat-card [ngClass]="additionalClasses" class="fl-card-styling">
+    <app-status-line *ngIf="detailsData && detailsData.header && detailsData.header.status"
+                     [type]="detailsData.header.status.type | lineType"
+                     [color]="detailsData.header.status.value | lineColor">
+    </app-status-line>
+    <mat-card-header *ngIf="detailsData && detailsData.header" class="card-header">
+      <div class="card-details-avatar" mat-card-avatar>
+        <app-gravatar *ngIf="detailsData && detailsData.header && detailsData.header.icon &&
+        detailsData.header.icon.gravatarEmail"
+                      [email]="detailsData.header.icon.gravatarEmail"
+                      [customStyle]="{width: '45px'}">
+        </app-gravatar>
+        <app-icon *ngIf="detailsData && detailsData.header && detailsData.header.icon &&
+        !detailsData.header.icon.gravatarEmail" [icon]="detailsData.header.icon"></app-icon>
+      </div>
+      <mat-card-title class="card-title">
+        <span class="fl-ellipsis-text card-details-title" *ngIf="detailsData">
+          {{detailsData.header.title.text}}
+        </span>
+      </mat-card-title>
+      <mat-card-subtitle class="card-details-subtitle" *ngIf="detailsData">
+        {{detailsData.header.title.subText | uppercase}}
+        <app-icon *ngIf="detailsData.header.title.subTextIcon" class="subtext-icon"
+                  [matTooltip]="detailsData.header.title.subTextIconTooltip"
+                  [icon]="detailsData.header.title.subTextIcon"></app-icon>
+      </mat-card-subtitle>
+      <div class="object-actions" *ngIf="detailsData && detailsData.actions">
+        <app-object-actions [objectActions]="detailsData.actions" [maxVisibleActions]="visibleActions">
+        </app-object-actions>
+      </div>
+    </mat-card-header>
+    <mat-card-content *ngIf="detailsData && detailsData.tabs">
+      <mat-tab-group *ngIf="detailsData && detailsData.tabs.length > 1" animationDuration="0ms"
+                     (selectedIndexChange)="changedTabIndex($event)"
+                     [(selectedIndex)]="selectedTabIndex">
+        <mat-tab *ngFor="let tab of detailsData.tabs; let tabIndex = index" label="{{tab.tabName | uppercase}}">
+          <ng-template appComponentHost [component]="tab.component" [objectController]="objectController"
+                       [componentTabIndex]="tabIndex" [detailsActions]="detailsData.detailsActions">
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+      <ng-template *ngIf="detailsData && detailsData.tabs.length === 1"
+                   appComponentHost [component]="detailsData.tabs[0].component"
+                   [detailsActions]="detailsData.detailsActions"
+                   [objectController]="objectController">
+      </ng-template>
+    </mat-card-content>
+    <mat-card-actions *ngIf="detailsData && detailsData.detailsActions" fxLayoutGap="10px"
+                      fxLayout="row" fxLayout.xs="column" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
+      <ng-container *ngFor="let action of detailsData.detailsActions">
+        <button mat-button
+                (click)="action.execute(notificationService, refreshService, null, $event)"
+                [disabled]="action.noPermissions || action.isRunning"
+                [class.mat-primary]="action.primary"
+                *ngIf="action.type !== actionTypes.RouterLinkAction; else actionWithRouterLink">
+          {{action.name}}
+        </button>
+        <ng-template #actionWithRouterLink>
+          <a mat-button
+             [routerLink]="action.routerUrl"
+             [queryParams]="action.queryParams"
+             [disabled]="action.noPermissions || action.isRunning"
+             [class.mat-primary]="action.primary">
+            {{action.name}}
+          </a>
+        </ng-template>
+      </ng-container>
+    </mat-card-actions>
+  </mat-card>
+</div>
+<div *ngIf="objectNotFound">
+  <h1>404: Not found :(</h1>
+  <div>Object does not exists</div>
+</div>

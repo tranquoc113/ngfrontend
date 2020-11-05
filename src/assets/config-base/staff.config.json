@@ -1,0 +1,63 @@
+{
+    "urls": {
+        "backendApiUrl": "https://demo.fleio.com/backend/staffapi/",
+        "homeName": "staff",
+        "angularJsPanelUrl": "https://demo.fleio.com/backend/staff/",
+        "resellerUrl": "/reseller",
+        "enduserUrl": "/"
+    },
+    "settings": {
+        "appIdleTimeout": 30,
+        "baseTitle": "Fleio Admin",
+        "defaultLanguage": "en",
+        "imagesPath": "assets/img/staff/",
+        "logoDark": null,
+        "logoLight": null,
+        "defaultTheme": "spring",
+        "availableThemes": [
+            "spring",
+            "navy",
+            "dusk"
+        ],
+        "paginateBy": 20,
+        "itemsDisplayAsList": false,
+        "instanceForm": {
+            "hideNetworksIfOnlyOneAvailable": true,
+            "preselectPublicNetworks": true,
+            "showUserData": true,
+            "flavorsAsCards": false,
+            "showRootPasswordField": true,
+            "rootPasswordFieldMandatory": false,
+            "localComputeStorageEnabled": true,
+            "hideVolumeSelectionForFlavorsWithDisk": false,
+            "defaultVolumeType": null
+        },
+        "logoutRedirect": null,
+        "usernameInputLabel": null,
+        "tinyMCEOptions": {
+            "base_url": "/tinymce",
+            "relative_urls": true,
+            "convert_urls": false,
+            "inline": false,
+            "plugins": "link code image lists autolink",
+            "toolbar": [
+                "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | link code image | bullist numlist | removeformat"
+            ],
+            "skin": "oxide",
+            "theme": "silver",
+            "menubar": "",
+            "branding": false
+        },
+        "refreshIntervals": {
+            "defaultInterval": 10000,
+            "clientDetailsInterval": 5000,
+            "operationsListInterval": 1000,
+            "operationDetailsInterval": 1000,
+            "reportDetailsInterval": 1000,
+            "operationsInProgressInterval": 5000,
+            "routerDetailsInterval": 5000,
+            "volumeDetailsBackupsInterval": 2000,
+            "volumeDetailsSnapshotsInterval": 2000
+        }
+    }
+}

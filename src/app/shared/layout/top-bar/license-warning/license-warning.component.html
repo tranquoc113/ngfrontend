@@ -1,0 +1,27 @@
+<ng-container *ngIf="showWarn">
+  <button
+    *ngIf="licenseDaysLeft && !coreDaysLeft"
+    mat-icon-button
+    fl-tooltip-direction="down"
+    [attr.fl-tooltip]="licenseExpiringText"
+    fl-tooltip-direction="down"
+    (click)="handleWarning()">
+    <mat-icon class="fl-icon-yellow license-warn-btn-icon">warning</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    *ngIf="coreDaysLeft && !licenseDaysLeft"
+    fl-tooltip-direction="down"
+    [attr.fl-tooltip]="coresExceededText"
+    (click)="handleWarning()">
+    <mat-icon class="fl-icon-yellow license-warn-btn-icon">warning</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    *ngIf="coreDaysLeft && licenseDaysLeft"
+    fl-tooltip-direction="down"
+    [attr.fl-tooltip]="licenseExpiringText + '\n' + coresExceededText"
+    (click)="handleWarning()">
+    <mat-icon class="fl-icon-yellow license-warn-btn-icon">warning</mat-icon>
+  </button>
+</ng-container>

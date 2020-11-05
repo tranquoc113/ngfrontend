@@ -1,0 +1,14 @@
+<div fxFlex="column" *ngIf="object">
+  <p class="fl-detail">ID: {{object.id}}</p>
+  <p class="fl-detail">Name: {{object.name}}</p>
+  <p class="fl-detail">Ram: {{object.memory_mb}} MB</p>
+  <p class="fl-detail">Virtual CPUs: {{object.vcpus}}</p>
+  <p class="fl-detail">Disk space: {{object.root_gb}} GB</p>
+  <p class="fl-detail">Swap: {{object.swap}} GB</p>
+  <p class="fl-detail">Ephemeral storage: {{object.ephemeral_gb}} GB</p>
+  <p class="fl-detail">Disabled: {{object.disabled}}</p>
+  <p class="fl-detail">Public: {{object.is_public}}</p>
+  <p class="fl-detail">Region: {{object.region}}</p>
+  <p class="fl-detail">Description: {{object.description}}</p>
+  <p class="fl-detail">Group: {{object.flavor_group?.name || 'n/a'}}</p>
+</div>

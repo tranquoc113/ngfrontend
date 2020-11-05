@@ -1,0 +1,27 @@
+.filtering-menu-button {
+  margin-right: 10px;
+}
+
+.filtering-detail-wrapper {
+  padding: 20px 10px;
+}
+
+.filtering-menu-wrapper {
+  width: 400px;
+}
+
+.filter-choice-wrapper {
+  margin-left: 20px;
+}
+
+::ng-deep .mat-menu-panel.filtering-menu-container {
+  min-height: 0 !important;
+  max-width: 400px !important;
+  overflow-x: hidden;
+}
+
+@media screen and (max-width: 480px) {
+  .filtering-menu-button {
+    margin-right: 0px;
+  }
+}

@@ -1,0 +1,45 @@
+<div class="fl-content fl-content-min-height">
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <p class="fl-detail">Here you can assign options to this product.</p>
+  <p class="fl-detail">If option cycles do not match product cycles the option will not be available on order.</p>
+
+  <table *ngIf="confOptions.length" mat-table
+         [dataSource]="confOptions" class="full-width">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element">
+        <span class="fl-detail">{{element.name}}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef fxHide.lt-md> Description </th>
+      <td mat-cell *matCellDef="let element" fxHide.lt-md>
+        <span class="fl-detail">{{ element.description }}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="cycles_match">
+      <th mat-header-cell *matHeaderCellDef> Product cycles match </th>
+      <td mat-cell *matCellDef="let element">
+        <span class="fl-detail fl-green-color" *ngIf="element.cycles_match">
+          Option has all product cycles
+        </span>
+        <span class="fl-detail fl-red-color" *ngIf="!element.cycles_match">
+          Option does not have all product cycles
+        </span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <app-object-actions [objectActions]="actions[element.id]" maxVisibleActions="2">
+        </app-object-actions>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div fxLayout="row" class="fl-margin-top">
+    <button mat-button color="primary" (click)="associateOption()">Associate option</button>
+  </div>
+</div>

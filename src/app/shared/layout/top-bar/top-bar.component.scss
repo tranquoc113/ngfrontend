@@ -1,0 +1,58 @@
+.topbar-items-container {
+}
+.topbar-items-container > div {
+  display: inline-block;
+}
+
+.topbar-items-container > div:last-child {
+  float: right;
+}
+
+.breadcrumbs-container {
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 16px;
+}
+
+.buttons-container > * {
+  display: inline-block;
+}
+
+.topbar-items-container > * {
+  display: inline-block;
+}
+
+.align-hello-btn {
+  vertical-align: text-bottom;
+}
+
+app-plugins-notifications {
+  vertical-align: sub;
+  height: 36px; // using this as placeholder
+}
+
+.search-container {
+  height: 30px; // using this as placeholder
+}
+
+.license-warn-space {
+  margin-right: 5px;
+}
+
+.align-operations-progress {
+  vertical-align: text-bottom;
+}
+
+@media screen and (max-width: 1280px) {
+  .buttons-container {
+    padding-top: 7px;
+  }
+  app-plugins-notifications {
+    height: unset;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  app-plugins-notifications {
+    vertical-align: text-top;
+  }
+}

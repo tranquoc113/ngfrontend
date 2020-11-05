@@ -1,0 +1,107 @@
+.fl-bordered-box ::ng-deep mat-icon {
+  font-size: 30px;
+  vertical-align: sub;
+}
+
+.fl-bordered-box > div {
+  display: inline-block;
+}
+
+.fl-bordered-box > div:last-child {
+  float: right;
+}
+
+.fl-bordered-box > div:not(:first-child) {
+  margin-left: 20px;
+}
+
+.boot-source-select-dialog {
+  position: fixed;
+  z-index: 120;
+  left: 330px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding: 24px 24px 0 24px;
+  background-color: #fff;
+}
+
+.boot-source-select-backdrop {
+  background: rgba(0, 0, 0, .3);
+  position: fixed;
+  width: 330px;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.boot-source-select-backdrop:hover {
+  cursor: pointer;
+}
+
+.boot-source-select-dialog-container {
+  position: relative;
+  height: 100%;
+}
+
+.selected-source-display-details {
+  line-height: 10px;
+}
+
+.boot-source-select-dialog-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 1;
+}
+
+.boot-source-select-dialog-actions {
+  margin-top: 45px;
+  margin-bottom: 20px;
+}
+
+.boot-source-select-dialog-actions button:not(:first-child) {
+  margin-left: 10px;
+}
+
+.boot-source-select-dialog-container ::ng-deep .mat-tab-body-content {
+  padding-left: 15px;
+  padding-top: 5px;
+}
+
+.boot-source-radio-group mat-radio-button {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.boot-source-caption {
+  display: block;
+}
+
+.invalid-vol-size {
+  position: absolute;
+  top: 30px;
+}
+
+.selected-source-display {
+  max-width: 200px;
+}
+
+.upload-img-btn {
+  margin-bottom: 10px !important;
+}
+
+@media screen and (max-width: 480px) {
+  .boot-source-select-dialog {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .boot-source-select-backdrop {
+    display: none;
+  }
+}

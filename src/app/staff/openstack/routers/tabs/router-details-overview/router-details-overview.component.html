@@ -1,0 +1,85 @@
+<ng-container *ngIf="object">
+  <p class="fl-detail">ID: {{ object.id }}</p>
+  <p class="fl-detail">Project: {{ object.project_id }}</p>
+  <p class="fl-detail">Region: {{ object.region }}</p>
+  <p *ngIf="object.description" class="fl-detail">Description: {{ object.description }}</p>
+  <p class="fl-detail">External network: {{ object.network_name }}
+    <span *ngIf="object.external_fixed_ips.length">(
+    <span *ngFor="let fixed_ips of object.external_fixed_ips; let last = last">
+      {{ fixed_ips.ip_address }}{{last ? '' : ', '}}
+    </span>)
+  </span>
+  </p>
+  <p class="fl-detail">Status: {{ object.status }}</p>
+  <p class="fl-detail">Enable SNAT:
+    <span *ngIf="object.enable_snat">true</span>
+    <span *ngIf="!object.enable_snat">false</span>
+  </p>
+  <p class="fl-detail">Distributed:
+    <span *ngIf="object.distributed">true</span>
+    <span *ngIf="!object.distributed">false</span>
+  </p>
+  <p class="fl-detail">Admin state up:
+    <span *ngIf="object.admin_state_up">true</span>
+    <span *ngIf="!object.admin_state_up">false</span>
+  </p>
+  <p class="fl-detail">High availability:
+    <span *ngIf="object.ha">true</span>
+    <span *ngIf="!object.ha">false</span>
+  </p>
+
+  <ul class="fl-detail" *ngIf="object.routes.length">
+    Routes:
+    <li class="fl-margin-left" *ngFor="let route of object.routes">
+      Destination: {{ route.destination }} - NextHop: {{ route.nexthop }}
+    </li>
+  </ul>
+
+  <ul class="fl-detail" *ngIf="object.availability_zones.length">
+    Availability zones:
+    <li class="fl-margin-left" *ngFor="let zone of object.availability_zones">
+      {{ zone }}
+    </li>
+  </ul>
+
+  <ul class="fl-detail" *ngIf="object.availability_hints.length">
+    Availability hints:
+    <li class="fl-margin-left" *ngFor="let hint of object.availability_hints">
+      {{ hint }}
+    </li>
+  </ul>
+
+  <div *ngIf="object.interfaces.length">
+    <div class="fl-margin-top">
+      Interfaces
+      <hr>
+    </div>
+    <table class="fl-table fl-detail">
+      <thead>
+      <tr>
+        <th>Fixed IP</th>
+        <th>Admin state up</th>
+        <th class="fl-flex-100">Network</th>
+        <th class="right-align">Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let netInt of object.interfaces">
+        <td>
+          {{ netInt.fixed_ips[0].ip_address }} <br>
+        </td>
+        <td>
+          {{ netInt.admin_state_up }} <br>
+        </td>
+        <td class="fl-flex-100">
+          {{ netInt.network_name }} <br>
+        </td>
+        <td class="right-align">
+          <app-object-actions [objectActions]="interfaceActions[netInt.id]" [maxVisibleActions]="2">
+          </app-object-actions>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>

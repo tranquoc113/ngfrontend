@@ -1,0 +1,107 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="createOptions" [formGroup]="portForm" fxLayout="row" fxLayoutGap="10px">
+  <div fxLayout="column" fxLayoutGap="10px" fxFlex="50" fxFlex.xs="100">
+    <app-form-errors #formErrors [formGroup]="portForm"></app-form-errors>
+
+    <mat-form-field>
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+
+    <mat-checkbox color="primary" formControlName="admin_state_up">
+      Enable admin state
+    </mat-checkbox>
+
+    <mat-form-field>
+      <input matInput placeholder="Network" type="text" formControlName="network" required
+             [matAutocomplete]="autocompleteNetwork" (click)="clearNetwork()">
+      <mat-autocomplete #autocompleteNetwork="matAutocomplete" [displayWith]="networkDisplay">
+        <mat-option *ngFor="let network of filteredNetworks$ | async" [value]="network">
+          {{network.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Project" type="text" formControlName="project" required
+             [matAutocomplete]="autocompleteProject" (click)="clearProject()">
+      <mat-autocomplete #autocompleteProject="matAutocomplete" [displayWith]="projectDisplay">
+        <mat-option *ngFor="let project of filteredProjects$ | async" [value]="project">
+          {{project.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="ip_address_or_subnet" placeholder="IP address or subnet">
+        <mat-option value="">Unspecified</mat-option>
+        <mat-option value="subnet">Subnet</mat-option>
+        <mat-option value="fixed_ip_address">Fixed IP Address</mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['ip_address_or_subnet']}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="portForm.controls.ip_address_or_subnet.value === 'fixed_ip_address'">
+      <input matInput formControlName="selected_fixed_ip_address" placeholder="Fixed IP address" type="text" required>
+      <mat-error>{{fieldErrors['selected_fixed_ip_address']}}</mat-error>
+    </mat-form-field>
+
+    <ng-container *ngIf="portForm.controls.ip_address_or_subnet.value === 'subnet'">
+      <span class="fl-red-color" *ngIf="!portForm.controls.network.value">Select a valid network first!</span>
+      <mat-form-field *ngIf="portForm.controls.network.value">
+        <mat-select formControlName="subnet" placeholder="Select subnet">
+          <mat-option *ngFor="let subnet of portForm.controls.network.value.subnets" [value]="subnet">
+            {{ subnet.name }} - {{ subnet.id }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <mat-form-field>
+      <input matInput placeholder="MAC address" type="text" formControlName="mac_address">
+      <mat-error>{{fieldErrors['mac_address']}}</mat-error>
+    </mat-form-field>
+
+    <mat-checkbox color="primary" formControlName="port_security_enabled">
+      Port security enabled
+    </mat-checkbox>
+
+    <mat-checkbox color="primary" formControlName="auto_add_security_group">
+      Auto add security group
+    </mat-checkbox>
+
+    <mat-form-field>
+      <mat-select formControlName="vnic_type" placeholder="vNIC type">
+        <mat-option *ngFor="let vNICType of createOptions.vnic_types" [value]="vNICType[0]">
+          {{ vNICType[1] }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Binding: Host" type="text" formControlName="host_id">
+      <mat-error>{{fieldErrors['host_id']}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Description" type="text" formControlName="description">
+      <mat-error>{{fieldErrors['description']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="column" fxFlex="50" fxHide.xs>
+    <p>
+      <strong>Project</strong><br>
+      The project that owns the resource. Leave blank to create the resource under admin project.
+    </p>
+    <p>
+      <strong>IP address or subnet</strong><br>
+      If you specify the subnet, OpenStack Networking allocates an available IP from that subnet to
+      the port. If you specify the IP address, OpenStack Networking tries to allocate the IP address
+      if the address is a valid IP for any of the subnets on the specified network.
+    </p>
+    <p>
+      <strong>MAC address</strong><br>
+      The MAC address of the port. If unspecified, a MAC address is automatically generated.
+    </p>
+  </div>
+</form>

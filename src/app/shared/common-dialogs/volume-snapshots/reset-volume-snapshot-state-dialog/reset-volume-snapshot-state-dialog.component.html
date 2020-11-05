@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Update volume snapshot</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form [formGroup]="snapshotForm">
+    <app-form-errors #formErrors [formGroup]="snapshotForm"></app-form-errors>
+    <mat-form-field class="full-width">
+      <mat-select placeholder="New state" formControlName="status" required>
+        <mat-option value="available">Available</mat-option>
+        <mat-option value="error">Error</mat-option>
+      </mat-select>
+      <mat-error>{{backendErrors['state'] || 'Field is required' }}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!snapshotForm.dirty" (click)="createOrUpdate()"
+          [color]="'primary'">
+    Update snapshot
+  </button>
+</div>

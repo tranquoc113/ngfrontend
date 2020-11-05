@@ -1,0 +1,40 @@
+import { IBaseFleioObjectModel } from '../../base-model/base-fleio-object.model';
+import { IClientModel } from '@fleio-api/client-user/model/client.model';
+import { IProjectModel } from '@fleio-api/openstack/model/project.model';
+import { IFlavorModel } from '@fleio-api/openstack/model/flavor.model';
+
+export interface IClusterTemplateModel extends IBaseFleioObjectModel {
+  name: string;
+  floating_ip_enabled: boolean;
+  master_flavor_id: string;
+  insecure_registry: string;
+  no_proxy: string;
+  https_proxy: string;
+  http_proxy: string;
+  updated_at: Date;
+  created_at: Date;
+  tls_disabled: boolean;
+  keypair_id: string;
+  public: boolean;
+  labels: string;
+  docker_volume_size: number;
+  server_type: string;
+  external_network_id: string;
+  fixed_subnet: string;
+  fixed_network: string;
+  dns_nameserver: string;
+  coe: string;
+  flavor_id: string;
+  master_lb_enabled: boolean;
+  cluster_distro: string;
+  image_id: string;
+  volume_driver: string;
+  docker_storage_driver: string;
+  project: IProjectModel;
+  network_driver: string;
+  apiserver_port: number;
+  registry_enabled: boolean;
+  region: string;
+  client: IClientModel;
+  assigned_flavors: Array<IFlavorModel>;
+}

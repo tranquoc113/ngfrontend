@@ -1,0 +1,52 @@
+<div class="dashboard-wrapper" [style]="{height: getHeight()}">
+  <span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>
+        sort
+      </mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before" yPosition="below">
+      <div>
+        <div *ngIf="!removedItems.length" (click)="$event.stopPropagation()">
+          <div class="all-widgets-placed">
+            All available widgets are placed on the dashboard.
+          </div>
+        </div>
+        <span *ngIf="removedItems.length > 0">
+          <button *ngFor="let removedItem of removedItems; let i = index;" mat-menu-item
+                  (click)="$event.stopPropagation();addItem(i);">
+            {{removedItem.title}} widget
+            <mat-icon>add</mat-icon>
+          </button>
+        </span>
+      </div>
+    </mat-menu>
+  </span>
+<gridster #gridsterComponent [options]="options">
+  <gridster-item [item]="item" *ngFor="let item of dashboard" class="mat-elevation-z3">
+    <div class="gridster-item-wrapper" [class.gridster-item-wrapper-padded]="item.addPaddingLeftRight">
+      <div (mousedown)="$event.stopPropagation()" class="gridster-item-title">
+        {{item.title}}
+      </div>
+      <div (mousedown)="$event.stopPropagation()">
+       <ng-template *ngIf="item.component && !!!reloadDict[item.title]" appComponentHost
+                    [component]="item.component"></ng-template>
+        <span *ngIf="!item.component">No component defined</span>
+      </div>
+      <button *ngIf="item.hasReload" class="reload-gridster-item-btn" mat-icon-button
+              [attr.fl-tooltip]="'Reload data'"
+              fl-tooltip-direction="down"
+              (click)="reloadWidgetPanelComponent(item)"
+              (mousedown)="$event.stopPropagation()">
+       <mat-icon>refresh</mat-icon>
+      </button>
+      <button class="remove-gridster-item-btn" mat-icon-button (click)="removeItem($event, item)"
+              [attr.fl-tooltip]="'Hide widget'"
+              fl-tooltip-direction="down"
+              (mousedown)="$event.stopPropagation()">
+       <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </gridster-item>
+</gridster>
+</div>

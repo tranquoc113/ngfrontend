@@ -1,0 +1,55 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="taxRuleForm" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="taxRuleForm"></app-form-errors>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Country" type="text" formControlName="country" required
+           [matAutocomplete]="autocompleteCountry" (click)="clearCountry()">
+    <mat-autocomplete #autocompleteCountry="matAutocomplete">
+      <mat-option *ngFor="let country of filteredCountries | async" [value]="country">
+        {{country}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['country']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-select formControlName="level" placeholder="Level">
+      <mat-option *ngFor="let level of createOptions.levels"
+                  [value]="level[0]">
+        {{level[1]}}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['level']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="State" type="text" formControlName="state">
+    <mat-error>{{fieldErrors['state']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Rate" type="number" formControlName="rate"
+           min="0.01" step="0.01" max="100.00" required>
+    <mat-error>{{fieldErrors['rate']}}</mat-error>
+  </mat-form-field>
+  <div fxLayoutGap="10px">
+    <mat-form-field fxFlex="50">
+      <mat-label>Start date</mat-label>
+      <input matInput [matDatepicker]="dpStartDate" formControlName="start_date" required>
+      <mat-datepicker-toggle matSuffix [for]="dpStartDate"></mat-datepicker-toggle>
+      <mat-datepicker #dpStartDate>
+      </mat-datepicker>
+      <mat-error>{{fieldErrors['start_date']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="50">
+      <mat-label>End date</mat-label>
+      <input matInput [matDatepicker]="dpEndDate" formControlName="end_date">
+      <mat-datepicker-toggle matSuffix [for]="dpEndDate"></mat-datepicker-toggle>
+      <mat-datepicker #dpEndDate>
+      </mat-datepicker>
+      <mat-error>{{fieldErrors['end_date']}}</mat-error>
+    </mat-form-field>
+  </div>
+</form>

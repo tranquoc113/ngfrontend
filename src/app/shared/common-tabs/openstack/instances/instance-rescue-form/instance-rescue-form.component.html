@@ -1,0 +1,41 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="rescueForm" *ngIf="rescueOptions">
+  <app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+  <app-form-errors #formErrors [formGroup]="rescueForm"></app-form-errors>
+  <div fxLayout="row">
+    <div *ngIf="hasImages; else noImages" fxLayout="column" fxFlex="100">
+      <div class="fl-subheader fl-margin-bottom">Select distribution</div>
+      <mat-form-field>
+        <mat-select [(ngModel)]="imageType" [ngModelOptions]="{standalone: true}" placeholder="Image type">
+          <ng-container *ngFor="let imageTypeSelect of imageTypes">
+            <mat-option [value]="imageTypeSelect" *ngIf="rescueOptions.image[imageTypeSelect.value].length">
+              {{imageTypeSelect.display}}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <app-images-as-cards #imagesAsCards [images]="rescueOptions.image[imageType.value]"></app-images-as-cards>
+      <div *ngIf="!bootFromIso" class="fl-subheader fl-margin-top">Root password</div>
+      <div *ngIf="!bootFromIso" fxLayout="row">
+        <mat-form-field fxFlex="50" class="fl-margin-top-medium">
+          <input matInput placeholder="Password" formControlName="root_password"
+                 [attr.type]="showPassword ? 'text' : 'password'">
+          <mat-error>{{fieldErrors['root_password']}}</mat-error>
+        </mat-form-field>
+        <div>
+          <button mat-icon-button class="fl-margin-top"
+                  (mousedown)="showPassword = true"
+                  (mouseup)="showPassword = false"
+                  fl-tooltip="Hold button to reveal password">
+            <mat-icon>
+              visibility
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <ng-template #noImages>
+      <p class="fl-margin-left">No usable images found</p>
+    </ng-template>
+  </div>
+</form>

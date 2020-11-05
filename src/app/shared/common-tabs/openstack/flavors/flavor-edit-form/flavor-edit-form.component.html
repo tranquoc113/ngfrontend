@@ -1,0 +1,76 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="flavorForm" *ngIf="createOptions" class="fl-content">
+  <app-fl-backdrop [verticalAlignMiddle]="true" *ngIf="loading"></app-fl-backdrop>
+  <app-form-errors #formErrors [formGroup]="flavorForm"></app-form-errors>
+  <div fxLayout="column">
+    <p *ngIf="!newFlavor">
+      OpenStack does not support the "modify flavor" operation. It's implemented here through the following workaround:
+      the current flavor is deleted from OpenStack and re-created (with the same UUID if "Preserve existing flavor ID"
+      is checked).
+    </p>
+    <p *ngIf="!newFlavor" class="fl-important-text fl-no-margin-top">
+      Warning: changing flavor name will cause current instances to no longer show flavor features after running a sync.
+      Changing flavor features will not update existing instances info. Also, changing flavor name may cause related
+      pricing rules to no longer work.
+    </p>
+    <mat-checkbox *ngIf="object && object.id" formControlName="preserve_id" color="primary">
+      Preserve existing flavor ID (not recommended for major changes)
+    </mat-checkbox>
+    <div fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Flavor name" type="text" formControlName="name" required>
+        <mat-error>{{fieldErrors['name']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="auto">
+        <mat-select formControlName="region" placeholder="Region" required>
+          <mat-option *ngFor="let region of createOptions.regions"
+                      [value]="region.id">
+            {{region.id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Ram in MB" type="number" min="1"
+               formControlName="memory_mb" required>
+        <mat-error>{{fieldErrors['memory_mb']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Virtual CPUs" type="number"
+               formControlName="vcpus" min="1" required>
+        <mat-error>{{fieldErrors['vcpus']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Disk size (GB)" type="number"
+               formControlName="root_gb" min="0" required>
+        <mat-error>{{fieldErrors['root_gb']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Swap space (MB)" type="number"
+               formControlName="swap" min="0" required>
+        <mat-error>{{fieldErrors['swap']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="auto">
+        <input matInput placeholder="Ephemeral disk space (GB)" type="number"
+               formControlName="ephemeral_gb" min="0" required>
+        <mat-error>{{fieldErrors['ephemeral_gb']}}</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row">
+      <mat-form-field fxFlex="auto">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="10"></textarea>
+      </mat-form-field>
+    </div>
+    <mat-checkbox formControlName="is_public" color="primary">
+      Is public
+    </mat-checkbox>
+    <mat-checkbox formControlName="show_in_fleio" color="primary">
+      Show in end user panel
+    </mat-checkbox>
+    <mat-checkbox formControlName="out_of_stock" color="primary">
+      Out of stock
+    </mat-checkbox>
+  </div>
+</form>

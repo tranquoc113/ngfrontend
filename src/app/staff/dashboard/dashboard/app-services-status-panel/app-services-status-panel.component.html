@@ -1,0 +1,25 @@
+<table class="full-width" mat-table *ngIf="tableData.length && tableLoaded" [dataSource]="tableData">
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="data">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <span class="fl-float-right"
+            fl-tooltip-direction="left"
+            [attr.fl-tooltip]="element.data.tooltip || ''"
+            [class.fl-tag]="element.data.tag"
+            [class.fl-light-green-bg]="element.data.bgColor === AppColor.Green"
+            [class.fl-red-bg]="element.data.bgColor === AppColor.Red"
+            [class.fl-red-color]="element.data.color ===  AppColor.Red"
+            [class.fl-green-color]="element.data.color === AppColor.Green">
+        {{element.data.value}}
+      </span>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

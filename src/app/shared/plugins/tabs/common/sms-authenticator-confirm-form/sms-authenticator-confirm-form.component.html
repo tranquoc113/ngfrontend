@@ -1,0 +1,53 @@
+<div align="center">
+  <form [formGroup]="confirmLoginForm" (ngSubmit)="submit()">
+    <div>
+      <mat-card class="confirm-login-card">
+        <div>
+          <app-logo [darkContext]="false" [linkOptions]="logoLinkOptions" [customStyle]="{
+            width: '140px',
+            height: '70px',
+            marginBottom: '20px'
+          }"></app-logo>
+        </div>
+        <mat-card-title align="left">
+          <span class="card-title">2-Step Verification</span>
+        </mat-card-title>
+        <mat-card-content align="left">
+          <p class="fl-detail">This extra step shows it’s really you trying to sign in</p>
+          <p class="fl-detail" *ngIf="receiver">A verification code was sent to {{receiver}}</p>
+          <p class="fl-margin-top-small fl-detail fl-bold" *ngIf="auth.feature('demo')">
+            In demo mode, any input will log you in.
+          </p>
+          <div>
+            <app-form-errors #formErrors [formGroup]="confirmLoginForm"></app-form-errors>
+            <mat-form-field>
+              <input matInput placeholder="Enter code" autocapitalize="none"
+                     type="text" maxlength="6" formControlName="code" name="code" required>
+              <mat-error>This field is required!</mat-error>
+            </mat-form-field>
+            <mat-checkbox formControlName="rememberSFA" [color]="'primary'">
+              Don't ask again on this computer
+            </mat-checkbox>
+              <p>{{confirmLoginForm.errors}}</p>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div>
+            <button class="sign-in-btn" mat-raised-button [color]="'primary'" type="submit">Sign in</button>
+          </div>
+          <div>
+            <a (click)="sendCode(true)"
+               *ngIf="verificationCodeTimeout" mat-flat-button>Resend verification code</a>
+          </div>
+          <div>
+            <a (click)="goToConfirmOptions()" mat-flat-button>Try another way</a>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </form>
+  <a class="powered-by-link" href="http://fleio.com" target="_blank"
+     *ngIf="auth && auth.userData && !auth.userData.is_white_label">
+    Powered by Fleio
+  </a>
+</div>

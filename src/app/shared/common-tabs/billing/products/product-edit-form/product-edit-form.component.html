@@ -1,0 +1,139 @@
+<div fxLayout="row" fxLayout.lt-md="column" class="fl-content">
+  <div fxFlex="50" fxFlex.lt-md="100">
+    <form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+          [formGroup]="productForm" *ngIf="createOptions" fxLayout="column">
+      <app-form-errors #formErrors [formGroup]="productForm"></app-form-errors>
+      <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="Name" type="text" formControlName="name" required>
+          <mat-error>{{fieldErrors['name']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="Product internal code" type="text" formControlName="code" required>
+          <mat-error>{{fieldErrors['code']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-form-field fxFlex="100">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+        <mat-error>{{fieldErrors['description']}}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="billing_type" placeholder="Billing type">
+          <mat-option *ngFor="let billingType of createOptions.billing_types" [value]="billingType[0]">
+            {{billingType[1]}}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{fieldErrors['billing_type']}}</mat-error>
+      </mat-form-field>
+      <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="group" placeholder="Group">
+            <mat-option *ngFor="let group of createOptions.groups" [value]="group.id">
+              {{group.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['group']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="module" placeholder="Module" (selectionChange)="changedModule()">
+            <mat-option *ngFor="let module of modules" [value]="module.id">
+              {{module.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['module']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="product_type" placeholder="Product type">
+            <mat-option *ngFor="let productType of createOptions.product_types" [value]="productType[0]">
+              {{productType[1]}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['product_type']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="status" placeholder="Status">
+            <mat-option *ngFor="let status of createOptions.statuses" [value]="status[0]">
+              {{status[1]}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['status']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="price_model" placeholder="Price model">
+            <mat-option *ngFor="let priceModel of createOptions.price_models" [value]="priceModel[0]">
+              {{priceModel[1]}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['price_model']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="auto_setup" placeholder="Auto setup">
+            <mat-option *ngFor="let autoSetup of createOptions.auto_setups" [value]="autoSetup[0]">
+              {{autoSetup[1]}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['auto_setup']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-checkbox formControlName="taxable" color="primary">
+        Apply taxes to this product
+      </mat-checkbox>
+      <mat-checkbox formControlName="requires_domain" color="primary">
+        This product requires a domain
+      </mat-checkbox>
+      <mat-checkbox formControlName="hide_services" color="primary">
+        Hide services for this product in enduser panel
+      </mat-checkbox>
+      <app-plugin-ui *ngIf="plugin" [pluginName]="plugin" [panelName]="panelLayout.panel"
+                     componentName="ProductSettings"
+                     [componentData]="{
+                        productModuleSettingsHelper: productModuleSettingsHelper,
+                        productModuleSettings: productModuleSettings
+                     }">
+      </app-plugin-ui>
+    </form>
+  </div>
+  <div fxFlex="50" fxFlex.lt-md="100" [ngClass.lt-md]="'fl-margin-top'">
+    <div class="fl-help-text">
+      <h3>Configure a new product</h3>
+      <p>A new product can be added as soon as its module is available.<br>
+        The first thing to do is to add a <span class="fl-bold">Name</span> and a
+        required <span class="fl-bold">Internal Code</span><br>
+        The <span class="fl-bold">Description</span> is optional and if filled in, it will appear next to a
+        product name in the shopping cart and on invoices.</p>
+    </div>
+    <div class="fl-help-text">
+      <h3>Group & Module</h3>
+      <p>
+        Select an appropriate group for this product and its module.<br>
+        The module determines how and where a new Service will be created.<br>
+        For example, selecting the OpenStack module means this is an OpenStack
+        product and once ordered and paid, a new OpenStack Project will be created
+        for the client.</p>
+    </div>
+    <div class="fl-help-text">
+      <h3>Type & Status</h3>
+      <p>
+        Select the appropriate type of this product and its <span class="fl-bold">Status</span><br>
+        The status of the product, determines its visibility and availability to clients. <br>
+        A <span class="fl-bold">Public</span> status makes the product visible to everyone while a
+        <span class="fl-bold">Private</span> status will allow only administrators of Fleio to create a service
+        with this product for a specified client.</p>
+    </div>
+    <div class="fl-help-text">
+      <h3>Price model</h3>
+      <p>The most important options here are <strong>Fixed plus dynamic</strong> and
+        <span class="fl-bold">Dynamic but at least fixed</span><br>
+        If the <span class="fl-bold">Fixed plus dynamic</span> price model is used the service price will be the sum
+        of fixed price and dynamic price.<br>
+        If the <span class="fl-bold">Dynamic but at least fixed</span> price model is used the service price will be
+        the fixed price if the fixed price is greater than dynamic price or dynamic price if dynamic price
+        is greater than the fixed price.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+<!-- Display when there are flavors inside a flavor group -->
+<mat-tab-group *ngIf="groupsList.length > 1" [animationDuration]="0">
+  <mat-tab *ngFor="let group of groupsList">
+    <ng-template mat-tab-label>
+      {{group.name}}
+      <app-icon [matTooltip]="group.description" *ngIf="group.description"
+                [matTooltipPosition]="'above'"
+                class="tab-description-icon"
+                [icon]="{name: 'info', class: 'fl-icons'}"></app-icon>
+    </ng-template>
+    <div class="fl-content-flavors-boxes">
+      <div fxLayout="row" class="cards-wrap">
+        <div *ngFor="let flavor of groups[group.name]"
+             (click)="flavorClick(flavor);"
+             class="fl-flavor-card-container"
+             [class.fl-flavor-card-container-disabled]="flavor.out_of_stock === true"
+             [class.fl-selected-checkmark]="selectedFlavor && selectedFlavor.id === flavor.id"
+             [class.out_of_stock_flavor_card]="flavor.out_of_stock === true">
+          <mat-icon class="fl-icons fl-flavor-selected-checkmark mat-primary">check</mat-icon>
+          <mat-icon *ngIf="flavorIncompatibility === true"
+                   class="fl-flavor-selected-checkmark fl-flavor-selected-checkmark-warning mat-primary">
+            warning
+          </mat-icon>
+          <div class="flavor-card"
+               [class.fl-selected]="selectedFlavor && selectedFlavor.id === flavor.id"
+               [class.fl-selected-warning]="flavorIncompatibility === true">
+            <div class="fl-ellipsis-text">
+              <span title="{{flavor.name}}" class="flavor-title">
+                {{flavor.name}}
+              </span>
+            </div>
+            <mat-divider></mat-divider>
+            <div>
+              <span class="flavor-out-of-stock-txt fl-red-color" *ngIf="flavor.out_of_stock">
+                Flavor is out of stock
+              </span>
+              <div class="flavor-card-info-row"
+                   *ngFor="let description of flavor.description.split('\n')">
+                <span>{{description}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+<!-- Display when there are no flavors inside a flavor group -->
+<div class="cards-wrap" fxLayout="row" *ngIf="groupsList.length === 1">
+  <div *ngFor="let flavor of groups[groupsList[0].name]"
+       (click)="flavorClick(flavor);"
+       class="fl-flavor-card-container"
+       [class.fl-flavor-card-container-disabled]="flavor.out_of_stock === true"
+       [class.fl-selected-checkmark]="selectedFlavor && selectedFlavor.id === flavor.id"
+       [class.out_of_stock_flavor_card]="flavor.out_of_stock === true">
+    <mat-icon class="fl-icons fl-flavor-selected-checkmark mat-primary">check</mat-icon>
+    <mat-icon *ngIf="flavorIncompatibility === true"
+             class="fl-flavor-selected-checkmark fl-flavor-selected-checkmark-warning mat-primary">
+      warning
+    </mat-icon>
+    <div class="flavor-card"
+         [class.fl-selected]="selectedFlavor && selectedFlavor.id === flavor.id"
+         [class.fl-selected-warning]="flavorIncompatibility === true">
+      <div class="fl-ellipsis-text">
+        <span title="{{flavor.name}}" class="flavor-title">
+          {{flavor.name}}
+        </span>
+      </div>
+      <mat-divider></mat-divider>
+      <div>
+        <span class="flavor-out-of-stock-txt fl-red-color" *ngIf="flavor.out_of_stock">
+          Flavor is out of stock
+        </span>
+        <div class="flavor-card-info-row"
+             *ngFor="let description of flavor.description.split('\n')">
+          <span>{{description}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

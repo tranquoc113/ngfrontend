@@ -1,0 +1,98 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)" [formGroup]="serviceForm">
+  <app-form-errors #formErrors [formGroup]="serviceForm"></app-form-errors>
+  <div fxLayout="column">
+    <p class="fl-detail" *ngIf="object && object.client">
+      Client:
+      <a class="active-link"
+         routerLink="{{config.getPanelUrl('clients-users/clients/' + object.client.id)}}">
+        {{object.client.name}}
+      </a>
+    </p>
+
+    <mat-form-field>
+      <input matInput placeholder="Display name" type="text" formControlName="display_name" required>
+      <mat-error>{{fieldErrors['display_name']}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Product" aria-label="Product" [matAutocomplete]="autocompleteProduct"
+             (click)="clickedProductInput()" formControlName="product" required>
+      <mat-autocomplete #autocompleteProduct="matAutocomplete" [displayWith]="displayProductFn">
+        <mat-option *ngFor="let product of filteredProducts$ | async" [value]="product">
+          {{product.name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{backendErrors['product'] || 'This field is required!' }}</mat-error>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="is_free" [color]="'primary'" class="fl-margin-bottom-small">
+      Is free
+    </mat-checkbox>
+
+    <mat-form-field>
+      <mat-select formControlName="cycle" placeholder="Cycle">
+        <mat-option *ngFor="let cycle of product.value.cycles" [value]="cycle.id">
+          {{cycle.display_name}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{backendErrors['cycle'] || 'This field is required'}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <textarea matInput rows="3" maxlength="255"
+                placeholder="Notes" formControlName="notes">
+      </textarea>
+      <mat-error>{{fieldErrors['notes']}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Override price" type="number" formControlName="override_price">
+      <mat-error>{{fieldErrors['override_price']}}</mat-error>
+    </mat-form-field>
+
+    <div fxLayout="row">
+      <div fxFlex="50">
+        <mat-form-field>
+          <input matInput [matDatepicker]="overrideSuspendUntilDatePicker"
+                 formControlName="override_suspend_until" placeholder="Do not suspend until">
+          <mat-datepicker-toggle matSuffix [for]="overrideSuspendUntilDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #overrideSuspendUntilDatePicker></mat-datepicker>
+          <mat-error>{{ fieldErrors['override_suspend_until']}}</mat-error>
+        </mat-form-field>
+        <a mat-icon-button fl-tooltip="Clear do not suspend until date"
+                (click)="serviceForm.controls.override_suspend_until.setValue(null)">
+          <mat-icon>delete</mat-icon>
+        </a>
+      </div>
+
+      <div fxFlex="50">
+        <mat-form-field>
+          <input matInput [matDatepicker]="nextDueDatePicker"
+                 formControlName="current_service_cycle_end" placeholder="Current cycle end">
+          <mat-datepicker-toggle matSuffix [for]="nextDueDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #nextDueDatePicker></mat-datepicker>
+          <mat-error>{{ fieldErrors['current_service_cycle_end']}}</mat-error>
+        </mat-form-field>
+        <a mat-icon-button fl-tooltip="Clear current cycle end"
+                (click)="serviceForm.controls.current_service_cycle_end.setValue(null)">
+          <mat-icon>delete</mat-icon>
+        </a>
+      </div>
+    </div>
+    <div fxLayout="row">
+      <div fxFlex="50">
+        <mat-form-field>
+          <input matInput [matDatepicker]="nextExpirationDatePicker"
+                 formControlName="next_expiration_date" placeholder="Next expiration date">
+          <mat-datepicker-toggle matSuffix [for]="nextExpirationDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #nextExpirationDatePicker></mat-datepicker>
+          <mat-error>{{ fieldErrors['next_expiration_date']}}</mat-error>
+        </mat-form-field>
+        <a mat-icon-button fl-tooltip="Clear next expiration date"
+                (click)="serviceForm.controls.next_expiration_date.setValue(null)">
+          <mat-icon>delete</mat-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+</form>

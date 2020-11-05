@@ -1,0 +1,17 @@
+<h1 *ngIf="data" mat-dialog-title>Edit message</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form [formGroup]="editTicketMessageForm" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="editTicketMessageForm" [maxWidth]="'300px'"></app-form-errors>
+    <div class="fl-tinymce-placeholder">
+      <editor [init]="tinyMCEOptions" formControlName="reply_text"></editor>
+    </div>
+    <mat-error>{{backendErrors['reply_text'] || backendErrors['note_text']}}</mat-error>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="save()"
+          [color]="'primary'">
+    Save message
+  </button>
+</div>

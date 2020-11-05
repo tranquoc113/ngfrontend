@@ -1,0 +1,14 @@
+<div fxLayout="row" fxLayout.xs="column" class="fl-content fl-content-min-height">
+  <div fxLayout="column" fxFlex="50" *ngIf="object">
+    <p class="fl-detail">First name:&nbsp;{{ object.first_name }}</p>
+    <p class="fl-detail">Last name:&nbsp;{{ object.last_name }}</p>
+    <p class="fl-detail">Username:&nbsp;{{ object.username }}</p>
+    <p class="fl-detail">Email:&nbsp;{{ object.email }}</p>
+    <p class="fl-detail">ID:&nbsp;{{ object.id }}</p>
+    <p class="fl-detail">Last login:&nbsp;{{ (object.last_login | date : 'medium') || 'never' }}</p>
+    <p class="fl-detail">Date joined:&nbsp;{{ object.date_joined | date: 'medium' }}</p>
+    <span class="fl-tag fit-content" *ngIf="object.is_reseller">reseller</span>
+    <span class="fl-tag fit-content fl-margin-top-medium" *ngIf="object.is_staff">staff</span>
+    <span class="fl-tag fit-content fl-margin-top-medium" *ngIf="object.is_superuser">superuser</span>
+  </div>
+</div>

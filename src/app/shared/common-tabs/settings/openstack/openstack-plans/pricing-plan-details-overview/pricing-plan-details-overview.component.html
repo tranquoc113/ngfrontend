@@ -1,0 +1,63 @@
+<div *ngIf="object && !object.pricing_rules.length" class="fl-detail fl-margin-top">
+  No pricing rules.
+</div>
+<div fxLayout="row" *ngIf="object && object.pricing_rules.length">
+  <table mat-table [dataSource]="object.pricing_rules" class="full-width">
+    <ng-container matColumnDef="display_name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{element.display_name}}</td>
+    </ng-container>
+    <ng-container matColumnDef="resource_name">
+      <th mat-header-cell *matHeaderCellDef>Resource</th>
+      <td mat-cell *matCellDef="let element">{{element.resource_name}}</td>
+    </ng-container>
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef>Price</th>
+      <td mat-cell *matCellDef="let element">
+        <ng-container *ngIf="element.tiered_price.length === 1">
+          {{element.price}} ({{object.currency}}) / {{element.pricing_attribute}} {{element.display_unit}}
+        </ng-container>
+        <ng-container *ngIf="element.tiered_price.length > 1">Tiered pricing</ng-container>
+        <span *ngIf="element.modifiers_count === 1"> + 1 modifier</span>
+        <span *ngIf="element.modifiers_count > 1"> + {{element.modifiers_count}} modifiers</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="start_dt">
+      <th mat-header-cell *matHeaderCellDef>Start date</th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.resource_type !== 'internal';else internalResource">
+          <span *ngIf="element.start_dt">{{element.start_dt | date:'mediumDate'}}</span>
+          <span *ngIf="!element.start_dt">&#8734;</span>
+        </span>
+        <ng-template #internalResource>n/a</ng-template>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="end_dt">
+      <th mat-header-cell *matHeaderCellDef>End date</th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.resource_type !== 'internal';else internalResource">
+          <span *ngIf="element.end_dt">{{element.end_dt | date:'mediumDate'}}</span>
+          <span *ngIf="!element.end_dt">&#8734;</span>
+        </span>
+        <ng-template #internalResource>n/a</ng-template>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="right-align">Actions</th>
+      <td mat-cell *matCellDef="let element" class="right-align">
+        <a mat-icon-button
+           fl-tooltip="Edit pricing rule"
+           [routerLink]="config.getPanelUrl('settings/pricing-rules/' + element.id + '/edit')">
+          <mat-icon>edit</mat-icon>
+        </a>
+        <a mat-icon-button
+           fl-tooltip="Delete pricing rule"
+           (click)="deletePricingRule(element.id)">
+          <mat-icon>delete</mat-icon>
+        </a>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

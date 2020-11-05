@@ -1,0 +1,30 @@
+<div *ngIf="object" fxLayout="row" class="fl-content fl-content-min-height">
+  <div fxLayout="column" fxFlex="50">
+    <p class="fl-detail">ID: {{object.id}}</p>
+    <p *ngIf="object.client" class="fl-detail">Client:&nbsp;
+      <a [routerLink]="config.getPanelUrl('clients-users/clients/' + object.client.id)" class="active-link">
+        {{object.client.name}}
+      </a>
+    </p>
+    <p class="fl-detail">Size: {{object.size / (1024 * 1024 * 1024) | number: '.1-2'}} GB</p>
+    <p class="fl-detail">Minimum memory: {{object.min_ram}} MB</p>
+    <p class="fl-detail">Minimum disk size: {{object.min_disk}} GB</p>
+    <p class="fl-detail">Created at: {{object.created_at | date}}</p>
+    <p class="fl-detail">Updated at: {{object.updated_at | date}}</p>
+    <p class="fl-detail">Architecture: {{object.architecture}}</p>
+    <p class="fl-detail">Container format: {{object.container_format}}</p>
+    <p class="fl-detail">Disk format: {{object.disk_format}}</p>
+    <p class="fl-detail">OS distro: {{object.os_distro}}</p>
+    <p class="fl-detail">Hypervisor type: {{object.hypervisor_type}}</p>
+    <p class="fl-detail">OS version: {{object.os_version}}</p>
+    <p class="fl-detail">Status: {{object.status}}</p>
+    <p class="fl-detail">Visibility: {{object.visibility}}</p>
+  </div>
+  <div fxLayout="column" fxFlex="50" class="wrap-text-content">
+    <p class="fl-detail">Properties:</p>
+    <div fxLayout="row" *ngFor="let property of object.properties | keyvalue" class="property-row">
+      <p fxFlex="50" class="fl-detail">{{property.key}}:</p>
+      <p fxFlex="50" class="fl-detail">{{property.value}}</p>
+    </div>
+  </div>
+</div>

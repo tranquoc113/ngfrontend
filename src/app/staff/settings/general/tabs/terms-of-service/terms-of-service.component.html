@@ -1,0 +1,94 @@
+<div class="fl-padding-left fl-content fl-no-padding-bottom" fxLayout="column">
+  <h2 class="mat-headline">Settings</h2>
+  <div fxLayout="row" fxLayout.lt-md="column" fxFlex="100">
+    <div fxLayout="column" fxFlex="100">
+      <form appFormSubmit (ngSubmit)="saveTosSettings()"
+            fxLayout="column" [formGroup]="tosSettingsForm">
+        <mat-checkbox [color]="'primary'" formControlName="require_end_users_to_agree_with_latest_tos"
+                      class="fl-margin-bottom">
+          Ask end-users to agree with latest TOS
+        </mat-checkbox>
+
+        <mat-form-field>
+          <input matInput placeholder="Ask again after (minutes)" type="number" formControlName="ask_again_after"
+                 required min="0" step="1">
+          <mat-error>{{backendErrors['ask_again_after'] || 'This field is required!' }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Forbid access after (YYYY-MM-DD h:m:s)" type="text"
+                 formControlName="forbid_access_after">
+        </mat-form-field>
+      </form>
+
+    </div>
+    <div class="fl-margin-top" fxHide.gt-sm></div>
+    <div fxFlex="50" class="fl-help-text">
+      <h3>Ask end-users to agree with latest TOS</h3>
+      <p>Users will be redirected to the terms of service page that shows the latest version TOS you defined
+        (that is not marked as draft).</p>
+      <h3>Ask again after (minutes)</h3>
+      <p>After user has been notified about new terms of service, he would only be asked again after the time
+        you defined in minutes has passed or when he logs in again.</p>
+      <h3>Forbid access after (YYYY-MM-DD h:m:s)</h3>
+      <p>After this date, user won't be able to use the fleio panel anymore unless he agrees with terms
+        and conditions.</p>
+    </div>
+  </div>
+  <div fxLayout="column">
+    <h2 class="mat-headline fl-margin-top">Terms of service</h2>
+    <div *ngIf="termsOfService" fxLayout="row">
+      <table mat-table [dataSource]="termsOfService.objects" class="full-width fl-padding-right">
+        <ng-container matColumnDef="version">
+          <th mat-header-cell *matHeaderCellDef>Version</th>
+          <td mat-cell *matCellDef="let tos">
+            {{tos.version}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <td mat-cell *matCellDef="let tos">
+            <span *ngIf="tos.title.length < 30; else longTitle">
+              {{tos.title}}
+            </span>
+            <ng-template #longTitle>
+              {{tos.title | slice: 0: 30}} ...
+            </ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="content">
+          <th mat-header-cell *matHeaderCellDef>Content</th>
+          <td mat-cell *matCellDef="let tos">
+            <div [innerHTML]="tos.content" class="tos-content"></div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="draft">
+          <th mat-header-cell *matHeaderCellDef>Draft</th>
+          <td mat-cell *matCellDef="let tos">
+            {{tos.draft | yesNo}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="(actions)">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let tos">
+            <app-object-actions [objectActions]="tosActions[tos.id]" [maxVisibleActions]="2">
+            </app-object-actions>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+    <div fxLayout="row" class="fl-margin-top">
+      <button mat-button id="add_new_terms_of_service" [color]="'primary'"
+              [routerLink]="[this.config.getPanelUrl('settings/general/new-tos')]">
+        Add new terms of service
+      </button>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end right" class="fl-margin-top">
+    <button mat-button id="save_tos_settings" (click)="saveTosSettings()" [color]="'primary'">
+      Save settings
+    </button>
+  </div>
+</div>

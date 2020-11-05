@@ -1,0 +1,28 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="pricingPlanForm" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="pricingPlanForm"></app-form-errors>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-select formControlName="currency" placeholder="Currency">
+      <mat-option *ngFor="let currency of createOptions.currencies" [value]="currency.code">{{currency.code}}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['currency']}}</mat-error>
+  </mat-form-field>
+  <div class="half-width half-width-spacing checkbox-container">
+    <mat-checkbox [color]="'primary'" formControlName="is_default">
+      Is default
+    </mat-checkbox>
+    <mat-error>{{fieldErrors['is_default']}}</mat-error>
+  </div>
+  <mat-form-field class="full-width" *ngIf="initialDefault && !isDefault.value">
+    <mat-select formControlName="other_default" placeholder="New default plan">
+      <mat-option *ngFor="let otherPlan of createOptions.non_default_plans" [value]="otherPlan.id">{{otherPlan.name}}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['other_default']}}</mat-error>
+  </mat-form-field>
+</form>

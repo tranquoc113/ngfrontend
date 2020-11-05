@@ -1,0 +1,52 @@
+<mat-card class="object-card" *ngIf="cardData" fxLayout="column">
+  <a *ngIf="cardData.detailsLink.enabled" [routerLink]="cardData.detailsLink.url" class="obj-card-link"></a>
+  <app-status-line *ngIf="cardData.header.status" [type]="cardData.header.status.type | lineType"
+                   [color]="cardData.header.status.value | lineColor">
+  </app-status-line>
+  <mat-card-header class="object-card-header" fxLayout="column">
+    <div *ngIf="cardData.header.icon" mat-card-avatar
+         [class.push-mat-avatar]="!!cardData.header.title.subText && !cardData.header.icon.gravatarEmail">
+      <app-icon *ngIf="!cardData.header.icon.gravatarEmail"
+                class="object-card-header-icon" [icon]="cardData.header.icon"></app-icon>
+      <app-gravatar *ngIf="cardData.header.icon.gravatarEmail"
+                    [email]="cardData.header.icon.gravatarEmail" [customStyle]="{width: '45px'}">
+      </app-gravatar>
+    </div>
+    <mat-card-title class="object-card-title" [attr.fl-tooltip]="cardData.header.title.text">
+        <span class="fl-ellipsis-text" [class.fl-bold]="cardData.header.title.textBold">
+          {{cardData.header.title.text}}
+        </span>
+    </mat-card-title>
+    <mat-card-subtitle fxLayout="column">
+      <div>
+            <span [class.fl-ellipsis-text]="!!!cardData.header.title.subTextIcon">
+              {{cardData.header.title.subText}}
+              <app-icon *ngIf="cardData.header.title.subTextIcon" class="subtext-icon"
+                        [attr.fl-tooltip]="cardData.header.title.subTextIconTooltip"
+                        [icon]="cardData.header.title.subTextIcon"></app-icon>
+            </span>
+      </div>
+      <div class="object-tags" fxLayout="row" fxLayoutGap="5px">
+          <span *ngFor="let tag of cardData.header.tags" class="fl-tag" translate>
+            {{tag}}
+          </span>
+      </div>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="object-card-content" fxLayout="column">
+    <div *ngIf="cardData.fields.length > 0">
+      <div *ngFor="let field of cardData.fields" class="fl-ellipsis-text">
+        <span *ngIf="field.name">{{field.name}}:&nbsp;</span>
+        <a *ngIf="field.url; else noLink" class="active-link field-link" [href]="field.url">
+          <span [classList]="field.valueTextAdditionalClasses">{{field.value}}</span>
+        </a>
+        <ng-template #noLink>
+          <span [classList]="field.valueTextAdditionalClasses">{{field.value}}</span>
+        </ng-template>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions class="object-card-actions">
+    <app-object-actions [objectActions]="cardData.actions" [maxVisibleActions]="4"></app-object-actions>
+  </mat-card-actions>
+</mat-card>

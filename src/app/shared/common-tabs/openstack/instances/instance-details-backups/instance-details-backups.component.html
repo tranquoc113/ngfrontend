@@ -1,0 +1,87 @@
+<div class="fl-content fl-content-min-height" fxLayout="row" fxLayoutGap="10px" fxLayout.lt-md="column">
+  <div fxLayout="column" fxFlex="100">
+    <div class="fl-subheader-md fl-margin-left-small">
+      Backups
+    </div>
+    <p *ngIf="backups.length < 1" class="fl-detail fl-margin-left-small">
+      No backups for this instance
+    </p>
+    <table *ngIf="backups.length" class="full-width" mat-table [dataSource]="backups">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">
+          <a class="active-link" [routerLink]="[config.getPanelUrl('openstack/images'), element.id]">
+            {{element.name}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="backup_type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let element">
+          <span>
+            {{ element.backup_type }}
+          </span>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="backupsDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: backupsDisplayedColumns;"></tr>
+    </table>
+    <div class="fl-margin-top">
+      <button color="primary"
+              [disabled]="!permissions['instances.create_backup']"
+              (click)="openCreateBackupDialog()" mat-button>
+        Create new backup
+      </button>
+    </div>
+
+  </div>
+  <div fxLayout="column" fxFlex="100">
+    <div class="fl-subheader-md fl-margin-left-small">
+      Backup schedules
+    </div>
+    <p *ngIf="schedules.length < 1" class="fl-detail fl-margin-left-small">
+      No backup schedules for this instance
+    </p>
+    <table *ngIf="schedules.length" class="full-width" mat-table [dataSource]="schedules">
+      <ng-container matColumnDef="backup_name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">
+          <span>
+            {{element.backup_name}}
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="backup_type">
+        <th mat-header-cell *matHeaderCellDef>Rotation / Type</th>
+        <td mat-cell *matCellDef="let element">
+          <span>
+            {{element.rotation}} / {{ element.backup_type }}
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="run_at">
+        <th mat-header-cell *matHeaderCellDef>Next run (UTC)</th>
+        <td mat-cell *matCellDef="let element">
+          <span>
+            {{element.run_at | date: 'medium' : 'UTC'}}
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button (click)="deleteSchedule(element)" mat-icon-button [attr.fl-tooltip]="'Delete schedule'">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="schedulesDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: schedulesDisplayedColumns;"></tr>
+    </table>
+    <div class="fl-margin-top">
+      <button color="primary" (click)="openCreateBackupScheduleDialog()" mat-button>
+        Create new backup schedule
+      </button>
+    </div>
+  </div>
+</div>

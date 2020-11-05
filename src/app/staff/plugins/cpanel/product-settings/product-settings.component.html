@@ -1,0 +1,20 @@
+<div class="fl-subheader-md fl-margin-top fl-margin-bottom-small">cPanel module configuration</div>
+
+<form [formGroup]="productSettingsForm" fxLayout="column">
+  <mat-form-field>
+    <input matInput placeholder="cPanel package ID" maxlength="128" type="number" min="1"
+           formControlName="cpanel_package_id" required>
+    <mat-error>{{backendErrors['cpanel_package_id'] || 'This field is required'}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="cPanel group ID" maxlength="128" type="number"
+           min="1" formControlName="cpanel_group_id" required>
+    <mat-error>{{backendErrors['cpanel_group_id'] || 'This field is required'}}</mat-error>
+  </mat-form-field>
+</form>
+<div class="fl-margin-top-medium">
+  <p class="fl-detail"><span class="fl-bold">cPanel licensing package configuration</span><br>
+    The cPanel license Package ID and Group ID for licenses issued with this package are configurable here.
+  </p>
+  <p class="fl-detail">Make sure CPANEL_USERNAME and CPANEL_PASSWORD are set in settings.py</p>
+</div>

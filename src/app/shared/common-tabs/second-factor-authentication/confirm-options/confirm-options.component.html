@@ -1,0 +1,33 @@
+<div align="center">
+  <div>
+    <mat-card class="confirm-login-card">
+      <div>
+        <app-logo [darkContext]="false" [linkOptions]="logoLinkOptions" [customStyle]="{
+          width: '140px',
+          height: '70px',
+          marginBottom: '20px'
+        }"></app-logo>
+      </div>
+      <mat-card-title align="left">
+        <span class="card-title">2-Step Verification</span>
+      </mat-card-title>
+      <mat-card-content align="left">
+        <p class="fl-detail">Choose a second factor authentication method</p>
+        <div fxLayout="column" class="fl-margin-top fl-margin-bottom">
+          <div *ngFor="let sfaOption of sfaLoginDataService.sfaMethods; let i = index"
+               class="full-width sfa-option sfa-option-{{sfaOption.name}}"
+               [class.fl-margin-top-small]="i > 0">
+            <a (click)="redirectToOptionConfirmDetails(sfaOption.name)">
+              <span>{{sfaOption.display_name}}</span>
+              <span class="sfa-help-text">{{sfaOption.help_text}}</span>
+            </a>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <a class="powered-by-link" href="http://fleio.com" target="_blank"
+     *ngIf="auth && auth.userData && !auth.userData.is_white_label">
+    Powered by Fleio
+  </a>
+</div>

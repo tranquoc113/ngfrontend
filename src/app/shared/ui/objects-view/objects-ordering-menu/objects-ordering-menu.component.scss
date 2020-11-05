@@ -1,0 +1,16 @@
+.ordering-menu-button {
+  margin-top: 4px;
+  margin-right: 12px;
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+.mat-menu-item {
+  line-height: 34px;
+  height: 34px;
+  font-size: 14px;
+}
+
+.ordering-menu-button > *, .ordering-menu-items > * {
+  vertical-align: middle;
+}

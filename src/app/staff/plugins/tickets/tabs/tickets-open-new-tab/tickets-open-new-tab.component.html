@@ -1,0 +1,101 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="openTicketForm" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="openTicketForm"></app-form-errors>
+  <div fxLayout="column">
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Title" type="text" formControlName="title" required>
+      <mat-error>{{fieldErrors['title']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="priority" placeholder="Priority" required>
+        <mat-option *ngFor="let priorityKey of prioritiesKeys" [value]="priorityKey">
+          {{createOptions.priorities[priorityKey]}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Department" aria-label="Department" [matAutocomplete]="depAuto"
+             (click)="clickedAutocompleteInput('department')"
+             formControlName="department" required>
+      <mat-autocomplete #depAuto="matAutocomplete" [displayWith]="displayDepartmentFn">
+        <mat-option *ngFor="let department of filteredDepartments" [value]="department">
+          <span>{{department.name || department.id}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['department']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <mat-form-field fxFlex="50">
+      <mat-select formControlName="status" placeholder="Status" required>
+        <mat-option *ngFor="let statusKey of statusesKeys" [value]="statusKey">
+          {{createOptions.statuses[statusKey]}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field fxFlex="50">
+      <mat-select formControlName="internal_status" placeholder="Internal status">
+        <mat-option *ngFor="let internalStatusKey of internalStatusesKeys" [value]="internalStatusKey">
+          {{createOptions.internal_statuses[internalStatusKey]}}
+        </mat-option>
+        <mat-option [value]="''">
+          None
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div fxLayout="column">
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="CC recipients (comma separated)" type="text" formControlName="cc_recipients">
+      <mat-error>{{fieldErrors['cc_recipients'] }}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Client" aria-label="Client" [matAutocomplete]="clientAuto"
+             (click)="clickedAutocompleteInput('client')"
+             formControlName="client">
+      <mat-autocomplete #clientAuto="matAutocomplete" [displayWith]="displayClientFn">
+        <mat-option *ngFor="let client of filteredClients" [value]="client">
+          <app-gravatar [email]="client.email" [customStyle]="{
+            width: '24px',
+            borderRadius: '100%',
+            marginLeft: '5px',
+            marginRight: '15px',
+            verticalAlign: 'middle'
+          }"></app-gravatar>
+          <span>{{client.name || client.id}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['client'] }}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Assigned to" aria-label="Assigned to" [matAutocomplete]="assignedToAuto"
+             (click)="clickedAutocompleteInput('assigned_to')"
+             formControlName="assigned_to">
+      <mat-autocomplete #assignedToAuto="matAutocomplete" [displayWith]="displayAssignedToFn">
+        <mat-option *ngFor="let user of filteredUsers" [value]="user">
+          <app-gravatar [email]="user.email" [customStyle]="{
+            width: '24px',
+            borderRadius: '100%',
+            marginLeft: '5px',
+            marginRight: '15px',
+            verticalAlign: 'middle'
+          }"></app-gravatar>
+          <span>{{user.username || user.id}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['assigned_to'] }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="column">
+    <p class="fl-subheader-md">Description</p>
+    <div class="fl-tinymce-placeholder">
+      <editor [init]="tinyMCEOptions" formControlName="description"></editor>
+    </div>
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </div>
+  <div fxLayout="column">
+    <p class="fl-subheader-md fl-no-margin-bottom">Add attachments</p>
+    <app-upload-interface [maxSize]="createOptions.MAX_TICKET_ATTACHMENT_SIZE"
+                          [multipleFileSelectors]="true" #uploadInterface></app-upload-interface>
+  </div>
+</form>

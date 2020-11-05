@@ -1,0 +1,42 @@
+<div class="min-height-content fl-content fl-detail">
+  <app-fl-backdrop *ngIf="loadServices === true"></app-fl-backdrop>
+  <table *ngIf="servicesVersions" class="fl-table fl-smaller-rows-table">
+    <thead>
+    <th>Service</th>
+    <th class="text-center">Found version</th>
+    <th class="text-center" fxShow.xs="false">Minimum supported version</th>
+    <th class="text-center" fxShow.xs="false">Maximum supported version</th>
+    <th class="right-align">Supported?</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let serviceName of servicesVersionsKeys">
+      <td>{{ serviceName }}</td>
+      <td class="text-center">
+        {{ servicesVersions[serviceName].version ? servicesVersions[serviceName].version : "-"}}
+      </td>
+      <td class="text-center" fxShow.xs="false">{{ servicesVersions[serviceName].min_version }}</td>
+      <td class="text-center" fxShow.xs="false">{{ servicesVersions[serviceName].max_version }}</td>
+      <td *ngIf="!servicesVersions[serviceName].version" class="right-align no-overflow-hidden">
+        <i [attr.fl-tooltip]="'Some Fleio functionality needs this service'" fl-tooltip-direction="left"
+           class="material-icons fl-red-color">
+          priority_high
+        </i>
+      </td>
+      <td class="right-align no-overflow-hidden"
+          *ngIf="isServiceVersionSupported(servicesVersions[serviceName]) && servicesVersions[serviceName].version">
+        <i [attr.fl-tooltip]="'Version is compatible with Fleio'" fl-tooltip-direction="left"
+           class="material-icons fl-green-color">
+          check
+        </i>
+      </td>
+      <td class="right-align no-overflow-hidden"
+          *ngIf="!isServiceVersionSupported(servicesVersions[serviceName]) && servicesVersions[serviceName].version">
+        <i [attr.fl-tooltip]="'Version is not compatible with Fleio'" fl-tooltip-direction="left"
+           class="material-icons fl-red-color">
+          priority_high
+        </i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

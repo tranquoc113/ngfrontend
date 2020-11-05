@@ -1,0 +1,17 @@
+<h1 *ngIf="invoice" mat-dialog-title>Delete invoice?</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <p *ngIf="allowDelete === true">
+    Are you sure you want to delete invoice {{invoice.display_number}}?
+  </p>
+  <div *ngIf="allowDelete === false">
+    <p>There are still transactions associated with this invoice.</p>
+    <p>Please delete or refund any transactions before deleting invoice.</p>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="delete()" [disabled]="!(allowDelete === true)"
+          [color]="'primary'">
+    Delete
+  </button>
+</div>

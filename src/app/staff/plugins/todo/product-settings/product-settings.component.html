@@ -1,0 +1,40 @@
+<div class="fl-subheader-md fl-margin-top">TODO module configuration</div>
+
+<form [formGroup]="productSettingsForm" fxLayout="column">
+  <mat-form-field fxFlex="100">
+    <input matInput placeholder="User" aria-label="User" [matAutocomplete]="userAuto"
+           (click)="clickedAutocompleteInput('todo_user_id')"
+           formControlName="todo_user_id">
+    <mat-autocomplete #userAuto="matAutocomplete" [displayWith]="displayUserFn">
+      <mat-option *ngFor="let user of filteredUsers" [value]="user">
+        <app-gravatar [email]="user.email" [customStyle]="{
+          width: '24px',
+          borderRadius: '100%',
+          marginLeft: '5px',
+          marginRight: '15px',
+          verticalAlign: 'middle'
+        }"></app-gravatar>
+        <span>{{user.full_name || user.username || user.id}}</span>
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{backendErrors['user']}}</mat-error>
+  </mat-form-field>
+  <mat-checkbox formControlName="add_todo_on_create" color="primary">
+    Add todo on create
+  </mat-checkbox>
+  <mat-checkbox formControlName="add_todo_on_destroy" color="primary">
+    Add todo on destroy
+  </mat-checkbox>
+  <mat-checkbox formControlName="add_todo_on_suspend" color="primary">
+    Add todo on suspend
+  </mat-checkbox>
+  <mat-checkbox formControlName="add_todo_on_resume" color="primary">
+    Add todo on resume
+  </mat-checkbox>
+  <mat-checkbox formControlName="add_todo_on_renew" color="primary">
+    Add todo on renew
+  </mat-checkbox>
+  <mat-checkbox formControlName="add_todo_on_change_cycle" color="primary">
+    Add todo on change cycle
+  </mat-checkbox>
+</form>

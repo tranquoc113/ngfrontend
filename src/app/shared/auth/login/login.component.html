@@ -1,0 +1,53 @@
+<div align="center">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div>
+      <mat-card class="login-card">
+        <div>
+          <app-logo [darkContext]="false" [linkOptions]="logoLinkOptions" [customStyle]="{
+            width: '140px',
+            height: '70px',
+            marginBottom: '20px'
+          }"></app-logo>
+        </div>
+        <mat-card-title align="left">
+          <span class="card-title">Login</span>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="text-left"
+               *ngIf="auth.feature('demo') && auth.feature('ui.core.demo-login-staff')">
+            Access demo account with username <strong>demoadmin</strong>, password <strong>demoadmin</strong>
+          </div>
+          <div class="text-left"
+               *ngIf="auth.feature('demo') && auth.feature('ui.core.demo-login-enduser')">
+            Access demo account with username <strong>demo</strong>, password <strong>demo</strong>
+          </div>
+          <app-form-errors #formErrors [formGroup]="loginForm"></app-form-errors>
+          <mat-form-field>
+            <input matInput placeholder="{{usernameInputLabel}}" autocapitalize="none"
+                   type="text" formControlName="username" name="username" required>
+            <mat-error>This field is required!</mat-error>
+          </mat-form-field>
+            <p>{{loginForm.errors}}</p>
+          <mat-form-field>
+            <input matInput placeholder="Password" type="password" formControlName="password" name="password" required>
+            <mat-error>This field is required!</mat-error>
+          </mat-form-field>
+          <mat-slide-toggle [color]="'primary'" formControlName="rememberMe">Remember me</mat-slide-toggle>
+        </mat-card-content>
+        <mat-card-actions>
+          <div>
+            <button mat-raised-button [color]="'primary'" type="submit" class="login-button">Sign in</button>
+          </div>
+          <div *ngIf="auth.feature('enduser.allow_changing_password') ||
+          auth.feature('ui.core.allow-changing-password')">
+            <a [routerLink]="config.getPanelUrl('reset')" mat-flat-button>Forgot password</a>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </form>
+  <a class="powered-by-link" href="http://fleio.com" target="_blank"
+     *ngIf="auth && auth.userData && !auth.userData.is_white_label">
+    Powered by Fleio
+  </a>
+</div>

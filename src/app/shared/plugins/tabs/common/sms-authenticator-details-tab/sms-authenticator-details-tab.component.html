@@ -1,0 +1,58 @@
+<div class="fl-content-min-height">
+  <div class="fl-margin-bottom" *ngIf="status && status.enabled">
+    <span class="fl-tag fl-light-green-bg" *ngIf="status && status.enabled">ENABLED</span>
+    <span class="fl-tag fl-margin-left-small" *ngIf="status && status.default">DEFAULT</span>
+  </div>
+  <app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+  <div *ngIf="status && !status.enabled">
+    <div>
+      <p>
+        To enable SMS authenticator on your profile, request a code to be sent to your mobile phone
+        number, enter it in the input below and submit the form.
+      </p>
+      <button mat-button *ngIf="userProfile && userProfile.mobile_phone_number"
+              (click)="requestCode()" color="primary">
+        Request code
+      </button>
+    </div>
+  </div>
+  <div *ngIf="userProfile && !userProfile.mobile_phone_number">
+    <p class="fl-bold">You must first set a valid phone number.</p>
+    <div fxLayout="row" fxLayoutGap="10px">
+      <app-phone-input [phoneNumber]="phoneNumber" (changedPhone)="onChangedPhone($event)"
+                       #phoneNumberInputComponent>
+      </app-phone-input>
+      <button class="fl-margin-top-medium phone-btn" mat-button (click)="savePhone()">
+        Set phone number
+      </button>
+    </div>
+  </div>
+  <div *ngIf="status && status.enabled" class="fl-margin-bottom">
+    <p class="fl-detail" *ngIf="userProfile">SMS authenticator is enabled. You will receive a verification code on your
+      mobile phone number ({{userProfile.mobile_phone_number}}) when trying to login.</p>
+  </div>
+  <div *ngIf="status && !status.enabled" class="fl-margin-top-medium fl-margin-bottom full-width">
+    <form appFormSubmit (ngSubmit)="enable()"
+          [formGroup]="smsForm" class="full-width">
+      <app-form-errors #formErrors [formGroup]="smsForm"></app-form-errors>
+      <mat-form-field class="half-width">
+        <input matInput placeholder="Code" type="text" maxlength="6" formControlName="code" required>
+        <mat-error>{{fieldErrors['code'] || 'This field is required'}}</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div>
+    <button [routerLink]="config.getPrevUrl('sfa/options')" mat-button>
+      Cancel
+    </button>
+    <button (click)="disable()" mat-button color="primary" *ngIf="status && status.enabled">
+      Disable SMS authenticator
+    </button>
+    <button (click)="makeDefault()" mat-button color="primary" *ngIf="status && status.enabled && !status.default">
+      Set as default
+    </button>
+    <button (click)="enable()" mat-button color="primary" *ngIf="status && !status.enabled">
+      Enable SMS authenticator
+    </button>
+  </div>
+</div>

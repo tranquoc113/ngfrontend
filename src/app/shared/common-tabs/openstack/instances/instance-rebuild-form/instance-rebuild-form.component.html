@@ -1,0 +1,73 @@
+<form [formGroup]="instanceRebuildForm" *ngIf="rebuildOptions">
+  <app-form-errors #formErrors [formGroup]="instanceRebuildForm"></app-form-errors>
+  <div fxLayout="row">
+      <div fxLayout="column" fxFlex="100" class="fl-margin-bottom">
+        <div class="fl-subheader">Rebuild instance</div>
+        <p class="fl-detail">All data currently on the instance disk will be permanently deleted.</p>
+      </div>
+  </div>
+  <div fxLayout="row" fxLayout.lt-md="column">
+    <div fxLayout="column" fxFlex="45" fxFlex.lt-md="100">
+      <div class="fl-margin-top-small fl-margin-bottom-small fl-bordered-box-help-txt">
+        <span>Select boot source</span>
+      </div>
+      <app-boot-source-select [images]="rebuildOptions.bootSources.image"
+                              [communityImages]="[]"
+                              [ownedImages]="rebuildOptions.bootSources.owned_image"
+                              [volumes]="[]"
+                              [volumeTypes]="[]"
+                              [volumeSnapshots]="[]"
+                              [sharedImages]="rebuildOptions.bootSources.shared_image"
+                              [showStorageSelection]="false"
+                              (selectedBootSourceInter)="onBootSourceChange($event)">
+      </app-boot-source-select>
+    </div>
+  </div>
+  <div fxLayout="row" *ngIf="config.current.settings.instanceForm.showUserData">
+    <div fxLayout="column" fxFlex="100">
+      <mat-checkbox [color]="'primary'" (change)="switchUserData()">
+        Cloud-init user data
+      </mat-checkbox>
+    </div>
+  </div>
+  <div fxLayout="row" *ngIf="showUserData">
+    <div fxLayout="column" fxFlex="100">
+      <mat-form-field fxFlex="100" class="fl-margin-top-medium">
+        <mat-label>Cloud-init user data</mat-label>
+        <textarea class="fl-userdata-textarea" matInput rows="3" formControlName="user_data"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxLayout="row" class="fl-margin-top">
+    <mat-form-field>
+      <mat-select formControlName="ssh_keys" placeholder="SSH keys" multiple>
+        <ng-container *ngIf="rebuildOptions.ssh_keys.length">
+          <mat-option *ngFor="let sshKey of rebuildOptions.ssh_keys" [value]="sshKey.id">
+            {{sshKey.name}}
+          </mat-option>
+        </ng-container>
+        <ng-container *ngIf="rebuildOptions.ssh_keys.length === 0">
+          <mat-option disabled>
+            No key to choose from
+          </mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>{{fieldErrors['ssh_keys']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlexOffset="2">
+      <input matInput placeholder="Root password" [type]="showPasswordText ? 'text' : 'password'"
+             formControlName="root_password" maxlength="1024"
+             [required]="config.current.settings.instanceForm.rootPasswordFieldMandatory">
+      <mat-error>{{fieldErrors['root_password']}}</mat-error>
+    </mat-form-field>
+    <div>
+      <button (mousedown)="showPasswordText = true;"
+              (mouseup)="showPasswordText = false;"
+              class="fl-margin-top-small"
+              mat-icon-button
+              fl-tooltip="Hold button to reveal password">
+        <mat-icon>visibility</mat-icon>
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,16 @@
+<div class="fl-content fl-content-min-height">
+  <app-fl-backdrop *ngIf="!configuration"></app-fl-backdrop>
+  <div *ngIf="configuration" fxLayout="column">
+    <p>Configuration:&nbsp;
+      <a class="active-link"
+         [routerLink]="[config.getPanelUrl('settings/configurations'), configuration.id]">
+        {{configuration.name}}
+      </a>
+    </p>
+    <div fxLayout="row">
+      <button mat-button color="primary" (click)="changeConfiguration()">
+        CHANGE CONFIGURATION
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<ng-container *ngIf="authService.userData && authService.userData.user">
+  <div matRipple [matRippleDisabled]="true" [matMenuTriggerFor]="menu" class="hello-user-button">
+    <span fxHide.xs fxHide.sm>Hello, {{authService.userData.user.first_name || authService.userData.user.username}}</span>
+    <app-gravatar [email]="authService.userData.user.email" [customStyle]="{
+      width: '24px',
+      borderRadius: '100%',
+      marginLeft: '15px',
+      verticalAlign: 'middle'
+    }"></app-gravatar>
+    <div *ngIf="authService.userData.notifications > 0" class="fl-notification-circle fl-notification-circle-gravatar">
+        {{authService.userData.notifications}}
+    </div>
+  </div>
+  <mat-menu #menu="matMenu" xPosition="before" yPosition="below">
+    <div (click) = "$event.stopPropagation()" class="hello-user-first-menu-item">
+      <app-gravatar [email]="authService.userData.user.email" [customStyle]="{
+        width: '50px',
+        marginRight: '10px',
+        verticalAlign: 'top'
+      }"></app-gravatar>
+      <div class="display-inline-block">
+        <div class="user-details-wrapper">
+          {{authService.userData.user.first_name}} {{authService.userData.user.last_name}}
+          <br>
+          {{authService.userData.user.email}}
+        </div>
+      </div>
+    </div>
+    <a class="text-center"
+            *ngIf="panel === 'staff' || panel === 'enduser'"
+            mat-menu-item
+            [routerLink]="[config.getPanelUrl('user/notifications')]">
+      Notifications
+      <span *ngIf="authService.userData.notifications > 0" class="fl-notification-circle">
+        {{authService.userData.notifications}}
+      </span>
+    </a>
+    <a class="text-center" mat-menu-item
+            [routerLink]="[config.getPanelUrl('/user/profile')]">My profile</a>
+    <a class="text-center" mat-menu-item [routerLink]="[config.getPanelUrl('/logout')]">Log out</a>
+  </mat-menu>
+</ng-container>

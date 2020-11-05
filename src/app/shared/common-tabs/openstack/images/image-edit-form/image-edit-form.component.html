@@ -1,0 +1,152 @@
+<form [formGroup]="imageForm" class="fl-content fl-content-min-height">
+  <app-form-errors #formErrors [formGroup]="imageForm"></app-form-errors>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <div fxLayout="column" fxFlex="50" fxFlex.xs="100" fxFlex.sm="100" *ngIf="createOptions" fxLayoutGap="10px">
+      <mat-form-field *ngIf="object && !object.id">
+        <mat-select formControlName="region" placeholder="Region">
+          <mat-option *ngFor="let region of createOptions.regions"
+                      [value]="region.id">
+            {{region.id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Image name" type="text" formControlName="name" required>
+        <mat-error>{{fieldErrors['name']}}</mat-error>
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="50">
+          <input matInput placeholder="Minimum disk size (GB)" type="number"
+                 formControlName="min_disk" required>
+          <mat-error>{{fieldErrors['min_disk']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="50">
+          <input matInput placeholder="Minimum required RAM (MB)" type="number"
+                 formControlName="min_ram" required>
+          <mat-error>{{fieldErrors['min_ram']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <mat-select formControlName="disk_format" placeholder="Disk format">
+          <mat-option *ngFor="let diskFormat of createOptions.disk_formats"
+                      [value]="diskFormat">
+            {{diskFormat}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="33">
+          <mat-select formControlName="os_distro" placeholder="OS distro">
+            <mat-option *ngFor="let osDistro of createOptions.os_distros"
+                        [value]="osDistro">
+              {{osDistro}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex="33">
+          <input matInput placeholder="OS version" type="text" formControlName="os_version">
+          <mat-error>{{fieldErrors['os_version']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="33">
+          <mat-select formControlName="architecture" placeholder="Architecture">
+            <mat-option *ngFor="let architecture of createOptions.architectures"
+                        [value]="architecture[0]">
+              {{architecture[1]}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <mat-select formControlName="hypervisor_type" placeholder="Hypervisor type">
+          <mat-option [value]="''">Any hypervisor</mat-option>
+          <mat-option *ngFor="let hypervisorType of createOptions.hypervisor_types"
+                      [value]="hypervisorType">
+            {{hypervisorType}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="visibility" placeholder="Visibility">
+          <mat-option *ngFor="let visibility of createOptions.visibilities"
+                      [value]="visibility">
+            {{visibility}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-checkbox formControlName="protected" color="primary">
+        Protected
+      </mat-checkbox>
+      <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" *ngIf="object && !object.id">
+        <mat-form-field fxFlex="20">
+          <mat-select formControlName="source" placeholder="Source" class="source-type">
+            <mat-option value="url">URL</mat-option>
+            <mat-option value="file">File</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex="auto" *ngIf="imageForm.controls.source.value === 'url'">
+          <input matInput placeholder="URL" type="text" formControlName="url" required class="file-input">
+          <mat-error>{{fieldErrors['url']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="auto" *ngIf="imageForm.controls.source.value === 'file'">
+          <input #fileInput type="file" (change)="fileChanged($event)" required>
+          <input matInput type="text" formControlName="file" required hidden>
+          <mat-error>{{fieldErrors['file']}}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="column" fxFlex="50" fxHide.xs fxHide.sm>
+      <p>
+        <strong>Image name</strong><br>
+        Set an image display name that will reflect what the image contains, like it's operating system
+        or snapshot of an instance.
+      </p>
+      <p>
+        <strong>Minimum disk size (GB)</strong><br>
+        This property will tell OpenStack Compute what the minimum required disk size is for this image.
+        <br>
+        This allows you to set a limit in order to avoid potential problems while creating an Instance with
+        a lower disk size than the installed software on that image.
+      </p>
+      <p>
+        <strong>Minimum required RAM (MB)</strong><br>
+        Like the minimum required disk size, this option allows you to set a limit for the minimum required
+        RAM an instance created from this image will required in order to run properly.
+      </p>
+      <p>
+        <strong>Visibility</strong><br>
+        An image can be set as <strong>private</strong>, making it only available to it's owner, or
+        <strong>public</strong>, making it available to everyone. You can also set an image visibility to
+        <strong>shared</strong> to allow only image members to access this image. The
+        <strong>community</strong>
+        visibility behaves similar to <strong>public</strong>
+      </p>
+      <p>
+        <strong>OS distro, OS version and Architecture</strong><br>
+        These special attributes allows Fleio to show the distro icon next to each instance created from
+        this image
+        and allows OpenStack to properly create an Instance especially for Windows or other non Linux
+        distributions.
+      </p>
+      <p>
+        <strong>Protected</strong><br>
+        Set this option in order to protect the image from accidental deletion
+      </p>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px"
+       fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
+    <button mat-button (click)="cancelEdit()">
+      Cancel
+    </button>
+    <button mat-button mat-raised-button color="primary" (click)="saveImage()">
+      {{ (this.object && this.object.id) ? 'Update image' : 'Create image' }}
+    </button>
+    <button *ngIf="this.object && this.object.id && auth.feature('ui.openstack.images.deactivate')"
+            [disabled]="changingActiveState" mat-button mat-raised-button
+            (click)="toggleActiveStatus()" color="accent">
+      {{ (this.object && object.status === 'active') ? 'Deactivate image' : 'Activate image' }}
+    </button>
+  </div>
+</form>
+<mat-progress-bar *ngIf="uploading" color="primary" mode="determinate" value="{{uploadProgress}}">
+</mat-progress-bar>

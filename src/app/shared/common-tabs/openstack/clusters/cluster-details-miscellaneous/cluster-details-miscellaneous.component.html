@@ -1,0 +1,10 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <p *ngIf="object.discovery_url">
+    Discovery URL: <a href="{{object.discovery_url}}" class="active-link">{{object.discovery_url}}</a>
+  </p>
+  <p>Cluster create timeout: {{object.create_timeout}}</p>
+  <p>Keypair: {{object.keypair}}</p>
+  <p>Master flavor: {{object.master_flavor_id}}</p>
+  <p>Node flavor: {{object.flavor_id}}</p>
+  <p *ngIf="object.health_status">Health status: {{object.health_status}}</p>
+</div>

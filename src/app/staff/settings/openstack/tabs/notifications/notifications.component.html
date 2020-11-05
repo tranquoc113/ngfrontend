@@ -1,0 +1,76 @@
+<div class="min-height-content fl-content">
+  <app-fl-backdrop *ngIf="notificationsLoading"></app-fl-backdrop>
+  <app-form-errors #formErrors [formGroup]="notificationsForm"></app-form-errors>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <form appFormSubmit (ngSubmit)="save()" [formGroup]="notificationsForm"
+          fxLayout="column" fxFlex="50" fxFlex.xs="100">
+      <mat-form-field>
+        <textarea matInput type="text" formControlName="notifications_url"
+                  placeholder="Notifications URLs">
+        </textarea>
+        <mat-error>{{fieldErrors['notifications_url']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="text" formControlName="notifications_topic" required
+               placeholder="Notifications topic">
+        <mat-error>{{fieldErrors['notifications_topic']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="text" formControlName="notifications_exchange" required
+               placeholder="Notifications exchange">
+        <mat-error>{{fieldErrors['notifications_exchange']}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="text" formControlName="notifications_pool" required
+               placeholder="Notifications pool name">
+        <mat-error>{{fieldErrors['notifications_pool']}}</mat-error>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
+        <a mat-button class="fl-margin-top" [color]="'primary'" (click)="save()">
+          Save
+        </a>
+        <a mat-button class="fl-margin-top" (click)="test()">
+          Test connections
+        </a>
+      </div>
+    </form>
+    <div fxLayout="column" fxLayoutGap="10px" fxShow.xs="false">
+      <p class="mat-caption">
+        <strong>Notifications URLs</strong><br>
+        The messaging broker URLs where to listen for notifications.<br>
+        Multiple URLs can be specified, one per line.<br>
+        Fleio updates it's internal state using notifications from OpenStack <br>
+        services.<br>
+        If the fleio-collector service is used or no broker virtual hosts are created <br>
+        for each setup, only one URL should be required.
+      </p>
+      <p class="mat-caption">
+        <strong>Notifications topic</strong><br>
+        The notifications topic where notifications are sent by services <br>
+        or the fleio-collector service.<br>
+        Multiple topics can be specie, separated by ',' (ex: "notifications, notifications_bis")<br>
+        Usually there is one topic called 'notifications'.<br>
+        If the fleio-collector service is used, the default topic is 'fleio'.
+      </p>
+      <p class="mat-caption">
+        <strong>Notifications exchange</strong><br>
+        The OpenStack services send notifications to different exchanges.<br>
+        The default exchanges used by Fleio are:<br>
+        'nova', 'neutron', 'openstack', 'glance'<br>
+        If the fleio-collector service is used, only one exchange is required<br>
+        named by default 'fleio'.
+      </p>
+      <p class="mat-caption">
+        <strong>Notifications pool name</strong><br>
+        The pool name is required if multiple consumers listen to the same topic<br>
+        If ceilometer is installed, set this to a valid name, like 'fleio'<br>
+        Note that if you want to change the pool once set, you will have to manually <br>
+        delete the previous queue created since Fleio is unable to do that.
+      </p>
+    </div>
+  </div>
+</div>

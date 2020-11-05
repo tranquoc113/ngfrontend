@@ -1,0 +1,102 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="createOptions" [formGroup]="configurableOptionForm" fxLayout="column" fxLayoutGap="10px">
+  <app-form-errors #formErrors [formGroup]="configurableOptionForm"></app-form-errors>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <mat-form-field>
+      <input matInput placeholder="Option display" type="text" formControlName="description" required>
+      <mat-error>{{fieldErrors['description']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Internal name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-form-field>
+    <mat-label>Help text</mat-label>
+    <textarea matInput formControlName="help_text"></textarea>
+    <mat-error>{{fieldErrors['help_text']}}</mat-error>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <mat-form-field>
+      <mat-select formControlName="widget" placeholder="Display widget" required>
+        <mat-option *ngFor="let widget of createOptions.widgets" [value]="widget.value">
+          {{widget.label}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['widget']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="status" placeholder="Status" required>
+        <mat-option *ngFor="let status of createOptions.status_choices" [value]="status[0]">
+          {{status[1]}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{fieldErrors['status']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-checkbox color="primary" formControlName="required">
+    Required
+  </mat-checkbox>
+
+  <ng-container *ngIf="!this.configurableOptionForm.controls.widget.dirty; else widgetDirty">
+    <div *ngIf="hasChoices" class="full-width">
+      <h3>Choices</h3>
+      <hr/>
+    </div>
+    <div *ngFor="let choice of choices">
+      <div *ngIf="hasChoices" class="full-width" fxLayout="row" fxLayoutAlign="default center">
+        <div>
+          <span class="fl-bold">{{choice.label}}</span>({{choice.choice}}):
+        </div>
+        <div>
+          <app-object-actions [objectActions]="choiceActions[choice.id]" [maxVisibleActions]="2">
+          </app-object-actions>
+        </div>
+      </div>
+      <table *ngIf="object && object.cycles" class="full-width" mat-table [dataSource]="choice.cycles">
+        <ng-container matColumnDef="display_name">
+          <th mat-header-cell *matHeaderCellDef>Cycle</th>
+          <td mat-cell *matCellDef="let cycle">
+            {{cycle.display_name}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Price</th>
+          <td mat-cell *matCellDef="let cycle">
+            {{cycle.price}} {{cycle.currency}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="setup_fee">
+          <th mat-header-cell *matHeaderCellDef>Setup fee</th>
+          <td mat-cell *matCellDef="let cycle">
+            {{cycle.setup_fee}} {{cycle.currency}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="(actions)">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let cycle">
+            <app-object-actions [objectActions]="cycleActions[choice.id + '_' + cycle.id]" [maxVisibleActions]="2">
+            </app-object-actions>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['display_name', 'price', 'setup_fee', '(actions)']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['display_name', 'price', 'setup_fee', '(actions)'];"></tr>
+      </table>
+
+      <div *ngIf="object.id" class="fl-margin-top">
+        <a mat-button color="primary" (click)="addCycle(choice)">
+          Add cycle
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="hasChoices" class="fl-margin-top">
+      <a mat-button mat-raised-button color="primary" (click)="addChoice()">
+        Add choice
+      </a>
+    </div>
+  </ng-container>
+  <ng-template #widgetDirty>
+    <p class="fl-detail">Display widget changed, please save to continue.</p>
+  </ng-template>
+</form>

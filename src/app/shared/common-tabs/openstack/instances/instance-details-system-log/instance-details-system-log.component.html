@@ -1,0 +1,23 @@
+<div class="fl-content">
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <div fxLayout="row">
+    <div fxLayout="column">
+      <mat-form-field>
+        <mat-select [(ngModel)]="length" placeholder="Number of lines to show" (selectionChange)="changedLength()">
+          <mat-option *ngFor="let line of [30, 100, 500, 1000]" [value]="line">
+            {{line}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxFlexOffset="2">
+      <button class="fl-margin-top-medium" [color]="'primary'" (click)="refreshConsoleOutput()" mat-button>
+        Refresh log
+      </button>
+    </div>
+  </div>
+  <div fxLayout="row">
+    <pre *ngIf="consoleOutput" class="fl-console-output">{{consoleOutput.console_text}}</pre>
+    <div *ngIf="!consoleOutput">No data to show.</div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+:host {
+  display: flex;
+  width: 100%;
+}
+
+.activity-log-details {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.task-list {
+  display: flex;
+  width: 100%;
+}
+
+.task-row {
+  position: relative;
+  display: flex;
+  min-height: 48px;
+  width: 100%;
+  border-top: 1px solid #eee;
+}
+
+.task-row:last-child {
+  border-bottom: 1px solid #eee;
+}
+
+.task-name {
+  padding-top: 12px;
+}
+
+.task-row-xs {
+  padding-top: 10px;
+  padding-left: 20px;
+  margin-right: 20px;
+  display: flex;
+  width: 100%;
+}
+
+.task-log-container {
+  padding-left: 24px;
+}
+
+.task-log {
+  padding: 10px;
+  margin-bottom: 24px;
+  border: 1.1px solid #e7e7e7;
+  border-radius: 2px;
+  background: #fff;
+  overflow: auto;
+  word-break: break-word;
+  word-wrap: break-word;
+  flex-wrap: wrap;
+  white-space: pre-wrap;
+  font-family: monospace;
+  margin-right: 24px;
+}
+
+.action-container-class {
+  margin-right: 24px;
+}
+
+::ng-deep .action-container-class .actions-container {
+  opacity: 0;
+  transition: 0.2s;
+  -webkit-transition: 0.2s;
+}
+
+::ng-deep .task-row:hover .actions-container {
+  opacity: 1;
+}

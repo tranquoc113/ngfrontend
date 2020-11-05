@@ -1,0 +1,33 @@
+<h1 *ngIf="data && data.objectController" mat-dialog-title>{{data.dialogTitle || '' }}</h1>
+<div mat-dialog-content>
+  <app-object-details [objectController]="data.objectController" [additionalClasses]="data.additionalClasses || []">
+  </app-object-details>
+</div>
+<div mat-dialog-actions>
+  <ng-container *ngIf="data.actions; else noActions">
+    <button mat-button (click)="close()">Close</button>
+    <ng-container *ngFor="let action of data.actions">
+      <button mat-button
+              (click)="action.execute(notificationService, refreshService, null, $event)"
+              (auxclick)="action.execute(notificationService, refreshService, null, $event)"
+              [disabled]="action.noPermissions || action.isRunning"
+              [class.mat-primary]="action.primary"
+              *ngIf="action.type !== actionTypes.RouterLinkAction; else dialogBtnWithRouterLink">
+        {{action.name}}
+      </button>
+      <ng-template #dialogBtnWithRouterLink>
+        <a mat-button
+           [disabled]="action.noPermissions || action.isRunning"
+           [routerLink]="action.routerUrl"
+           [queryParams]="action.queryParams"
+           [class.mat-primary]="action.primary"
+           *ngIf="action.type !== actionTypes.RouterLinkAction; else dialogBtnWithRouterLink">
+          {{action.name}}
+        </a>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-template #noActions>
+    <button mat-button color="primary" (click)="close()">Close</button>
+  </ng-template>
+</div>

@@ -1,0 +1,12 @@
+<div>
+  <div class="no-objects-message-container" *ngIf="cardViewData && !cardViewData.cards.length">
+    <span class="no-objects-message">{{objectsListController.objectListUIService.noItemsMessage || 'No items'}}</span>
+  </div>
+  <ng-container *ngIf="cardViewData">
+    <div *ngFor="let cardData of cardViewData.cards; trackBy: cardViewData.trackByFunction" class="cards-wrapper">
+      <app-object-card
+        [cardData]="cardData">
+      </app-object-card>
+    </div>
+  </ng-container>
+</div>

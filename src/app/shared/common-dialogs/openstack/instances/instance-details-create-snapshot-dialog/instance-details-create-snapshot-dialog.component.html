@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>Create snapshot for instance {{data.instanceName}}</h1>
+<p class="fl-important-text">Warning: instance will not be available while the snapshot is being processed.</p>
+<p class="fl-detail">
+  Note: if instance is booted from volume, you would need to have support for volume snapshots.
+</p>
+<div mat-dialog-content>
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <form appFormSubmit (ngSubmit)="createSnapshot()" [formGroup]="createSnapshotForm">
+    <app-form-errors #formErrors [formGroup]="createSnapshotForm"></app-form-errors>
+    <div fxLayout="row">
+      <mat-form-field fxFlex="50" class="fl-margin-top-medium">
+        <input matInput placeholder="Name" type="text" formControlName="name" required>
+        <mat-error>{{ 'This field is required!' }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row">
+      <mat-radio-group
+        aria-labelledby="create_snapshot_as_client"
+        formControlName="create_snapshot_as_client">
+        <mat-radio-button [color]="'primary'" [value]="false"
+                          [attr.fl-tooltip]="'End-user will NOT see this snapshot\nand NO storage cost will incur'">
+          Create snapshot in admin project
+        </mat-radio-button>
+        <mat-radio-button [color]="'primary'" [value]="true"
+                          [attr.fl-tooltip]="'End-user will see this snapshot\nand storage cost will incur\n(assuming you have a\nmatching Image pricing rule)'">
+          Create snapshot in client project
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="createSnapshot()"
+          [color]="'primary'">
+    Create
+  </button>
+</div>

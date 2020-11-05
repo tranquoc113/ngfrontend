@@ -1,0 +1,36 @@
+<h1 *ngIf="data && data.instance" mat-dialog-title>
+  Associate ip for instance {{data.instance.name || data.instance.id}}
+</h1>
+<div mat-dialog-content class="fl-dialog overflow-hidden">
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <form appFormSubmit (ngSubmit)="associateIp()" [formGroup]="associateIpForm" fxFlex="100" fxLayout="column">
+    <app-form-errors #formErrors [formGroup]="associateIpForm"></app-form-errors>
+    <div class="fl-subheader-md">Available floating IPs</div>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="floating_ip" placeholder="Floating IPs" required>
+        <mat-option *ngFor="let ip of data.freeIps" [value]="ip.floating_ip_address">
+          {{ip.floating_ip_address}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{backendErrors['floating_ip'] || 'This field is required'}}</mat-error>
+    </mat-form-field>
+    <div class="fl-subheader-md">Available ports</div>
+    <mat-form-field fxFlex="100">
+      <mat-select formControlName="fixed_ip" placeholder="Ports" required>
+        <mat-option *ngFor="let port of data.ports" [value]="port">
+          {{ port.id }} - {{ port.fixed_ips[0].ip_address }}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{backendErrors['fixed_ip'] || 'This field is required'}}</mat-error>
+    </mat-form-field>
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="associateIp()"
+          [disabled]="associateIpForm.invalid"
+          [color]="'primary'">
+    Associate ip
+  </button>
+</div>

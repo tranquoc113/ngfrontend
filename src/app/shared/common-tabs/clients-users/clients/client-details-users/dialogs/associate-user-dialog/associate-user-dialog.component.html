@@ -1,0 +1,23 @@
+<h1 *ngIf="data && data.client" mat-dialog-title>Associate client {{data.client.name}} with a user</h1>
+<div mat-dialog-content>
+  <div *ngIf="availableUsers && !availableUsers.length">
+    There are no available users.
+  </div>
+  <form appFormSubmit (ngSubmit)="associateUser()"
+        [formGroup]="associateUserForm" *ngIf="availableUsers && availableUsers.length">
+    <mat-form-field fxFlex="90">
+      <mat-select formControlName="selectedUser" placeholder="User to associate">
+        <mat-option *ngFor="let user of availableUsers" [value]="user.id">
+          {{user.full_name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button disabled="{{!(this.selectedUser && this.selectedUser.value > 0)}}" (click)="associateUser()"
+          [color]="'primary'">
+    Associate user
+  </button>
+</div>

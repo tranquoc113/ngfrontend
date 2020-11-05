@@ -1,0 +1,15 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="projectForm" fxLayout="column" fxLayoutGap="10px">
+  <app-form-errors #formErrors [formGroup]="projectForm"></app-form-errors>
+  <mat-form-field>
+    <input matInput placeholder="Name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Description" type="text" formControlName="description" required>
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+  <mat-checkbox color="primary" formControlName="disabled">
+    Project disabled
+  </mat-checkbox>
+</form>

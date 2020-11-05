@@ -1,0 +1,24 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <p>ID: {{object.id }}</p>
+  <p>Created at: {{object.created_at | date:'medium'}}</p>
+  <p *ngIf="object.updated_at">
+    Updated at: {{object.updated_at | date:'medium'}}
+  </p>
+  <p *ngIf="object.client">
+    Client:
+    <a class="active-link"
+       [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]">
+      {{object.client.name}}
+    </a>
+  </p>
+  <p *ngIf="object.cluster_template">
+    Cluster template:
+    <a class="active-link"
+       [routerLink]="[config.getPanelUrl('openstack/cluster-templates'), object.cluster_template.id]">
+      {{object.cluster_template.name}}
+    </a>
+  </p>
+  <p *ngIf="object.status_reason">
+    Status reason: <span [innerHTML]="object.status_reason"></span>
+  </p>
+</div>

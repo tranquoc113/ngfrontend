@@ -1,0 +1,6 @@
+<div *ngFor="let item of menu.items">
+  <app-menu-item *ngIf="item.type==='menuItem'" [menuItem]="item"></app-menu-item>
+  <app-menu-item-container *ngIf="item.type==='menuItemContainer' && canShowMenuItemContainer(item)"
+                           [menuItemContainer]="item"></app-menu-item-container>
+</div>
+

@@ -1,0 +1,5 @@
+<div class="snackbar-with-link-wrapper">
+  <p>{{data.message}}</p>
+  <a mat-raised-button [routerLink]="config.getPanelUrl(data.urlFragment)">{{data.redirectButtonText}}</a>
+  <button mat-raised-button (click)="snackBar.dismiss()">Dismiss</button>
+</div>

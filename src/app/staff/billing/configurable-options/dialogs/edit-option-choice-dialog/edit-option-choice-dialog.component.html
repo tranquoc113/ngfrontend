@@ -1,0 +1,20 @@
+<h1 *ngIf="data" mat-dialog-title>Option billing cycle</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="addChoice()"
+        [formGroup]="editChoiceForm" fxLayout="column" fxLayoutGap="10px">
+    <app-form-errors #formErrors [formGroup]="editChoiceForm" [maxWidth]="'300px'"></app-form-errors>
+    <mat-form-field>
+      <input matInput type="text" formControlName="label" placeholder="Label" required>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" formControlName="choice" placeholder="Choice value" required>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="addChoice()"
+          [color]="'primary'">
+    {{ data.choice ? 'Save choice' : 'Add choice' }}
+  </button>
+</div>

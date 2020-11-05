@@ -1,0 +1,72 @@
+<form appFormSubmit [formGroup]="userForm" (ngSubmit)="objectController.actionCallback(primaryAction)">
+  <app-form-errors #formErrors [formGroup]="userForm"></app-form-errors>
+  <mat-form-field class="half-width half-width-spacing">
+    <input matInput placeholder="First name" type="text" formControlName="first_name" required>
+    <mat-error>{{fieldErrors['first_name']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="half-width">
+    <input matInput placeholder="Last name" type="text" formControlName="last_name" required>
+    <mat-error>{{fieldErrors['last_name']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="full-width"
+                  *ngIf="canEditReseller && showResellerClientSelect">
+    <input matInput placeholder="Reseller client" aria-label="Reseller client" [matAutocomplete]="auto"
+           (click)="clickedClientInput()"
+           formControlName="reseller_client">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClientFn">
+      <mat-option *ngFor="let client of filteredClients" [value]="client">
+        <app-gravatar [email]="client.email" [customStyle]="{
+          width: '24px',
+          borderRadius: '100%',
+          marginLeft: '5px',
+          marginRight: '15px',
+          verticalAlign: 'middle'
+        }"></app-gravatar>
+        <span>{{client.name}}</span>
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{backendErrors['reseller_client'] || 'This field is required!' }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="half-width half-width-spacing">
+    <input matInput placeholder="Email" type="text" formControlName="email" required>
+    <mat-error>{{fieldErrors['email']}}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="half-width">
+    <input matInput placeholder="User name" type="text" formControlName="username" required>
+    <mat-error>{{fieldErrors['username']}}</mat-error>
+  </mat-form-field>
+  <mat-checkbox [color]="'primary'" class="full-width" formControlName="email_as_username">
+    Use email as username
+  </mat-checkbox>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Password" type="password" formControlName="password" required>
+    <mat-error>{{fieldErrors['password']}}</mat-error>
+  </mat-form-field>
+  <div class="half-width checkbox-container">
+    <mat-checkbox [color]="'primary'" formControlName="is_active">
+      Is active
+    </mat-checkbox>
+  </div>
+  <div class="half-width checkbox-container">
+    <mat-checkbox [color]="'primary'" class="half-width" formControlName="email_verified">
+      Has verified email
+    </mat-checkbox>
+  </div>
+  <div class="half-width checkbox-container" *ngIf="canEditReseller">
+    <mat-checkbox [color]="'primary'" formControlName="is_reseller">
+      Is reseller
+    </mat-checkbox>
+  </div>
+  <div class="half-width checkbox-container" *ngIf="isStaffPanel">
+    <mat-checkbox [color]="'primary'" class="half-width" formControlName="is_superuser">
+      Is superuser
+    </mat-checkbox>
+  </div>
+  <div class="half-width checkbox-container" *ngIf="isStaffPanel">
+    <mat-checkbox [color]="'primary'" formControlName="is_staff">
+      Is staff
+    </mat-checkbox>
+  </div>
+</form>

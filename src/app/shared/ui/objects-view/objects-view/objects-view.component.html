@@ -1,0 +1,17 @@
+<app-objects-subheader [cardsDisplay]="cardsDisplay" [objectsListController]="objectsListController"
+                       (changedCardsDisplay)="onChangedCardsDisplay($event)" [listOnly]="listOnly">
+</app-objects-subheader>
+<ng-container *ngIf="objectsListController; else noController">
+  <app-card-view *ngIf="cardsDisplay" [objectsListController]="objectsListController"></app-card-view>
+  <app-list-view *ngIf="!cardsDisplay" [objectsListController]="objectsListController"></app-list-view>
+  <div class="text-center fl-margin-bottom-small"
+       *ngIf="objectsListController.objectList.totalCount > currentPageSize">
+    <button (click)="paginator.increasePageSize()" mat-button>Load more</button>
+  </div>
+</ng-container>
+<ng-template #noController>
+  An error occurred, please see logs for details.
+</ng-template>
+<div *ngIf="actions" class="actions">
+  <app-object-actions [objectActions]="actions" [listStateActions]="true" [maxVisibleActions]="1"></app-object-actions>
+</div>

@@ -1,0 +1,81 @@
+<div class="fl-content fl-content-min-height" *ngIf="object">
+  <p class="fl-detail">Description:</p>
+  <pre class="fl-detail">{{object.description}}</pre>
+  <p class="fl-detail">
+    Created by&nbsp;
+    <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/users'), object.created_by]">
+      {{object.created_by_display}}
+    </a>
+    &nbsp;on {{object.created_at | date:'medium'}}
+  </p>
+  <hr>
+  <p>Activity:</p>
+  <div *ngFor="let comment of object.comments">
+    <div *ngIf="comment.comment_text">
+      <p class="fl-detail">
+        <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/users'), comment.created_by]">
+          {{comment.created_by_display}}
+        </a>
+        &nbsp;commented on&nbsp;{{comment.created_at | date:'medium'}}
+      </p>
+      <p *ngIf="comment.comment_text" class="fl-margin-left fl-detail">
+        {{comment.comment_text}}
+      </p>
+    </div>
+    <div *ngIf="comment.new_assignee">
+      <p class="fl-detail">
+        <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/users'), comment.created_by]">
+          {{comment.created_by_display}}
+        </a>
+        &nbsp;assigned this TODO to&nbsp;
+        <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/users'), comment.new_assignee]">
+          {{comment.new_assignee_display}}
+        </a>
+        &nbsp;on&nbsp;
+        {{comment.created_at | date:'medium'}}
+      </p>
+    </div>
+    <div *ngIf="comment.new_status">
+      <p class="fl-detail">
+        <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/users'), comment.created_by]">
+          {{comment.created_by_display}}
+        </a>
+        &nbsp;changed status to&nbsp;
+        {{comment.new_status_display}}&nbsp;on&nbsp;
+        {{comment.created_at | date:'medium'}}
+      </p>
+    </div>
+    <div *ngIf="comment.description_changed">
+      <p class="fl-detail">
+        <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/users'), comment.created_by]">
+          {{comment.created_by_display}}
+        </a>
+        &nbsp;changed description on&nbsp;
+        {{comment.created_at | date:'medium'}}
+      </p>
+    </div>
+    <div *ngIf="comment.title_changed">
+      <p class="fl-detail">
+        <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/users'), comment.created_by]">
+          {{comment.created_by_display}}
+        </a>
+        &nbsp;changed title on&nbsp;
+        {{comment.created_at | date:'medium'}}
+      </p>
+    </div>
+  </div>
+  <div class="fl-margin-top">
+    <textarea class="full-width" id="comment_text" [(ngModel)]="commentText" rows="5" placeholder="Add new comment">
+    </textarea>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <button mat-button color="primary" (click)="addComment(false)" [disabled]="!commentText">
+      Comment
+    </button>
+    <button mat-button color="primary" (click)="addComment(true)" [disabled]="!commentText">
+      Comment & close
+    </button>
+  </div>
+</div>
+
+

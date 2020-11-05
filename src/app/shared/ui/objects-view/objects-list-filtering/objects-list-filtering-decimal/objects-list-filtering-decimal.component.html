@@ -1,0 +1,10 @@
+<mat-form-field class="filtering-input-width">
+  <input matInput placeholder="Enter a value..." [(ngModel)]="searchValue" type="number">
+</mat-form-field>
+<div><!--pushes checkbox on new line--></div>
+<mat-checkbox [(ngModel)]="exclude" [color]="'primary'">Exclude</mat-checkbox>
+<div><!--pushes button on new line--></div>
+<button class="fl-margin-top-medium" (click)="applyFiltering()" mat-flat-button>
+  Apply
+</button>
+

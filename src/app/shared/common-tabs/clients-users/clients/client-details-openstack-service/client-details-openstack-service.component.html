@@ -1,0 +1,41 @@
+<div class="fl-content fl-content-min-height">
+  <div class="fl-subheader-md fl-gray-color" *ngIf="openstackServices && !openstackServices.length">
+    No OpenStack service exists for this client
+  </div>
+  <app-fl-backdrop *ngIf="!openstackServices"></app-fl-backdrop>
+  <div *ngIf="openstackServices" fxLayout="column">
+    <div *ngFor="let service of openstackServices">
+      <p class="fl-detail">Service status: {{service.status}}</p>
+      <p class="fl-detail">Product name: {{service.product.name}}</p>
+      <p class="fl-detail">Product cycle: {{service.cycle.display_name}}</p>
+      <p class="fl-detail">Pricing plan: {{service.pricing_plan.name}}</p>
+      <p class="fl-detail">Service:&nbsp;
+        <a class="active-link"
+           [routerLink]="[config.getPanelUrl('billing/services'), service.id]">
+          {{service.id}}
+        </a>
+      </p>
+      <div *ngIf="service.status !== 'terminated'">
+        <p class="fl-detail">Project:
+          <app-openstack-resource-link [resourceId]="openstackProjects[service.id].project_id" path="openstack/projects">
+            {{openstackProjects[service.id].name}}
+          </app-openstack-resource-link>
+        </p>
+        <p class="fl-detail">Project domain ID: {{openstackProjects[service.id].project_domain_id}}</p>
+      </div>
+      <div *ngIf="service.status !== 'terminated'" fxLayout="row" class="fl-margin-top">
+        <button mat-button color="primary" (click)="changePricingPlan(service)">
+          Change pricing plan
+        </button>
+        <button mat-button color="primary" (click)="terminateService(service)">
+          Terminate service
+        </button>
+      </div>
+    </div>
+    <div fxLayout="row" class="fl-margin-top-medium" *ngIf="!this.hasServiceWithProject">
+      <button mat-button color="primary" (click)="createOpenstackService()">
+        Create OpenStack service
+      </button>
+    </div>
+  </div>
+</div>

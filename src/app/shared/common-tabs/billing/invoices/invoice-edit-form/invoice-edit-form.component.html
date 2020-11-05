@@ -1,0 +1,91 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="invoiceForm" *ngIf="createOptions">
+  <app-form-errors #formErrors [formGroup]="invoiceForm"></app-form-errors>
+  <div fxLayout="column">
+    <p class="fl-subheader">Select client</p>
+    <mat-form-field>
+      <input matInput placeholder="Client" type="text" formControlName="client" required
+             [matAutocomplete]="autocompleteClient">
+      <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+        <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+          {{client.first_name}} {{client.last_name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{'This field is required!'}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="status" placeholder="Status">
+        <mat-option *ngFor="let status of createOptions.invoice_statuses" [value]="status[0]">
+          {{status[1]}}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{'This field is required!'}}</mat-error>
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput [matDatepicker]="issueDatePicker" formControlName="issue_date" placeholder="Issue date">
+        <mat-datepicker-toggle matSuffix [for]="issueDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #issueDatePicker></mat-datepicker>
+        <mat-error>{{'This field is required!'}}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [matDatepicker]="dueDatePicker" formControlName="due_date" placeholder="Due date">
+        <mat-datepicker-toggle matSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #dueDatePicker></mat-datepicker>
+        <mat-error>{{'This field is required!'}}</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
+      <div>
+        <p class="fl-subheader">Invoice items</p>
+      </div>
+      <button mat-mini-fab class="add-item-button" fl-tooltip="Add invoice item" fl-tooltip-direction="right"
+              [disabled]="!this.invoiceForm.controls.client.value"
+              (click)="addInvoiceItem()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div formArrayName="items" *ngFor="let item of invoiceForm.get('items')['controls']; let i = index;">
+      <div [formGroupName]="i">
+        <mat-form-field class="full-width">
+          <textarea matInput rows="3" maxlength="255" placeholder="Description" type="text"
+                    formControlName="description" required>
+          </textarea>
+        </mat-form-field>
+        <div fxLayout="row" fxLayoutGap="10px">
+          <mat-form-field fxFlex="66">
+            <mat-select formControlName="item_type" placeholder="Invoice item type">
+              <mat-option *ngFor="let item_type of createOptions.invoice_item_types | keyvalue"
+                          [value]="item_type.key">
+                {{item_type.value}}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="33">
+            <input matInput placeholder="Amount" type="number"
+                   formControlName="amount" required>
+            <mat-error>{{'This field is required!' }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
+          <mat-form-field fxFlex="66">
+            <mat-select formControlName="service" placeholder="Service">
+              <mat-option *ngFor="let service of createOptions.services"
+                          [value]="service.id">
+                {{service.display_name}}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{'This field is required!'}}</mat-error>
+          </mat-form-field>
+          <mat-checkbox formControlName="taxed" color="primary">
+            Taxed
+          </mat-checkbox>
+        </div>
+        <div>
+          <button mat-button (click)="removeItem(i)">Delete invoice item</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

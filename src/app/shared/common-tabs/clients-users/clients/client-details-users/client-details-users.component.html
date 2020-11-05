@@ -1,0 +1,34 @@
+<div class="fl-content fl-content-min-height">
+  <app-fl-backdrop *ngIf="!users"></app-fl-backdrop>
+  <div *ngIf="users" fxLayout="column">
+    <table class="full-width" mat-table [dataSource]="users">
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef>Username</th>
+        <td mat-cell *matCellDef="let user">
+          <a [routerLink]="config.getPanelUrl('clients-users/users/' + user.id.toString())">
+            {{user.username}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="full_name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let user">
+          <a [routerLink]="config.getPanelUrl('clients-users/users/' + user.id.toString())">
+            {{user.full_name}}
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="(actions)">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let user">
+          <app-object-actions [objectActions]="usersActions[user.id]" [maxVisibleActions]="2">
+          </app-object-actions>
+        </td>
+      </ng-container>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div fxLayout="row" class="fl-margin-top">
+      <button mat-button color="primary" (click)="associateNewUser()">Associate user</button>
+    </div>
+  </div>
+</div>

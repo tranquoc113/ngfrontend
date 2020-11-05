@@ -1,0 +1,55 @@
+<h1 *ngIf="data && data.instance" mat-dialog-title>Add ip to instance {{data.instance.name || data.instance.id}}</h1>
+<div mat-dialog-content class="add-ip-dialog-content">
+  <app-fl-backdrop *ngIf="loading"></app-fl-backdrop>
+  <form appFormSubmit (ngSubmit)="addIpToInstance()" [formGroup]="addIpForm">
+    <app-form-errors #formErrors [formGroup]="addIpForm"></app-form-errors>
+    <div fxLayout="row">
+      <mat-form-field fxFlex="100">
+        <mat-select formControlName="port" placeholder="Port" (selectionChange)="changeSubnets()">
+          <mat-option *ngFor="let port of ports" [value]="port.id">
+            {{port.id}}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{'This field is required'}}</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" *ngIf="addIpForm.controls.port.value">
+      <mat-form-field fxFlex="100">
+        <mat-select formControlName="subnet" placeholder="Subnet">
+          <mat-option *ngFor="let subnet of subnets" [value]="subnet.id">
+            {{subnet.name}} ({{subnet.cidr}})
+          </mat-option>
+        </mat-select>
+        <mat-error>{{'This field is required'}}</mat-error>
+      </mat-form-field>
+    </div>
+    <div formArrayName="fixed_ips" fxLayout="row"
+    *ngFor="let fixedIp of addIpForm.get('fixed_ips')['controls']; let i = index;">
+      <div [formGroupName]="i" fxLayout="row">
+        <mat-form-field>
+          <mat-label>IP address</mat-label>
+          <input matInput formControlName="ip_address" placeholder="IP address" type="text" required>
+          <mat-error>{{'This field is required!'}}</mat-error>
+        </mat-form-field>
+        <div class="fl-margin-top-medium" *ngIf="addIpForm.get('fixed_ips')['controls'].length > 1">
+          <button mat-icon-button (click)="removeIp(i)" fl-tooltip="Remove ip">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <button mat-mini-fab class="add-ip-button" fl-tooltip="Add IP" fl-tooltip-direction="right"
+            (click)="addIp()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="addIpToInstance()"
+          [color]="'primary'">
+    Add ip
+  </button>
+</div>

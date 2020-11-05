@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Add signature</h1>
+<div mat-dialog-content class="fl-dialog">
+  <form [formGroup]="addSignatureForm" fxLayout="column">
+    <app-form-errors fxFlex="100" #formErrors [formGroup]="addSignatureForm"></app-form-errors>
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Department" aria-label="Department" [matAutocomplete]="depAuto"
+             (click)="clickedAutocompleteInput('department')"
+             formControlName="department" required>
+      <mat-autocomplete #depAuto="matAutocomplete" [displayWith]="displayDepartmentFn">
+        <mat-option *ngFor="let department of filteredDepartments" [value]="department">
+          <span>{{department.name || department.id}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{backendErrors['department'] || 'This field is required!'}}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [disabled]="!addSignatureForm.valid" (click)="addSignature()"
+          [color]="'primary'">
+    Submit
+  </button>
+</div>

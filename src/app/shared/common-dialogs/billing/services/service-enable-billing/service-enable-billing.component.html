@@ -1,0 +1,19 @@
+<h1 *ngIf="data && data.service" mat-dialog-title>Enable billing for service {{data.service.id}}</h1>
+<div mat-dialog-content>
+  <div [formGroup]="newCycleStartOptionsForm">
+    <p class="fl-detail fl-margin-bottom">Choose the start date for the new cycle</p>
+    <mat-select formControlName="newCycleStart" placeholder="Choose the start date for the new cycle"
+                class="fl-margin-bottom-small">
+      <mat-option *ngFor="let option of newCycleStartOptions" [value]="option.value">
+        {{ option.display }}
+      </mat-option>
+    </mat-select>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="enableServiceBilling()"
+          [color]="'primary'">
+    Enable service billing
+  </button>
+</div>

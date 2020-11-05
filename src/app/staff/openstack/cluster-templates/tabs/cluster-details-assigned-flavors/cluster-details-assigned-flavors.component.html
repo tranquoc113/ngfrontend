@@ -1,0 +1,61 @@
+<div class="fl-content fl-content-min-height" fxLayout="column" *ngIf="object">
+  <p class="fl-detail">
+    Note: if you assign a flavor to this cluster template, only that flavor and others assigned to this template will
+    be possible to be used when creating a cluster with this cluster template.
+    If no flavor is assigned to cluster template, it means that the a cluster created with this template will work
+    with flavors regardless of assignments.
+  </p>
+  <form [formGroup]="assignedFlavorsForm" fxLayoutGap="15px" class="fl-margin-top">
+    <mat-form-field>
+      <input matInput placeholder="Flavor" type="text" formControlName="flavor" required
+             [matAutocomplete]="autocompleteFlavor" (click)="clickedFlavorInput()">
+      <mat-autocomplete #autocompleteFlavor="matAutocomplete" [displayWith]="flavorDisplay">
+        <mat-option *ngFor="let flavor of filteredFlavors$ | async" [value]="flavor">
+          {{flavor.name}} - {{flavor.region}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{'This field is required!'}}</mat-error>
+    </mat-form-field>
+    <button (click)="assignFlavorToClusterTemplate()" mat-raised-button color="primary">
+      Assign flavor to cluster template
+    </button>
+  </form>
+
+  <table mat-table [dataSource]="object.assigned_flavors" class="full-width"
+         *ngIf="object.assigned_flavors && object.assigned_flavors.length">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef fxHide.lt-md> ID </th>
+      <td mat-cell *matCellDef="let element" fxHide.lt-md>
+        <a [routerLink]="[config.getPanelUrl('openstack/flavors'), element.id]">
+          {{element.id}}
+        </a> </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element">
+        <a [routerLink]="[config.getPanelUrl('openstack/flavors'), element.id]">
+          {{element.name}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="region">
+      <th mat-header-cell *matHeaderCellDef> Region </th>
+      <td mat-cell *matCellDef="let element">
+        <a [routerLink]="[config.getPanelUrl('openstack/flavors'), element.id]">
+          {{element.region}}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" class="right-align">
+        <button mat-icon-button (click)="removeFlavor(element.id)"
+                [attr.fl-tooltip]="'Remove assignment'">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

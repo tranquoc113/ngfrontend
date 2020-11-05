@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Rename volume {{data.volume.name}}</h1>
+<div class="fl-dialog" mat-dialog-content>
+  <form appFormSubmit (ngSubmit)="renameVolume()" [formGroup]="renameForm">
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button disabled="{{!renameForm.controls.name.dirty}}" (click)="renameVolume()"
+          [color]="'primary'">
+    Rename
+  </button>
+</div>

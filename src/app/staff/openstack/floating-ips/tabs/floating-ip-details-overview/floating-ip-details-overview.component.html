@@ -1,0 +1,28 @@
+<div *ngIf="object" fxLayout="column" layout-align="space-between start" class="fl-content fl-content-min-height">
+  <p class="fl-detail" *ngIf="object.client">
+    Client:&nbsp;
+    <a class="active-link" [routerLink]="[config.getPanelUrl('clients-users/clients'), object.client.id]">
+      {{ object.client.name }}
+    </a>
+  </p>
+  <p class="fl-detail">Network id: {{object.floating_network.id }} </p>
+  <p class="fl-detail">Network name: {{object.floating_network.name }} </p>
+  <p class="fl-detail">Router id: {{object.router ? object.router.id : 'n/a'}} </p>
+  <p class="fl-detail">Router name: {{object.router ? object.router.name : 'n/a' }} </p>
+  <p class="fl-detail">Fixed ip address: {{ object.fixed_ip_address }}</p>
+  <p class="fl-detail">Port id: {{ object.port ? object.port.id : 'n/a' }}</p>
+  <p class="fl-detail">Description: {{ object.description || 'n/a' }}</p>
+  <ng-container *ngIf="object.associated_object">
+    <p class="fl-detail">
+      Associated to instance:&nbsp;
+      <a [routerLink]="[config.getPanelUrl('openstack/instances'), object.associated_object.id]"
+         class="active-link">
+        {{ object.associated_object.name }}
+      </a>
+    </p>
+    <p *ngIf="!object.associated_object.device_type" class="fl-detail">Associated to object:
+      {{ object.associated_object.id }}
+    </p>
+  </ng-container>
+  <p class="fl-detail" *ngIf="!object.associated_object">No associated object</p>
+</div>

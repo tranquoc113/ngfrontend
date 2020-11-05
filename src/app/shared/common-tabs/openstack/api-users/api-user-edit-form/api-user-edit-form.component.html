@@ -1,0 +1,23 @@
+<app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      [formGroup]="apiUserForm">
+  <app-form-errors #formErrors [formGroup]="apiUserForm"></app-form-errors>
+  <div fxLayout="row">
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row">
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Password" type="password" maxlength="1024" formControlName="password">
+      <mat-error>{{fieldErrors['password']}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row">
+    <mat-form-field fxFlex="100">
+      <input matInput placeholder="Description" type="text" maxlength="1024" formControlName="description">
+      <mat-error>{{fieldErrors['description']}}</mat-error>
+    </mat-form-field>
+  </div>
+</form>

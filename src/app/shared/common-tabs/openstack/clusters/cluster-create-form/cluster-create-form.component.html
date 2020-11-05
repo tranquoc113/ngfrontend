@@ -1,0 +1,86 @@
+<app-fl-backdrop *ngIf="loading" [verticalAlignMiddle]="true"></app-fl-backdrop>
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)" [formGroup]="createClusterForm">
+  <app-form-errors #formErrors [formGroup]="createClusterForm"></app-form-errors>
+  <div fxLayout="column">
+    <mat-form-field>
+      <input matInput placeholder="Name" type="text" formControlName="name" required>
+      <mat-error>{{fieldErrors['name']}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Cluster template" aria-label="Cluster template" [matAutocomplete]="templateAuto"
+             (click)="clickedAutocompleteInput('cluster_template')"
+             formControlName="cluster_template" required>
+      <mat-autocomplete #templateAuto="matAutocomplete" [displayWith]="displayClusterTemplateFn"
+                        (optionSelected)="selectedTemplate()">
+        <mat-option *ngFor="let clusterTemplate of filteredClusterTemplates" [value]="clusterTemplate">
+          <span>{{clusterTemplate.name || clusterTemplate.id}}</span>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>{{fieldErrors['cluster_template'] }}</mat-error>
+    </mat-form-field>
+
+    <div *ngIf="clusterTemplate.value" fxLayout="column">
+      <div class="fl-subheader-md fl-margin-bottom-small">Size</div>
+      <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="Master count" type="number"
+                 formControlName="master_count" min="1" step="1" required>
+          <mat-error>{{fieldErrors['master_count']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="Node count" type="number"
+                 formControlName="node_count" min="1" step="1" required>
+          <mat-error>{{fieldErrors['node_count']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="Docker volume size (GB)" type="number"
+                 formControlName="docker_volume_size" min="1" step="1" required>
+          <mat-error>{{fieldErrors['docker_volume_size']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="fl-subheader-md fl-margin-bottom-small">Misc</div>
+      <mat-form-field>
+        <input matInput placeholder="Discovery URL" type="text" formControlName="discovery_url">
+        <mat-error>{{fieldErrors['discovery_url']}}</mat-error>
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="Timeout" type="number"
+                 formControlName="create_timeout" min="0" step="1" required>
+          <mat-error>{{fieldErrors['create_timeout']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="keypair" placeholder="Select keypair" required>
+            <mat-option *ngFor="let keypair of createOptions.keypairs" [value]="keypair.name">
+              {{keypair.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['keypair']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="flavor_id" placeholder="Node flavor" required>
+            <mat-option *ngFor="let flavor of createOptions.flavors" [value]="flavor.id">
+              {{flavor.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['flavor_id']}}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <mat-select formControlName="master_flavor_id" placeholder="Master node flavor" required>
+            <mat-option *ngFor="let flavor of createOptions.flavors" [value]="flavor.id">
+              {{flavor.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{fieldErrors['master_flavor_id']}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="fl-subheader-md fl-margin-bottom-small">Labels</div>
+      <mat-form-field>
+        <mat-label>Labels</mat-label>
+        <textarea rows="5" placeholder="KEY1=VALUE1, KEY2=VALUE2" matInput formControlName="labels"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</form>

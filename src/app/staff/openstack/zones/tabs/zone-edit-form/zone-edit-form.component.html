@@ -1,0 +1,46 @@
+<form appFormSubmit (ngSubmit)="objectController.actionCallback(primaryAction)"
+      *ngIf="createOptions" [formGroup]="zoneForm" fxLayout="column">
+  <app-form-errors #formErrors [formGroup]="zoneForm"></app-form-errors>
+  <mat-checkbox *ngIf="!object.id" formControlName="forClient" color="primary">
+    Create DNS zone for client
+  </mat-checkbox>
+  <mat-form-field *ngIf="!object.id">
+    <input matInput placeholder="Client" type="text" formControlName="client" required
+           [matAutocomplete]="autocompleteClient" (click)="clearClient()">
+    <mat-autocomplete #autocompleteClient="matAutocomplete" [displayWith]="clientDisplay">
+      <mat-option *ngFor="let client of filteredClients$ | async" [value]="client">
+        {{client.first_name}} {{client.last_name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>{{fieldErrors['client']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Domain name" type="text" formControlName="name" required>
+    <mat-error>{{fieldErrors['name']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Email" type="text" formControlName="email" required>
+    <mat-error>{{fieldErrors['email']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="!object.id">
+    <mat-select formControlName="type_" placeholder="Type selection" required>
+      <mat-option *ngFor="let type of createOptions.types" [value]="type[0]">
+        {{ type[1] }}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{fieldErrors['type_']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Description" type="text" formControlName="description" required>
+    <mat-error>{{fieldErrors['description']}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="TTL" type="number" formControlName="ttl" required min="0">
+    <mat-error>{{fieldErrors['ttl']}}</mat-error>
+  </mat-form-field>
+</form>
